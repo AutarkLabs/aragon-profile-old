@@ -1,14 +1,19 @@
 {
-  "name": "profile-frontend",
+  "name": "app",
   "version": "1.0.0",
   "main": "src/index.js",
+  "license": "MIT",
   "dependencies": {
+    "3box": "^1.7.0",
     "@aragon/api": "^1.0.0-beta.1",
     "@aragon/api-react": "^1.0.0-beta.1",
     "@aragon/ui": "^0.32.0",
     "@babel/polyfill": "^7.2.5",
+    "ipfs-http-client": "^30.1.3",
+    "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-dropzone": "^10.1.3",
     "rxjs": "^6.2.1",
     "styled-components": "^4.1.3"
   },

@@ -1,10 +1,12 @@
 {
-  "name": "Counter",
-  "description": "An application for Aragon",
-  "icons": [{
-    "src": "/dist/images/icon.png",
-    "sizes": "22x22"
-  }],
+  "name": "Profile",
+  "description": "A profile application for Aragon",
+  "icons": [
+    {
+      "src": "/dist/images/icon.png",
+      "sizes": "22x22"
+    }
+  ],
   "start_url": "/dist/index.html",
   "script": "/dist/script.js"
 }
