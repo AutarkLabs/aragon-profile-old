@@ -1,52 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
-import { Text, font, theme } from '@aragon/ui'
+import { font, theme } from '@aragon/ui'
 
-const ReadOrEditTextArea = ({
+const EditTextArea = ({
   type,
-  editing,
   disabled,
   onChange,
   value,
   placeholder,
   size,
-}) => {
-  if (editing) {
-    return (
-      <TextArea
-        type={type}
-        disabled={disabled}
-        onChange={onChange}
-        value={value}
-        placeholder={placeholder}
-      />
-    )
-  }
+}) => (
+  <TextArea
+    type={type}
+    disabled={disabled}
+    onChange={onChange}
+    value={value}
+    placeholder={placeholder}
+  />
+)
 
-  return (
-    <div>
-      {value ? (
-        <Text size={size}>{value}</Text>
-      ) : (
-        <Text size={size} color="grey">
-          {placeholder}
-        </Text>
-      )}
-    </div>
-  )
-}
-
-ReadOrEditTextArea.propTypes = {
+EditTextArea.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
-  editing: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.string,
 }
 
-ReadOrEditTextArea.defaultProps = {
+EditTextArea.defaultProps = {
   editing: false,
   disabled: false,
   type: 'text',
@@ -72,12 +54,11 @@ const baseStyles = css`
     color: transparent;
     text-shadow: 0 0 0 ${theme.textSecondary};
   }
-  width: 169px;
-  max-width: 300px;
+  width: 100%;
 `
 
 const TextArea = styled.textarea`
   ${baseStyles};
 `
 
-export default ReadOrEditTextArea
+export default EditTextArea

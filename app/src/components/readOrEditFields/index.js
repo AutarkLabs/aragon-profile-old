@@ -1,3 +1,3 @@
-export { default as ReadOrEditSafeLink } from './ReadOrEditSafeLink'
-export { default as ReadOrEditTextField } from './ReadOrEditTextField'
-export { default as ReadOrEditTextArea } from './ReadOrEditTextArea'
+export { default as SafeLink } from './SafeLink'
+export { default as TextField } from './TextField'
+export { default as EditTextArea } from './EditTextArea'
