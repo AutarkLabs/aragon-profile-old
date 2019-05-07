@@ -39,7 +39,7 @@ export const fetchedPublicProfileSuccess = (state, publicProfile) => {
     loadedPublicProf: true,
     loadedPublicProfSuccess: true,
     publicProfile,
-    forms: { ...publicProfile, ...state.forms },
+    forms: { ...state.forms, ...publicProfile },
     changed: [],
   }
 }
@@ -102,7 +102,7 @@ export const editedField = (state, field, value, uniqueId, nestedField) => {
 
   return {
     ...state,
-    newFormVals,
+    forms: newFormVals,
     changed: calculateChanged(state.changed, field),
   }
 }
