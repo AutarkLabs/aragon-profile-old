@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { Button, TextInput } from '@aragon/ui'
+import { Button } from '@aragon/ui'
 
+import { EditTextField } from '../readOrEditFields'
 import editImage from '../../assets/pencil-black-tool-interface-symbol.png'
 
 export const AlignRight = styled.div`
@@ -32,10 +33,10 @@ export const FullWidthButton = styled(Button)`
   width: 100%;
 `
 
-export const FullWidthTextInput = styled(TextInput)`
+export const FullWidthTextInput = styled(EditTextField)`
   width: 100%;
 `
 
-export const FlexGrowTextInput = styled(TextInput)`
+export const FlexGrowTextInput = styled(EditTextField)`
   flex-grow: 1;
 `

@@ -1,56 +1,25 @@
-import React, { Fragment, useState, useContext } from 'react'
+import React, { Fragment } from 'react'
 import uuidv1 from 'uuid/v1'
 import { Modal, Text, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
 
-import { BoxContext } from '../../wrappers/box'
-import {
-  editField,
-  savingProfile,
-  savedProfile,
-  saveProfileError,
-} from '../../stateManagers/box'
 import {
   SmallMargin,
   FullWidthButton,
   FullWidthTextInput,
 } from '../styled-components'
-import { DatePicker } from '../readOrEditFields'
+import { DatePicker, EditTextArea } from '../readOrEditFields'
 
-const WorkHistory = ({ ethereumAddress, workHistoryId }) => {
-  const [opened, setOpened] = useState(false)
-  const { boxes, dispatch } = useContext(BoxContext)
-
-  const userLoaded = !!boxes[ethereumAddress]
-
-  const onChange = (value, field, uniqueId, nestedField) => {
-    dispatch(editField(ethereumAddress, field, value, uniqueId, nestedField))
-  }
-
-  const getFormValue = (field, uniqueId, nestedField) => {
-    if (!userLoaded) return ''
-    if (!uniqueId) return boxes[ethereumAddress].forms[field]
-    return (
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-      boxes[ethereumAddress].forms[field][uniqueId][nestedField]
-    )
-  }
-
-  const saveProfile = async connectedAccount => {
-    dispatch(savingProfile(connectedAccount))
-
-    try {
-      const { changed, forms, unlockedBox } = boxes[connectedAccount]
-      const changedValues = changed.map(field => forms[field])
-      await unlockedBox.setPublicFields(changed, changedValues)
-      dispatch(savedProfile(connectedAccount, forms))
-      setOpened(false)
-    } catch (error) {
-      dispatch(saveProfileError(connectedAccount, error))
-    }
-  }
-
+const WorkHistory = ({
+  ethereumAddress,
+  getFormValue,
+  opened,
+  onChange,
+  saveProfile,
+  setOpened,
+  userLoaded,
+  workHistoryId,
+}) => {
   return (
     <Fragment>
       <div>
@@ -79,6 +48,22 @@ const WorkHistory = ({ ethereumAddress, workHistoryId }) => {
           size="normal"
         />
         <SmallMargin />
+        <EditTextArea
+          value={getFormValue('workHistory', workHistoryId, 'description')}
+          placeholder={'Description'}
+          onChange={e =>
+            onChange(
+              e.target.value,
+              'workHistory',
+              workHistoryId,
+              'description'
+            )
+          }
+          type="text"
+          disabled={!userLoaded}
+          size="normal"
+        />
+        <SmallMargin />
         <DatePicker
           value={getFormValue('workHistory', workHistoryId, 'startDate')}
           onChange={unixTime =>
@@ -86,6 +71,7 @@ const WorkHistory = ({ ethereumAddress, workHistoryId }) => {
           }
           label="Start date"
         />
+        <SmallMargin />
         <DatePicker
           value={getFormValue('workHistory', workHistoryId, 'endDate')}
           onChange={unixTime =>
@@ -93,6 +79,10 @@ const WorkHistory = ({ ethereumAddress, workHistoryId }) => {
           }
           label="End date"
         />
+        <FullWidthButton onClick={() => saveProfile(ethereumAddress)}>
+          Save
+        </FullWidthButton>
+        <SmallMargin />
         <FullWidthButton onClick={() => setOpened(false)}>
           Close modal
         </FullWidthButton>

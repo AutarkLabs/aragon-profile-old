@@ -26,6 +26,7 @@ EditTextArea.defaultProps = {
   disabled: false,
   type: 'text',
   wide: false,
+  value: '',
 }
 
 const baseStyles = css`

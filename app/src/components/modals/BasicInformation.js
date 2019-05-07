@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react'
+import React, { Fragment } from 'react'
 import { Modal, Text } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -12,44 +12,18 @@ import {
   FullWidthTextInput,
 } from '../styled-components'
 
-import { BoxContext } from '../../wrappers/box'
-import {
-  editField,
-  savingProfile,
-  savedProfile,
-  saveProfileError,
-} from '../../stateManagers/box'
 import { EditTextArea } from '../readOrEditFields'
 
-const BasicInformation = ({ ethereumAddress }) => {
-  const [opened, setOpened] = useState(false)
-  const { boxes, dispatch } = useContext(BoxContext)
-
-  const userLoaded = !!boxes[ethereumAddress]
-
-  const onChange = (value, field) => {
-    dispatch(editField(ethereumAddress, field, value))
-  }
-
-  const getFormValue = field => {
-    if (!userLoaded) return ''
-    return boxes[ethereumAddress].forms[field] || ''
-  }
-
-  const saveProfile = async connectedAccount => {
-    dispatch(savingProfile(connectedAccount))
-
-    try {
-      const { changed, forms, unlockedBox } = boxes[connectedAccount]
-      const changedValues = changed.map(field => forms[field])
-      await unlockedBox.setPublicFields(changed, changedValues)
-      dispatch(savedProfile(connectedAccount, forms))
-      setOpened(false)
-    } catch (error) {
-      dispatch(saveProfileError(connectedAccount, error))
-    }
-  }
-
+const BasicInformation = ({
+  ethereumAddress,
+  getFormValue,
+  opened,
+  onChange,
+  saveProfile,
+  setOpened,
+  userLoaded,
+  workHistoryId,
+}) => {
   return (
     <Fragment>
       <AlignRight
