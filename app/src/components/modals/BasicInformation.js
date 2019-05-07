@@ -22,7 +22,6 @@ const BasicInformation = ({
   saveProfile,
   setOpened,
   userLoaded,
-  workHistoryId,
 }) => {
   return (
     <Fragment>
@@ -89,6 +88,12 @@ const BasicInformation = ({
 
 BasicInformation.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
+  getFormValue: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  saveProfile: PropTypes.func.isRequired,
+  setOpened: PropTypes.func.isRequired,
+  opened: PropTypes.bool.isRequired,
+  userLoaded: PropTypes.bool.isRequired,
 }
 
 export default BasicInformation

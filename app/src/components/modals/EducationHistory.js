@@ -8,9 +8,9 @@ import {
   FullWidthButton,
   FullWidthTextInput,
 } from '../styled-components'
-import { DatePicker, EditTextArea } from '../readOrEditFields'
+import { DatePicker } from '../readOrEditFields'
 
-const WorkHistory = ({
+const EducationHistory = ({
   ethereumAddress,
   getFormValue,
   opened,
@@ -18,64 +18,82 @@ const WorkHistory = ({
   saveProfile,
   setOpened,
   userLoaded,
-  workHistoryId,
+  educationHistoryId,
 }) => {
   return (
     <Fragment>
       <div>
-        <Button onClick={() => setOpened(!opened)}>Add another (work)</Button>
+        <Button onClick={() => setOpened(!opened)}>
+          Add another (education)
+        </Button>
       </div>
       <Modal visible={opened}>
-        <Text>Add Work History</Text>
+        <Text>Add Education History</Text>
         <SmallMargin />
         <FullWidthTextInput
-          value={getFormValue('workHistory', workHistoryId, 'employer')}
-          placeholder={'Employer'}
-          onChange={e =>
-            onChange(e.target.value, 'workHistory', workHistoryId, 'employer')
-          }
-          type="text"
-          size="normal"
-        />
-        <SmallMargin />
-        <FullWidthTextInput
-          value={getFormValue('workHistory', workHistoryId, 'jobTitle')}
-          placeholder={'Job Title'}
-          onChange={e =>
-            onChange(e.target.value, 'workHistory', workHistoryId, 'jobTitle')
-          }
-          type="text"
-          size="normal"
-        />
-        <SmallMargin />
-        <EditTextArea
-          value={getFormValue('workHistory', workHistoryId, 'description')}
-          placeholder={'Description'}
+          value={getFormValue(
+            'educationHistory',
+            educationHistoryId,
+            'organization'
+          )}
+          placeholder={'Organization'}
           onChange={e =>
             onChange(
               e.target.value,
-              'workHistory',
-              workHistoryId,
-              'description'
+              'educationHistory',
+              educationHistoryId,
+              'organization'
             )
           }
           type="text"
-          disabled={!userLoaded}
+          size="normal"
+        />
+        <SmallMargin />
+        <FullWidthTextInput
+          value={getFormValue('educationHistory', educationHistoryId, 'degree')}
+          placeholder={'Degree'}
+          onChange={e =>
+            onChange(
+              e.target.value,
+              'educationHistory',
+              educationHistoryId,
+              'degree'
+            )
+          }
+          type="text"
           size="normal"
         />
         <SmallMargin />
         <DatePicker
-          value={getFormValue('workHistory', workHistoryId, 'startDate')}
+          value={getFormValue(
+            'educationHistory',
+            educationHistoryId,
+            'startDate'
+          )}
           onChange={unixTime =>
-            onChange(unixTime, 'workHistory', workHistoryId, 'startDate')
+            onChange(
+              unixTime,
+              'educationHistory',
+              educationHistoryId,
+              'startDate'
+            )
           }
           label="Start date"
         />
         <SmallMargin />
         <DatePicker
-          value={getFormValue('workHistory', workHistoryId, 'endDate')}
+          value={getFormValue(
+            'educationHistory',
+            educationHistoryId,
+            'endDate'
+          )}
           onChange={unixTime =>
-            onChange(unixTime, 'workHistory', workHistoryId, 'endDate')
+            onChange(
+              unixTime,
+              'educationHistory',
+              educationHistoryId,
+              'endDate'
+            )
           }
           label="End date"
         />
@@ -91,7 +109,7 @@ const WorkHistory = ({
   )
 }
 
-WorkHistory.propTypes = {
+EducationHistory.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
   getFormValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -101,8 +119,8 @@ WorkHistory.propTypes = {
   userLoaded: PropTypes.bool.isRequired,
 }
 
-WorkHistory.defaultProps = {
-  workHistoryId: uuidv1(),
+EducationHistory.defaultProps = {
+  educationHistoryId: uuidv1(),
 }
 
-export default WorkHistory
+export default EducationHistory

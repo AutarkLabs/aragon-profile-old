@@ -10,6 +10,7 @@ import {
 } from '../../stateManagers/box'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
+import EducationHistoryModal from './EducationHistory'
 
 const ModalBase = ({ ethereumAddress, type }) => {
   const [opened, setOpened] = useState(false)
@@ -68,6 +69,18 @@ const ModalBase = ({ ethereumAddress, type }) => {
         userLoaded={userLoaded}
       />
     )
+  if (type === 'educationHistory')
+    return (
+      <EducationHistoryModal
+        ethereumAddress={ethereumAddress}
+        getFormValue={getFormValue}
+        onChange={onChange}
+        opened={opened}
+        saveProfile={saveProfile}
+        setOpened={setOpened}
+        userLoaded={userLoaded}
+      />
+    )
 }
 
 ModalBase.propTypes = {
@@ -81,4 +94,8 @@ export const BasicInformation = ({ ethereumAddress }) => (
 
 export const WorkHistory = ({ ethereumAddress }) => (
   <ModalBase type="workHistory" ethereumAddress={ethereumAddress} />
+)
+
+export const EducationHistory = ({ ethereumAddress }) => (
+  <ModalBase type="educationHistory" ethereumAddress={ethereumAddress} />
 )
