@@ -1,7 +1,16 @@
 import React, { Fragment, useState, useContext } from 'react'
-import { Modal, Button, Text, TextInput } from '@aragon/ui'
+import { Modal, Text } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import {
+  AlignRight,
+  EditIcon,
+  SmallMargin,
+  FlexDirectionRow,
+  FlexGrowTextInput,
+  FullWidthButton,
+  FullWidthTextInput,
+} from '../styled-components'
 
 import { BoxContext } from '../../wrappers/box'
 import {
@@ -11,8 +20,6 @@ import {
   saveProfileError,
 } from '../../stateManagers/box'
 import { EditTextArea } from '../readOrEditFields'
-
-import editImage from '../../assets/pencil-black-tool-interface-symbol.png'
 
 const BasicInformation = ({ ethereumAddress }) => {
   const [opened, setOpened] = useState(false)
@@ -56,7 +63,7 @@ const BasicInformation = ({ ethereumAddress }) => {
       <Modal visible={opened}>
         <Text>Edit Basic Information</Text>
         <SmallMargin />
-        <FlexDirectionRow>
+        <SpaceAround>
           <FlexGrowTextInput
             type={'text'}
             disabled={!userLoaded}
@@ -72,7 +79,7 @@ const BasicInformation = ({ ethereumAddress }) => {
             value={getFormValue('location')}
             placeholder={'Location'}
           />
-        </FlexDirectionRow>
+        </SpaceAround>
         <SmallMargin />
         <EditTextArea
           value={getFormValue('description')}
@@ -112,35 +119,6 @@ BasicInformation.propTypes = {
 
 export default BasicInformation
 
-const AlignRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  cursor: pointer;
-`
-
-const EditIcon = styled.img.attrs({ src: editImage })`
-  width: 25px;
-`
-
-const SmallMargin = styled.div`
-  margin-top: 10px;
-`
-
-const FlexDirectionRow = styled.div`
-  display: flex;
-  flex-direction: row;
+const SpaceAround = styled(FlexDirectionRow)`
   justify-content: space-around;
-`
-
-const FullWidthButton = styled(Button)`
-  width: 100%;
-`
-
-const FullWidthTextInput = styled(TextInput)`
-  width: 100%;
-`
-
-const FlexGrowTextInput = styled(TextInput)`
-  flex-grow: 1;
 `

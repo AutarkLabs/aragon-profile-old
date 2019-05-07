@@ -15,9 +15,13 @@ const TextField = ({ value, placeholder, size }) => (
 )
 
 TextField.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   size: PropTypes.string.isRequired,
+}
+
+TextField.defaultProps = {
+  value: '',
 }
 
 export default TextField

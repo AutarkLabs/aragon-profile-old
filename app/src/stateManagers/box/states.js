@@ -23,6 +23,8 @@ export const fetchingPublicProfile = () => ({
     school: '',
     website: '',
     description: '',
+    workHistory: {},
+    educationHistory: {},
   },
   changed: [],
   uploadingImage: false,
@@ -37,7 +39,7 @@ export const fetchedPublicProfileSuccess = (state, publicProfile) => {
     loadedPublicProf: true,
     loadedPublicProfSuccess: true,
     publicProfile,
-    forms: { ...publicProfile },
+    forms: { ...publicProfile, ...state.forms },
     changed: [],
   }
 }
@@ -87,13 +89,20 @@ const calculateChanged = (changed, field) => {
   return changed
 }
 
-export const editedField = (state, field, value) => {
+export const editedField = (state, field, value, uniqueId, nestedField) => {
+  const newFormVals = { ...state.forms }
+  if (!uniqueId) newFormVals[field] = value
+  else {
+    const newNestedField = {
+      ...newFormVals[field][uniqueId],
+      [nestedField]: value,
+    }
+    newFormVals[field][uniqueId] = newNestedField
+  }
+
   return {
     ...state,
-    forms: {
-      ...state.forms,
-      [field]: value,
-    },
+    newFormVals,
     changed: calculateChanged(state.changed, field),
   }
 }

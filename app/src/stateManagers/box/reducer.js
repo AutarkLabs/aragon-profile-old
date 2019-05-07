@@ -107,12 +107,14 @@ const boxReducer = (prevState, action) => {
     case EDIT_FIELD: {
       const nextState = { ...prevState }
       const ethereumAddress = action.meta.ethereumAddress
-      const field = action.meta.field
+      const { field, uniqueId, nestedField } = action.meta
       const value = action.payload.value
       nextState[ethereumAddress] = editedField(
         prevState[ethereumAddress],
         field,
-        value
+        value,
+        uniqueId,
+        nestedField
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

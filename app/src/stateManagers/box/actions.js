@@ -73,11 +73,20 @@ export const requestProfileEdit = ethereumAddress => ({
   },
 })
 
-export const editField = (ethereumAddress, field, value) => ({
+// uniqueId is used only when a field is nested (like workHistory and educationHistory)
+export const editField = (
+  ethereumAddress,
+  field,
+  value,
+  uniqueId,
+  nestedField
+) => ({
   type: EDIT_FIELD,
   meta: {
     ethereumAddress,
     field,
+    uniqueId,
+    nestedField,
   },
   payload: {
     value,

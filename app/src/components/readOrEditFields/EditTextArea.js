@@ -3,14 +3,7 @@ import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import { font, theme } from '@aragon/ui'
 
-const EditTextArea = ({
-  type,
-  disabled,
-  onChange,
-  value,
-  placeholder,
-  size,
-}) => (
+const EditTextArea = ({ type, disabled, onChange, value, placeholder }) => (
   <TextArea
     type={type}
     disabled={disabled}
