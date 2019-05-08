@@ -14,8 +14,6 @@ const EducationPanel = ({ ethereumAddress }) => {
 
   const userLoaded = !!boxes[ethereumAddress]
 
-  console.log('what is there: ', boxes[ethereumAddress])
-
   return (
     <CardWrapper title="Education" addMore={addMore}>
       <Text>education</Text>
