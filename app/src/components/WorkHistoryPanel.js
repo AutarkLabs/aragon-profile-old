@@ -15,34 +15,32 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
     ? boxes[ethereumAddress].publicProfile.workHistory
     : {}
 
-  const showHistory = workHistory ? (
-    Object.keys(workHistory).map(id => (
-      <Fragment key={id}>
-        <WorkHistoryTile
-          id={id}
-          description={workHistory[id].description}
-          employer={workHistory[id].employer}
-          endDate={workHistory[id].endDate}
-          ethereumAddress={ethereumAddress}
-          jobTitle={workHistory[id].jobTitle}
-          openModal={() =>
-            dispatch(openModal(ethereumAddress, 'workHistory', id))
-          }
-          startDate={workHistory[id].startDate}
-        />
-        <SmallMargin />
-      </Fragment>
-    ))
-  ) : (
-    <div style={{ textAlign: 'center' }}>No work history</div>
-  )
-
   return (
     <CardWrapper
       title="Work history"
       addMore={() => dispatch(openModal(ethereumAddress, 'workHistory'))}
     >
-      {showHistory}
+      {workHistory ? (
+        Object.keys(workHistory).map(id => (
+          <Fragment key={id}>
+            <WorkHistoryTile
+              id={id}
+              description={workHistory[id].description}
+              employer={workHistory[id].employer}
+              endDate={workHistory[id].endDate}
+              ethereumAddress={ethereumAddress}
+              jobTitle={workHistory[id].jobTitle}
+              openModal={() =>
+                dispatch(openModal(ethereumAddress, 'workHistory', id))
+              }
+              startDate={workHistory[id].startDate}
+            />
+            <SmallMargin />
+          </Fragment>
+        ))
+      ) : (
+        <div style={{ textAlign: 'center' }}>No work history</div>
+      )}
     </CardWrapper>
   )
 }

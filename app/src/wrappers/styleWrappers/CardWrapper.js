@@ -18,12 +18,12 @@ const CardWrapper = ({ children, title, addMore }) => (
         Add more
       </Text>
     )}
-    <Card width="100%">{children}</Card>
+    <Card width="100%">{children && children}</Card>
   </div>
 )
 
 CardWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   title: PropTypes.string,
   addMore: PropTypes.func,
 }
