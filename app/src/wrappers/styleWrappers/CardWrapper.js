@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { Card, Text } from '@aragon/ui'
 
 const CardWrapper = ({ children, title, addMore }) => (
-  <div style={{ width: '100% ' }}>
+  <div style={{ width: '100%' }}>
     {title && (
-      <Text style={{ padding: '0.5rem 0' }} size="large">
+      <Text style={{ padding: '0.5rem 0' }} size="xlarge">
         {title}
       </Text>
     )}
@@ -18,12 +18,12 @@ const CardWrapper = ({ children, title, addMore }) => (
         Add more
       </Text>
     )}
-    <Card width="100%">{children}</Card>
+    <Card width="100%">{children && children}</Card>
   </div>
 )
 
 CardWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   title: PropTypes.string,
   addMore: PropTypes.func,
 }

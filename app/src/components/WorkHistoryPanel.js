@@ -20,8 +20,8 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
       title="Work history"
       addMore={() => dispatch(openModal(ethereumAddress, 'workHistory'))}
     >
-      {Object.keys(workHistory).map(id => {
-        return (
+      {workHistory ? (
+        Object.keys(workHistory).map(id => (
           <Fragment key={id}>
             <WorkHistoryTile
               id={id}
@@ -37,8 +37,10 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
             />
             <SmallMargin />
           </Fragment>
-        )
-      })}
+        ))
+      ) : (
+        <div style={{ textAlign: 'center' }}>No work history</div>
+      )}
     </CardWrapper>
   )
 }

@@ -79,10 +79,11 @@ const AlignItemsCenter = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 3rem;
 `
 
 const SmallMargin = styled.div`
-  margin-top: 10px;
+  margin-top: 0.6rem;
 `
 
 export default InformationCard

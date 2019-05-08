@@ -20,8 +20,8 @@ const EducationPanel = ({ ethereumAddress }) => {
       title="Education"
       addMore={() => dispatch(openModal(ethereumAddress, 'educationHistory'))}
     >
-      {Object.keys(educationHistory).map(id => {
-        return (
+      {educationHistory ? (
+        Object.keys(educationHistory).map(id => (
           <Fragment key={id}>
             <EducationHistoryTile
               degree={educationHistory[id].degree}
@@ -34,8 +34,10 @@ const EducationPanel = ({ ethereumAddress }) => {
             />
             <SmallMargin />
           </Fragment>
-        )
-      })}
+        ))
+      ) : (
+        <div style={{ textAlign: 'center' }}>No education</div>
+      )}
     </CardWrapper>
   )
 }

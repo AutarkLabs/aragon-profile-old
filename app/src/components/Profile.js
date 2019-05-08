@@ -14,7 +14,7 @@ const Profile = ({ ethereumAddress }) => {
       <CoverImage />
       <Viewport>
         {({ below }) =>
-          below('small') ? (
+          below(640) ? (
             <SingleColumn>
               <InformationPanel ethereumAddress={ethereumAddress} />
               <OrganizationPanel />
@@ -45,32 +45,34 @@ Profile.propTypes = {
 
 const CoverImage = styled.div`
   width: 100%;
-  height: 150px;
+  height: 12rem;
   background-image: url('https://cdn2.spacedecentral.net/assets/stars-551011e393a28d383a3f188ea38c595c9721561d3cf733bd63ce976616c0b0cd.jpg');
 `
 const LeftColumn = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 320px;
+  width: 100%;
+  max-width: 25rem;
 
-  margin: 10px;
+  margin: 1rem;
   > * {
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
   }
 `
 const RightColumn = styled(LeftColumn)`
   width: 100%;
-  max-width: 600px;
+  max-width: 46rem;
 `
 const SingleColumn = styled(RightColumn)`
-  margin: 0;
-  padding: 10px;
+  width: auto;
+  padding: 0 1rem;
   background-color: #ffffff;
+  align-content: stretch;
 `
 const DoubleColumn = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 0 2rem;
 `
 
 export default Profile
