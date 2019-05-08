@@ -1,4 +1,5 @@
 import { image } from '../../../modules/things'
+import { reformatNestedFields } from '../../utils'
 
 export const initialState = {}
 
@@ -32,7 +33,8 @@ export const fetchingPublicProfile = () => ({
   uploadedImage: false,
 })
 
-export const fetchedPublicProfileSuccess = (state, publicProfile) => {
+export const fetchedPublicProfileSuccess = (state, profile) => {
+  const publicProfile = reformatNestedFields(profile)
   return {
     ...state,
     loadingPublicProf: false,

@@ -118,7 +118,7 @@ export const uploadedImageFailure = (ethereumAddress, error) => ({
   error,
 })
 
-export const savingProfile = (ethereumAddress, profile) => ({
+export const savingProfile = ethereumAddress => ({
   type: REQUESTED_PROFILE_SAVE,
   meta: {
     ethereumAddress,

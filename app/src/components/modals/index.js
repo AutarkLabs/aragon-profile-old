@@ -36,7 +36,14 @@ const ModalBase = ({ ethereumAddress, type }) => {
 
     try {
       const { changed, forms, unlockedBox } = boxes[connectedAccount]
-      const changedValues = changed.map(field => forms[field])
+      const calculateChanged = field => {
+        if (field === 'workHistory' || field === 'educationHistory') {
+          return Object.keys(forms[field]).map(id => forms[field][id])
+        }
+        return forms[field]
+      }
+
+      const changedValues = changed.map(calculateChanged)
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(connectedAccount, forms))
       setOpened(false)
