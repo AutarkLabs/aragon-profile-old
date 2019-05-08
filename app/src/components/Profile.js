@@ -18,18 +18,18 @@ const Profile = ({ ethereumAddress }) => {
             <SingleColumn>
               <InformationPanel ethereumAddress={ethereumAddress} />
               <OrganizationPanel />
-              <WorkHistoryPanel />
-              <EducationPanel />
+              <WorkHistoryPanel ethereumAddress={ethereumAddress} />
+              <EducationPanel ethereumAddress={ethereumAddress} />
             </SingleColumn>
           ) : (
             <DoubleColumn>
               <LeftColumn>
                 <InformationPanel ethereumAddress={ethereumAddress} />
-                <EducationPanel />
+                <EducationPanel ethereumAddress={ethereumAddress} />
               </LeftColumn>
               <RightColumn>
                 <OrganizationPanel />
-                <WorkHistoryPanel />
+                <WorkHistoryPanel ethereumAddress={ethereumAddress} />
               </RightColumn>
             </DoubleColumn>
           )
