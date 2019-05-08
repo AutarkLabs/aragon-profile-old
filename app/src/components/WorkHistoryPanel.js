@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Text } from '@aragon/ui'
-import CardWrapper from './CardWrapper'
+import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
 import { BoxContext } from '../wrappers/box'
 import { BasicInformation } from './modals'
