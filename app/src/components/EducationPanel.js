@@ -15,27 +15,31 @@ const EducationPanel = ({ ethereumAddress }) => {
     ? boxes[ethereumAddress].publicProfile.educationHistory
     : {}
 
+  const showEducation = educationHistory ? (
+    Object.keys(educationHistory).map(id => (
+      <Fragment key={id}>
+        <EducationHistoryTile
+          degree={educationHistory[id].degree}
+          organization={educationHistory[id].organization}
+          endDate={educationHistory[id].endDate}
+          openModal={() =>
+            dispatch(openModal(ethereumAddress, 'educationHistory', id))
+          }
+          startDate={educationHistory[id].startDate}
+        />
+        <SmallMargin />
+      </Fragment>
+    ))
+  ) : (
+    <div style={{ textAlign: 'center' }}>No education</div>
+  )
+
   return (
     <CardWrapper
       title="Education"
       addMore={() => dispatch(openModal(ethereumAddress, 'educationHistory'))}
     >
-      {Object.keys(educationHistory).map(id => {
-        return (
-          <Fragment key={id}>
-            <EducationHistoryTile
-              degree={educationHistory[id].degree}
-              organization={educationHistory[id].organization}
-              endDate={educationHistory[id].endDate}
-              openModal={() =>
-                dispatch(openModal(ethereumAddress, 'educationHistory', id))
-              }
-              startDate={educationHistory[id].startDate}
-            />
-            <SmallMargin />
-          </Fragment>
-        )
-      })}
+      {showEducation}
     </CardWrapper>
   )
 }
