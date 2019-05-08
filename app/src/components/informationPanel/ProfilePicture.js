@@ -124,40 +124,41 @@ const getBorderStyle = props => {
 
 const Container = styled.div`
   cursor: ${props => props.isEditing && 'pointer'};
-  padding: 20px;
-  border-width: 2px;
+  padding: 1.2rem;
+  border-width: 0.15rem;
   /*border-color: ${props => getBorderColor(props)};*/
-  border-color: red;
+  border-color: #F2F2F2;
   border-style: ${props => getBorderStyle(props)};
+  background-color: white;
   background-image: ${props => getBackground(props)};
-  background-size: 150px 150px;
+  background-size: 11.5rem 11.5rem;
   transition: border 0.24s ease-in-out;
   border-radius: 50%;
-  width: 150px;
-  height: 150px;
+  width: 11.5rem;
+  height: 11.5rem;
   position: absolute;
-  top: 50px;
-  left: 50px;
+  top: 4rem;
+  left: 4rem;
   z-index: 4;
 `
 
 const TransparentEditOverlay = styled.div`
-  width: 146px;
-  height: 146px;
+  width: 11.2rem;
+  height: 11.2rem;
   cursor: pointer;
   background-color: white;
   position: absolute;
   opacity: 0.5;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   border-radius: 50%;
 `
 
 const EditIcon = styled.img.attrs({ src: editImage })`
-  width: 25px;
+  width: 1.9rem;
   position: absolute;
-  right: 15px;
-  top: 5px;
+  right: 1.1rem;
+  top: 0.4rem;
 `
 
 export default ProfilePicture
