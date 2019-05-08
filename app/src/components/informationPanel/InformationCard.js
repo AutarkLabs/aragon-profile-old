@@ -18,8 +18,6 @@ const InformationCard = ({ ethereumAddress }) => {
     return boxes[ethereumAddress].publicProfile[field] || ''
   }
 
-  console.log('what is there: ', boxes[ethereumAddress])
-
   return (
     <CardWrapper>
       <BasicInformation ethereumAddress={ethereumAddress} />
