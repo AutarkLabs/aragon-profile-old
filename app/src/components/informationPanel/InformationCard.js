@@ -5,11 +5,12 @@ import styled from 'styled-components'
 import CardWrapper from '../../wrappers/styleWrappers/CardWrapper'
 
 import { BoxContext } from '../../wrappers/box'
+import { openModal } from '../../stateManagers/box'
 import { TextField, SafeLink } from '../readOrEditFields'
-import { BasicInformation } from '../modals'
+import { EditIcon, AlignRight } from '../styled-components'
 
 const InformationCard = ({ ethereumAddress }) => {
-  const { boxes } = useContext(BoxContext)
+  const { boxes, dispatch } = useContext(BoxContext)
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -20,7 +21,13 @@ const InformationCard = ({ ethereumAddress }) => {
 
   return (
     <CardWrapper>
-      <BasicInformation ethereumAddress={ethereumAddress} />
+      <AlignRight
+        tabindex="0"
+        role="button"
+        onClick={() => dispatch(openModal(ethereumAddress, 'basicInformation'))}
+      >
+        <EditIcon />
+      </AlignRight>
       <AlignItemsCenter>
         <TextField
           value={getValue('name')}

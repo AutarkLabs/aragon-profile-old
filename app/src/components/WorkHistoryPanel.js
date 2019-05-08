@@ -1,21 +1,44 @@
 import React, { Fragment, useContext } from 'react'
-import PropTypes from 'prop-types'
-import { Text } from '@aragon/ui'
-import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
 import { BoxContext } from '../wrappers/box'
-import { BasicInformation } from './modals'
+import WorkHistoryTile from './WorkHistoryTile'
+import { SmallMargin } from './styled-components'
+import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
-const addMore = () => console.log('add more work')
+import { openModal } from '../stateManagers/box'
 
 const WorkHistoryPanel = ({ ethereumAddress }) => {
-  const { boxes } = useContext(BoxContext)
-
+  const { boxes, dispatch } = useContext(BoxContext)
   const userLoaded = !!boxes[ethereumAddress]
 
+  const workHistory = userLoaded
+    ? boxes[ethereumAddress].publicProfile.workHistory
+    : {}
+
   return (
-    <CardWrapper title="Work History" addMore={addMore}>
-      <Text>worked</Text>
+    <CardWrapper
+      title="Work history"
+      addMore={() => dispatch(openModal(ethereumAddress, 'workHistory'))}
+    >
+      {Object.keys(workHistory).map(id => {
+        return (
+          <Fragment key={id}>
+            <WorkHistoryTile
+              id={id}
+              description={workHistory[id].description}
+              employer={workHistory[id].employer}
+              endDate={workHistory[id].endDate}
+              ethereumAddress={ethereumAddress}
+              jobTitle={workHistory[id].jobTitle}
+              openModal={() =>
+                dispatch(openModal(ethereumAddress, 'workHistory', id))
+              }
+              startDate={workHistory[id].startDate}
+            />
+            <SmallMargin />
+          </Fragment>
+        )
+      })}
     </CardWrapper>
   )
 }
