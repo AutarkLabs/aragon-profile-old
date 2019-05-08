@@ -69,13 +69,13 @@ const UserInfoModal = ({ ethereumAddress }) => {
       {userLoaded &&
         boxes[ethereumAddress].openedModal.type === 'educationHistory' && (
           <EducationHistoryModal
+            educationHistoryId={boxes[ethereumAddress].openedModal.id}
             ethereumAddress={ethereumAddress}
             getFormValue={getFormValue}
             onChange={onChange}
             saveProfile={saveProfile}
           />
         )}
-
       {userLoaded &&
         boxes[ethereumAddress].openedModal.type === 'workHistory' && (
           <WorkHistoryModal
@@ -83,6 +83,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
             getFormValue={getFormValue}
             onChange={onChange}
             saveProfile={saveProfile}
+            workHistoryId={boxes[ethereumAddress].openedModal.id}
           />
         )}
       <FullWidthButton onClick={() => dispatch(closeModal(ethereumAddress))}>

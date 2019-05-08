@@ -30,6 +30,9 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
               endDate={workHistory[id].endDate}
               ethereumAddress={ethereumAddress}
               jobTitle={workHistory[id].jobTitle}
+              openModal={() =>
+                dispatch(openModal(ethereumAddress, 'workHistory', id))
+              }
               startDate={workHistory[id].startDate}
             />
             <SmallMargin />

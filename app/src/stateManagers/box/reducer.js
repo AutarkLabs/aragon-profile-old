@@ -185,7 +185,8 @@ const boxReducer = (prevState, action) => {
       const ethereumAddress = action.meta.ethereumAddress
       nextState[ethereumAddress] = openedModal(
         prevState[ethereumAddress],
-        action.meta.type
+        action.meta.type,
+        action.meta.id
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

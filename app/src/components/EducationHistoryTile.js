@@ -5,11 +5,10 @@ import { Text, Card } from '@aragon/ui'
 import { SmallMargin, EditIcon, AlignRight } from './styled-components'
 import { unixToCalendar } from '../utils'
 
-const WorkHistoryTile = ({
-  description,
-  employer,
+const EducationHistoryTile = ({
+  degree,
+  organization,
   endDate,
-  jobTitle,
   openModal,
   startDate,
 }) => {
@@ -19,27 +18,24 @@ const WorkHistoryTile = ({
         <AlignRight tabindex="0" role="button" onClick={() => openModal()}>
           <EditIcon />
         </AlignRight>
-        <Text size="large">{employer}</Text>
+        <Text size="large">{organization}</Text>
         <SmallMargin />
-        <Text size="normal">{jobTitle}</Text>
+        <Text size="normal">{degree}</Text>
         <SmallMargin />
         <Text size="small" color="grey">{`${unixToCalendar(
           startDate
         )} --- ${unixToCalendar(endDate)}`}</Text>
-        <SmallMargin />
-        <Text size="normal">{description}</Text>
       </Card>
     </div>
   )
 }
 
-WorkHistoryTile.propTypes = {
-  employer: PropTypes.string.isRequired,
-  jobTitle: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+EducationHistoryTile.propTypes = {
+  degree: PropTypes.string.isRequired,
+  organization: PropTypes.string.isRequired,
   startDate: PropTypes.number.isRequired,
   endDate: PropTypes.number.isRequired,
   openModal: PropTypes.func.isRequired,
 }
 
-export default WorkHistoryTile
+export default EducationHistoryTile
