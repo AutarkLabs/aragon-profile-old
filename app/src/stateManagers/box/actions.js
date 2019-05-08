@@ -13,6 +13,8 @@ import {
   REQUESTED_PROFILE_SAVE,
   REQUESTED_PROFILE_SAVE_SUCCESS,
   REQUESTED_PROFILE_SAVE_ERROR,
+  OPENED_MODAL,
+  CLOSED_MODAL,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -141,4 +143,17 @@ export const saveProfileError = (ethereumAddress, error) => ({
     ethereumAddress,
   },
   error,
+})
+
+export const openModal = (ethereumAddress, type) => ({
+  type: OPENED_MODAL,
+  meta: {
+    ethereumAddress,
+    type,
+  },
+})
+
+export const closeModal = ethereumAddress => ({
+  type: CLOSED_MODAL,
+  meta: { ethereumAddress },
 })

@@ -1,5 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
+import { Modal } from '@aragon/ui'
 
 import { BoxContext } from '../../wrappers/box'
 import {
@@ -7,13 +8,14 @@ import {
   savingProfile,
   savedProfile,
   saveProfileError,
+  closeModal,
 } from '../../stateManagers/box'
+import { FullWidthButton } from '../styled-components'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
 
-const ModalBase = ({ ethereumAddress, type }) => {
-  const [opened, setOpened] = useState(false)
+const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
 
   const userLoaded = !!boxes[ethereumAddress]
@@ -31,11 +33,11 @@ const ModalBase = ({ ethereumAddress, type }) => {
     )
   }
 
-  const saveProfile = async connectedAccount => {
-    dispatch(savingProfile(connectedAccount))
+  const saveProfile = async ethereumAddress => {
+    dispatch(savingProfile(ethereumAddress))
 
     try {
-      const { changed, forms, unlockedBox } = boxes[connectedAccount]
+      const { changed, forms, unlockedBox } = boxes[ethereumAddress]
       const calculateChanged = field => {
         if (field === 'workHistory' || field === 'educationHistory') {
           return Object.keys(forms[field]).map(id => forms[field][id])
@@ -45,64 +47,52 @@ const ModalBase = ({ ethereumAddress, type }) => {
 
       const changedValues = changed.map(calculateChanged)
       await unlockedBox.setPublicFields(changed, changedValues)
-      dispatch(savedProfile(connectedAccount, forms))
-      setOpened(false)
+      dispatch(savedProfile(ethereumAddress, forms))
+      dispatch(closeModal(ethereumAddress))
     } catch (error) {
-      dispatch(saveProfileError(connectedAccount, error))
+      dispatch(saveProfileError(ethereumAddress, error))
     }
   }
 
-  if (type === 'workHistory')
-    return (
-      <WorkHistoryModal
-        ethereumAddress={ethereumAddress}
-        getFormValue={getFormValue}
-        onChange={onChange}
-        opened={opened}
-        saveProfile={saveProfile}
-        setOpened={setOpened}
-        userLoaded={userLoaded}
-      />
-    )
-  if (type === 'basicInformation')
-    return (
-      <BasicInformationModal
-        ethereumAddress={ethereumAddress}
-        getFormValue={getFormValue}
-        onChange={onChange}
-        opened={opened}
-        saveProfile={saveProfile}
-        setOpened={setOpened}
-        userLoaded={userLoaded}
-      />
-    )
-  if (type === 'educationHistory')
-    return (
-      <EducationHistoryModal
-        ethereumAddress={ethereumAddress}
-        getFormValue={getFormValue}
-        onChange={onChange}
-        opened={opened}
-        saveProfile={saveProfile}
-        setOpened={setOpened}
-        userLoaded={userLoaded}
-      />
-    )
+  return (
+    <Modal visible={userLoaded && !!boxes[ethereumAddress].openedModal}>
+      {userLoaded &&
+        boxes[ethereumAddress].openedModal === 'basicInformation' && (
+          <BasicInformationModal
+            ethereumAddress={ethereumAddress}
+            getFormValue={getFormValue}
+            onChange={onChange}
+            saveProfile={saveProfile}
+          />
+        )}
+
+      {userLoaded &&
+        boxes[ethereumAddress].openedModal === 'educationHistory' && (
+          <EducationHistoryModal
+            ethereumAddress={ethereumAddress}
+            getFormValue={getFormValue}
+            onChange={onChange}
+            saveProfile={saveProfile}
+          />
+        )}
+
+      {userLoaded && boxes[ethereumAddress].openedModal === 'workHistory' && (
+        <WorkHistoryModal
+          ethereumAddress={ethereumAddress}
+          getFormValue={getFormValue}
+          onChange={onChange}
+          saveProfile={saveProfile}
+        />
+      )}
+      <FullWidthButton onClick={() => dispatch(closeModal(ethereumAddress))}>
+        Close modal
+      </FullWidthButton>
+    </Modal>
+  )
 }
 
-ModalBase.propTypes = {
+export default UserInfoModal
+
+UserInfoModal.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
 }
-
-export const BasicInformation = ({ ethereumAddress }) => (
-  <ModalBase type="basicInformation" ethereumAddress={ethereumAddress} />
-)
-
-export const WorkHistory = ({ ethereumAddress }) => (
-  <ModalBase type="workHistory" ethereumAddress={ethereumAddress} />
-)
-
-export const EducationHistory = ({ ethereumAddress }) => (
-  <ModalBase type="educationHistory" ethereumAddress={ethereumAddress} />
-)

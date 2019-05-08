@@ -1,24 +1,27 @@
-import React, { Fragment, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Text } from '@aragon/ui'
 import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
 import { BoxContext } from '../wrappers/box'
 
-import { BasicInformation } from './modals'
-
-const addMore = () => console.log('add more education')
+import { openModal } from '../stateManagers/box'
 
 const EducationPanel = ({ ethereumAddress }) => {
-  const { boxes } = useContext(BoxContext)
-
-  const userLoaded = !!boxes[ethereumAddress]
+  const { dispatch } = useContext(BoxContext)
 
   return (
-    <CardWrapper title="Education" addMore={addMore}>
+    <CardWrapper
+      title="Education"
+      addMore={() => dispatch(openModal(ethereumAddress, 'educationHistory'))}
+    >
       <Text>education</Text>
     </CardWrapper>
   )
+}
+
+EducationPanel.propTypes = {
+  ethereumAddress: PropTypes.string.isRequired,
 }
 
 export default EducationPanel

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { useAragonApi } from '@aragon/api-react'
 import { AppView, AppBar } from '@aragon/ui'
 
 import AuthButton from '../../components/AuthButton'
+import UserInfoModal from '../../components/modals'
 
 const AppContainer = ({ children }) => {
   const { connectedAccount } = useAragonApi()
@@ -17,7 +18,10 @@ const AppContainer = ({ children }) => {
       }
       padding={0}
     >
-      {children}
+      <Fragment>
+        <UserInfoModal ethereumAddress={connectedAccount} />
+        {children}
+      </Fragment>
     </AppView>
   )
 }

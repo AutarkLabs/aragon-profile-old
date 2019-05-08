@@ -16,7 +16,7 @@ const WorkHistoryTile = ({
 }) => {
   return (
     <div>
-      <Card width="700px" height="100%">
+      <Card height="100%">
         <Text size="large">{employer}</Text>
         <SmallMargin />
         <Text size="normal">{jobTitle}</Text>
