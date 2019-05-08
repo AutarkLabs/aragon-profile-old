@@ -145,11 +145,12 @@ export const saveProfileError = (ethereumAddress, error) => ({
   error,
 })
 
-export const openModal = (ethereumAddress, type) => ({
+export const openModal = (ethereumAddress, type, id) => ({
   type: OPENED_MODAL,
   meta: {
     ethereumAddress,
     type,
+    id,
   },
 })
 

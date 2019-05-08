@@ -55,9 +55,9 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   return (
-    <Modal visible={userLoaded && !!boxes[ethereumAddress].openedModal}>
+    <Modal visible={userLoaded && !!boxes[ethereumAddress].openedModal.type}>
       {userLoaded &&
-        boxes[ethereumAddress].openedModal === 'basicInformation' && (
+        boxes[ethereumAddress].openedModal.type === 'basicInformation' && (
           <BasicInformationModal
             ethereumAddress={ethereumAddress}
             getFormValue={getFormValue}
@@ -67,7 +67,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
         )}
 
       {userLoaded &&
-        boxes[ethereumAddress].openedModal === 'educationHistory' && (
+        boxes[ethereumAddress].openedModal.type === 'educationHistory' && (
           <EducationHistoryModal
             ethereumAddress={ethereumAddress}
             getFormValue={getFormValue}
@@ -76,14 +76,15 @@ const UserInfoModal = ({ ethereumAddress }) => {
           />
         )}
 
-      {userLoaded && boxes[ethereumAddress].openedModal === 'workHistory' && (
-        <WorkHistoryModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-        />
-      )}
+      {userLoaded &&
+        boxes[ethereumAddress].openedModal.type === 'workHistory' && (
+          <WorkHistoryModal
+            ethereumAddress={ethereumAddress}
+            getFormValue={getFormValue}
+            onChange={onChange}
+            saveProfile={saveProfile}
+          />
+        )}
       <FullWidthButton onClick={() => dispatch(closeModal(ethereumAddress))}>
         Close modal
       </FullWidthButton>
