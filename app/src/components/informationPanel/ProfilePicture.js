@@ -126,7 +126,8 @@ const Container = styled.div`
   cursor: ${props => props.isEditing && 'pointer'};
   padding: 20px;
   border-width: 2px;
-  border-color: ${props => getBorderColor(props)};
+  /*border-color: ${props => getBorderColor(props)};*/
+  border-color: red;
   border-style: ${props => getBorderStyle(props)};
   background-image: ${props => getBackground(props)};
   background-size: 150px 150px;
@@ -134,8 +135,10 @@ const Container = styled.div`
   border-radius: 50%;
   width: 150px;
   height: 150px;
-  position: relative;
-  top: 30px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  z-index: 4;
 `
 
 const TransparentEditOverlay = styled.div`
