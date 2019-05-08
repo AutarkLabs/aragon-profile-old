@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Card, Text } from '@aragon/ui'
-import CardWrapper from './CardWrapper'
+import { Text } from '@aragon/ui'
+import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
 const addMore = () => console.log('add more orgs')
 

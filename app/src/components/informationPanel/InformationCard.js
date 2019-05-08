@@ -1,8 +1,8 @@
-import React, { Fragment, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import CardWrapper from '../CardWrapper'
+import CardWrapper from '../../wrappers/styleWrappers/CardWrapper'
 
 import { BoxContext } from '../../wrappers/box'
 import { TextField, SafeLink } from '../readOrEditFields'
