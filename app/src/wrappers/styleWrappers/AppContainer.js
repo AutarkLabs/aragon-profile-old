@@ -15,6 +15,7 @@ const AppContainer = ({ children }) => {
           endContent={<AuthButton connectedAccount={connectedAccount} />}
         />
       }
+      padding={0}
     >
       {children}
     </AppView>

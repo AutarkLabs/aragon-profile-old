@@ -1,34 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Card, Text } from '@aragon/ui'
+import CardWrapper from './CardWrapper'
+
+const addMore = () => console.log('add more orgs')
 
 const OrganizationPanel = () => {
   return (
-    <Spacing>
-      <Card width="700px" height="200px">
-        <TitleSpace />
-        <Title size="xlarge">Organizations</Title>
-        <br />
-        <Center>
-          <Text color="grey">Coming Soon</Text>
-        </Center>
-      </Card>
-    </Spacing>
+    <CardWrapper title="Organisations" addMore={addMore}>
+      <Center>
+        <Text color="grey">Coming Soon</Text>
+      </Center>
+    </CardWrapper>
   )
 }
-
-const Spacing = styled.div`
-  margin-top: 170px;
-  padding-right: 90px;
-`
-
-const Title = styled(Text)`
-  margin-left: 20px;
-`
-
-const TitleSpace = styled.div`
-  height: 10px;
-`
 
 const Center = styled.div`
   display: flex;

@@ -7,7 +7,8 @@
     "@aragon/apps-token-manager": "2.0.0",
     "@aragon/apps-voting": "2.0.0",
     "@aragon/os": "^4.0.1",
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "orbit-db": "^0.20.1"
   },
   "devDependencies": {
     "@aragon/cli": "5.6.1",
