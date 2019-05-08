@@ -23,7 +23,7 @@ const CardWrapper = ({ children, title, addMore }) => (
 )
 
 CardWrapper.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.node.isRequired,
   title: PropTypes.string,
   addMore: PropTypes.func,
 }
