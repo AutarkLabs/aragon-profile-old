@@ -3,22 +3,26 @@ import PropTypes from 'prop-types'
 import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
 import { BoxContext } from '../wrappers/box'
+import { ModalContext } from '../wrappers/modal'
 import { SmallMargin } from './styled-components'
 import EducationHistoryTile from './EducationHistoryTile'
-import { openModal } from '../stateManagers/box'
+import { open } from '../stateManagers/modal'
 
 const EducationPanel = ({ ethereumAddress }) => {
-  const { boxes, dispatch } = useContext(BoxContext)
+  const { boxes } = useContext(BoxContext)
+  const { dispatchModal } = useContext(ModalContext)
   const userLoaded = !!boxes[ethereumAddress]
 
   const educationHistory = userLoaded
     ? boxes[ethereumAddress].publicProfile.educationHistory
     : {}
 
+  console.log(educationHistory)
+
   return (
     <CardWrapper
       title="Education"
-      addMore={() => dispatch(openModal(ethereumAddress, 'educationHistory'))}
+      addMore={() => dispatchModal(open('educationHistory'))}
     >
       {educationHistory ? (
         Object.keys(educationHistory).map(id => (
@@ -27,9 +31,7 @@ const EducationPanel = ({ ethereumAddress }) => {
               degree={educationHistory[id].degree}
               organization={educationHistory[id].organization}
               endDate={educationHistory[id].endDate}
-              openModal={() =>
-                dispatch(openModal(ethereumAddress, 'educationHistory', id))
-              }
+              openModal={() => dispatchModal(open('educationHistory', id))}
               startDate={educationHistory[id].startDate}
             />
             <SmallMargin />

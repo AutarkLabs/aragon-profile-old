@@ -17,6 +17,7 @@ const EducationHistory = ({
   saveProfile,
   educationHistoryId,
 }) => {
+  console.log('id', educationHistoryId)
   return (
     <Fragment>
       <Text>Add Education History</Text>

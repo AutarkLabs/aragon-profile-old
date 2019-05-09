@@ -7,19 +7,22 @@ import { BoxWrapper } from './wrappers/box'
 import AppContainer from './wrappers/styleWrappers/AppContainer'
 import LoadAndErrorWrapper from './wrappers/loadAndErrorWrapper'
 import Profile from './components/Profile'
+import { ModalWrapper } from './wrappers/modal'
 
 function App() {
   const { connectedAccount } = useAragonApi()
   return (
     <Main>
       <BoxWrapper>
-        <AppContainer>
-          <BaseLayout>
-            <LoadAndErrorWrapper ethereumAddress={connectedAccount}>
-              <Profile ethereumAddress={connectedAccount} />
-            </LoadAndErrorWrapper>
-          </BaseLayout>
-        </AppContainer>
+        <ModalWrapper ethereumAddress={connectedAccount}>
+          <AppContainer>
+            <BaseLayout>
+              <LoadAndErrorWrapper ethereumAddress={connectedAccount}>
+                <Profile ethereumAddress={connectedAccount} />
+              </LoadAndErrorWrapper>
+            </BaseLayout>
+          </AppContainer>
+        </ModalWrapper>
       </BoxWrapper>
     </Main>
   )

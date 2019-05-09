@@ -1,14 +1,18 @@
 import React, { Fragment, useContext } from 'react'
 
 import { BoxContext } from '../wrappers/box'
+import { ModalContext } from '../wrappers/modal'
+
 import WorkHistoryTile from './WorkHistoryTile'
 import { SmallMargin } from './styled-components'
 import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 
-import { openModal } from '../stateManagers/box'
+import { open } from '../stateManagers/modal'
 
 const WorkHistoryPanel = ({ ethereumAddress }) => {
-  const { boxes, dispatch } = useContext(BoxContext)
+  const { boxes } = useContext(BoxContext)
+  const { dispatchModal } = useContext(ModalContext)
+
   const userLoaded = !!boxes[ethereumAddress]
 
   const workHistory = userLoaded
@@ -18,7 +22,7 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
   return (
     <CardWrapper
       title="Work history"
-      addMore={() => dispatch(openModal(ethereumAddress, 'workHistory'))}
+      addMore={() => dispatchModal(open('workHistory'))}
     >
       {workHistory ? (
         Object.keys(workHistory).map(id => (
@@ -30,9 +34,7 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
               endDate={workHistory[id].endDate}
               ethereumAddress={ethereumAddress}
               jobTitle={workHistory[id].jobTitle}
-              openModal={() =>
-                dispatch(openModal(ethereumAddress, 'workHistory', id))
-              }
+              openModal={() => dispatchModal(open('workHistory', id))}
               startDate={workHistory[id].startDate}
             />
             <SmallMargin />

@@ -7,7 +7,6 @@ export const fetchingPublicProfile = () => ({
   loadingPublicProf: true,
   loadedPublicProf: false,
   loadedPublicProfSuccess: false,
-  openedModal: { type: false, id: null },
   unlockingProf: false,
   unlockedProf: false,
   unlockedProfSuccess: false,
@@ -164,14 +163,4 @@ export const requestedSaveProfileError = (state, error) => ({
   savedProfileSucess: true,
   editingProfile: false,
   error,
-})
-
-export const openedModal = (state, type, id) => ({
-  ...state,
-  openedModal: { type, id },
-})
-
-export const closedModal = state => ({
-  ...state,
-  openedModal: { type: false, id: null },
 })
