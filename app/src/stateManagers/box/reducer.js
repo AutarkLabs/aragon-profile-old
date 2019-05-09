@@ -13,8 +13,6 @@ import {
   REQUESTED_PROFILE_SAVE,
   REQUESTED_PROFILE_SAVE_SUCCESS,
   REQUESTED_PROFILE_SAVE_ERROR,
-  OPENED_MODAL,
-  CLOSED_MODAL,
 } from './actionTypes'
 
 import {
@@ -32,8 +30,6 @@ import {
   requestedSaveProfile,
   requestedSaveProfileSuccess,
   requestedSaveProfileError,
-  openedModal,
-  closedModal,
 } from './states'
 
 import { log } from '../../../utils'
@@ -176,27 +172,6 @@ const boxReducer = (prevState, action) => {
       nextState[ethereumAddress] = requestedSaveProfileError(
         prevState[ethereumAddress],
         action.error
-      )
-      logStateUpdate(action, prevState, nextState)
-      return nextState
-    }
-    case OPENED_MODAL: {
-      const nextState = { ...prevState }
-      const ethereumAddress = action.meta.ethereumAddress
-      nextState[ethereumAddress] = openedModal(
-        prevState[ethereumAddress],
-        action.meta.type,
-        action.meta.id
-      )
-      logStateUpdate(action, prevState, nextState)
-      return nextState
-    }
-    case CLOSED_MODAL: {
-      const nextState = { ...prevState }
-      const ethereumAddress = action.meta.ethereumAddress
-      nextState[ethereumAddress] = closedModal(
-        prevState[ethereumAddress],
-        action.meta.type
       )
       logStateUpdate(action, prevState, nextState)
       return nextState
