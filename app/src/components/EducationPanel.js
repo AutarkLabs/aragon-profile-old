@@ -1,9 +1,7 @@
-import React, { Fragment, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
-
 import { BoxContext } from '../wrappers/box'
-import { SmallMargin } from './styled-components'
 import EducationHistoryTile from './EducationHistoryTile'
 import { openModal } from '../stateManagers/box'
 
@@ -19,21 +17,17 @@ const EducationPanel = ({ ethereumAddress }) => {
     <CardWrapper
       title="Education"
       addMore={() => dispatch(openModal(ethereumAddress, 'educationHistory'))}
+      addSeparators
     >
       {educationHistory ? (
         Object.keys(educationHistory).map(id => (
-          <Fragment key={id}>
-            <EducationHistoryTile
-              degree={educationHistory[id].degree}
-              organization={educationHistory[id].organization}
-              endDate={educationHistory[id].endDate}
-              openModal={() =>
-                dispatch(openModal(ethereumAddress, 'educationHistory', id))
-              }
-              startDate={educationHistory[id].startDate}
-            />
-            <SmallMargin />
-          </Fragment>
+          <EducationHistoryTile
+            key={id}
+            educationHistoryData={educationHistory[id]}
+            openModal={() =>
+              dispatch(openModal(ethereumAddress, 'educationHistory', id))
+            }
+          />
         ))
       ) : (
         <div style={{ textAlign: 'center' }}>No education</div>
