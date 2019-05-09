@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { image } from '../../../modules/things'
 import { reformatNestedFields } from '../../utils'
 
@@ -24,8 +25,19 @@ export const fetchingPublicProfile = () => ({
     school: '',
     website: '',
     description: '',
-    workHistory: {},
-    educationHistory: {},
+    workHistory: {
+      startDate: null,
+      endDate: null,
+      employer: '',
+      jobTitle: '',
+      description: '',
+    },
+    educationHistory: {
+      startDate: null,
+      endDate: null,
+      degree: '',
+      organization: '',
+    },
   },
   changed: [],
   uploadingImage: false,
@@ -92,7 +104,7 @@ const calculateChanged = (changed, field) => {
 }
 
 export const editedField = (state, field, value, uniqueId, nestedField) => {
-  const newFormVals = { ...state.forms }
+  const newFormVals = _.cloneDeep({ ...state.forms })
   if (!uniqueId) newFormVals[field] = value
   else {
     const newNestedField = {
