@@ -15,10 +15,7 @@ const EducationHistoryTile = ({ educationHistoryData, openModal }) => (
       <Text.Block size="normal" style={{ fontWeight: '600' }}>
         {educationHistoryData.degree}
       </Text.Block>
-      <Text.Block
-        size="xsmall"
-        style={{ fontColor: theme.textTertiary }}
-      >
+      <Text.Block size="xsmall" style={{ fontColor: theme.textTertiary }}>
         {unixToEducationDate(educationHistoryData.startDate)}
         {' - '}
         {educationHistoryData.endDate
