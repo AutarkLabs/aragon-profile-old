@@ -17,8 +17,6 @@ const EducationPanel = ({ ethereumAddress }) => {
     ? boxes[ethereumAddress].publicProfile.educationHistory
     : {}
 
-  console.log(educationHistory)
-
   return (
     <CardWrapper
       title="Education"

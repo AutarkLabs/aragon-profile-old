@@ -29,11 +29,6 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const getFormValue = (field, uniqueId, nestedField) => {
     if (!userLoaded) return ''
     if (!uniqueId) return boxes[ethereumAddress].forms[field]
-    console.log(
-      'yooo',
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-        boxes[ethereumAddress].forms[field][uniqueId][nestedField]
-    )
     return (
       boxes[ethereumAddress].forms[field][uniqueId] &&
       boxes[ethereumAddress].forms[field][uniqueId][nestedField]
