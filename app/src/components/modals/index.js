@@ -50,7 +50,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       const changedValues = changed.map(calculateChanged)
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(ethereumAddress, forms))
-      dispatch(close(ethereumAddress))
+      dispatch(close())
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }
