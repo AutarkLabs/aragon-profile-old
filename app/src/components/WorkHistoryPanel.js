@@ -1,12 +1,9 @@
-import React, { Fragment, useContext } from 'react'
-
+import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
-
 import WorkHistoryTile from './WorkHistoryTile'
-import { SmallMargin } from './styled-components'
-import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
-
 import { open } from '../stateManagers/modal'
 
 const WorkHistoryPanel = ({ ethereumAddress }) => {
@@ -23,28 +20,25 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
     <CardWrapper
       title="Work history"
       addMore={() => dispatchModal(open('workHistory'))}
+      addSeparators
     >
       {workHistory ? (
         Object.keys(workHistory).map(id => (
-          <Fragment key={id}>
-            <WorkHistoryTile
-              id={id}
-              description={workHistory[id].description}
-              employer={workHistory[id].employer}
-              endDate={workHistory[id].endDate}
-              ethereumAddress={ethereumAddress}
-              jobTitle={workHistory[id].jobTitle}
-              openModal={() => dispatchModal(open('workHistory', id))}
-              startDate={workHistory[id].startDate}
-            />
-            <SmallMargin />
-          </Fragment>
+          <WorkHistoryTile
+            key={id}
+            workHistoryData={workHistory[id]}
+            openModal={() => dispatchModal(open('workHistory', id))}
+          />
         ))
       ) : (
         <div style={{ textAlign: 'center' }}>No work history</div>
       )}
     </CardWrapper>
   )
+}
+
+WorkHistoryPanel.propTypes = {
+  ethereumAddress: PropTypes.string.isRequired,
 }
 
 export default WorkHistoryPanel

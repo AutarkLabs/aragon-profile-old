@@ -5,6 +5,8 @@ import uuidv1 from 'uuid/v1'
 export const toUnix = date => moment(date).unix()
 
 export const unixToCalendar = unix => moment.unix(unix).format('YYYY-MM-DD')
+export const unixToWorkDate = unix => moment.unix(unix).format('MMM YYYY')
+export const unixToEducationDate = unix => moment.unix(unix).format('YYYY')
 
 export const todayInUnix = () => Number(moment().format('X'))
 
