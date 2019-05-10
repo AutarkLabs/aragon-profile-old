@@ -35,7 +35,7 @@ const WorkHistoryTile = ({ workHistoryData, openModal }) => (
 )
 const SingleWorkItem = styled.div`
   display: flex;
-  > * {
+  > :not(:last-child) {
     margin-bottom: 0.4rem;
   }
 `
@@ -46,6 +46,7 @@ const Icons = styled.div`
   visibility: hidden;
   > * {
     margin: 0 0 0.6rem 0.6rem;
+    cursor: pointer;
   }
   ${SingleWorkItem}:hover & {
     visibility: visible;
@@ -54,13 +55,19 @@ const Icons = styled.div`
 `
 const Details = styled.div`
   width: 100%;
-  > * {
+  > :not(:last-child) {
     margin-bottom: 0.5rem;
   }
 `
 
 WorkHistoryTile.propTypes = {
-  workHistoryData: PropTypes.object.isRequired,
+  workHistoryData: PropTypes.shape({
+    employer: PropTypes.string.isRequired,
+    jobTitle: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    startDate: PropTypes.number.isRequired,
+    endDate: PropTypes.number,
+  }).isRequired,
   openModal: PropTypes.func.isRequired,
 }
 

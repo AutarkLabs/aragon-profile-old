@@ -31,7 +31,7 @@ const EducationHistoryTile = ({ educationHistoryData, openModal }) => (
 )
 const SingleEducationItem = styled.div`
   display: flex;
-  > * {
+  > :not(:last-child) {
     margin-bottom: 0.2rem;
   }
 `
@@ -42,6 +42,7 @@ const Icons = styled.div`
   visibility: hidden;
   > * {
     margin: 0 0 0.6rem 0.6rem;
+    cursor: pointer;
   }
   ${SingleEducationItem}:hover & {
     visibility: visible;
@@ -50,13 +51,18 @@ const Icons = styled.div`
 `
 const Details = styled.div`
   width: 100%;
-  > * {
+  > :not(:last-child) {
     margin-bottom: 0.5rem;
   }
 `
 
 EducationHistoryTile.propTypes = {
-  educationHistoryData: PropTypes.object.isRequired,
+  educationHistoryData: PropTypes.shape({
+    degree: PropTypes.string,
+    organization: PropTypes.string.isRequired,
+    startDate: PropTypes.number.isRequired,
+    endDate: PropTypes.number,
+  }).isRequired,
   openModal: PropTypes.func.isRequired,
 }
 
