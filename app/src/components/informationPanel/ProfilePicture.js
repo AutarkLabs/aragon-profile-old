@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
 import { Buffer } from 'ipfs-http-client'
 
+import ImageMenu from '../ImageMenu'
 import { BoxContext } from '../../wrappers/box'
 import infuraIpfs from '../../../ipfs'
 
@@ -81,6 +82,7 @@ const ProfilePicture = ({ ethereumAddress }) => {
           publicProfileImageCid,
           editProfileImageCid,
         })}
+        className="imageHover"
       >
         {isEditing && (
           <TransparentEditOverlay>
@@ -88,6 +90,7 @@ const ProfilePicture = ({ ethereumAddress }) => {
           </TransparentEditOverlay>
         )}
         <input {...getInputProps({ disabled: !isEditing })} />
+        <ImageMenu top={26} right={-6} imageExists />
       </Container>
     </Fragment>
   )
@@ -141,7 +144,6 @@ const Container = styled.div`
   left: 4rem;
   z-index: 4;
 `
-
 const TransparentEditOverlay = styled.div`
   width: 11.2rem;
   height: 11.2rem;
@@ -153,12 +155,10 @@ const TransparentEditOverlay = styled.div`
   left: 0;
   border-radius: 50%;
 `
-
 const EditIcon = styled.img.attrs({ src: editImage })`
   width: 1.9rem;
   position: absolute;
   right: 1.1rem;
   top: 0.4rem;
 `
-
 export default ProfilePicture

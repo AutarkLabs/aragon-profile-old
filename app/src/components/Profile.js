@@ -7,6 +7,7 @@ import InformationPanel from './informationPanel'
 import OrganizationPanel from './OrganizationPanel'
 import EducationPanel from './EducationPanel'
 import WorkHistoryPanel from './WorkHistoryPanel'
+import CoverImage from './CoverImage'
 
 const Profile = ({ ethereumAddress }) => {
   return (
@@ -38,16 +39,10 @@ const Profile = ({ ethereumAddress }) => {
     </div>
   )
 }
-
 Profile.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
 
-const CoverImage = styled.div`
-  width: 100%;
-  height: 12rem;
-  background-image: url('https://cdn2.spacedecentral.net/assets/stars-551011e393a28d383a3f188ea38c595c9721561d3cf733bd63ce976616c0b0cd.jpg');
-`
 const LeftColumn = styled.div`
   display: flex;
   flex-direction: column;
