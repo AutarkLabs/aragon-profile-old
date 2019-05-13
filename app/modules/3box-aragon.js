@@ -116,4 +116,20 @@ export class Profile {
       throw new Error(`Error setting in box: ${err}`)
     }
   }
+
+  removePublicField = async field => {
+    try {
+      await this.unlockedBox.public.remove(field)
+    } catch (err) {
+      throw new Error(`Error removing field from box ${err}`)
+    }
+  }
+
+  removePrivateField = async field => {
+    try {
+      await this.unlockedBox.private.remove(field)
+    } catch (err) {
+      throw new Error(`Error removing field from box ${err}`)
+    }
+  }
 }

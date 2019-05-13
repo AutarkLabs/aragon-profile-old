@@ -6,7 +6,7 @@ import { Text, theme } from '@aragon/ui'
 import { unixToWorkDate } from '../utils'
 import { IconPencil, IconTrash } from '../assets/'
 
-const WorkHistoryTile = ({ workHistoryData, openModal }) => (
+const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
   <SingleWorkItem>
     <Details>
       <Text.Block size="large" style={{ fontWeight: '700' }}>
@@ -29,7 +29,7 @@ const WorkHistoryTile = ({ workHistoryData, openModal }) => (
     </Details>
     <Icons>
       <IconPencil width="16px" onClick={() => openModal()} />
-      <IconTrash width="16px" onClick={() => openModal()} />
+      <IconTrash width="16px" onClick={() => removeItem()} />
     </Icons>
   </SingleWorkItem>
 )
@@ -69,6 +69,7 @@ WorkHistoryTile.propTypes = {
     endDate: PropTypes.number,
   }).isRequired,
   openModal: PropTypes.func.isRequired,
+  removeItem: PropTypes.func.isRequired,
 }
 
 export default WorkHistoryTile

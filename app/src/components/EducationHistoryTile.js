@@ -6,7 +6,11 @@ import { Text, theme } from '@aragon/ui'
 import { IconPencil, IconTrash } from '../assets/'
 import { unixToEducationDate } from '../utils'
 
-const EducationHistoryTile = ({ educationHistoryData, openModal }) => (
+const EducationHistoryTile = ({
+  educationHistoryData,
+  openModal,
+  removeItem,
+}) => (
   <SingleEducationItem>
     <Details>
       <Text.Block size="large" style={{ fontWeight: '700' }}>
@@ -25,7 +29,7 @@ const EducationHistoryTile = ({ educationHistoryData, openModal }) => (
     </Details>
     <Icons>
       <IconPencil width="16px" onClick={() => openModal()} />
-      <IconTrash width="16px" onClick={() => openModal()} />
+      <IconTrash width="16px" onClick={() => removeItem()} />
     </Icons>
   </SingleEducationItem>
 )
@@ -64,6 +68,7 @@ EducationHistoryTile.propTypes = {
     endDate: PropTypes.number,
   }).isRequired,
   openModal: PropTypes.func.isRequired,
+  removeItem: PropTypes.func.isRequired,
 }
 
 export default EducationHistoryTile

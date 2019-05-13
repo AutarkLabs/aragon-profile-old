@@ -13,6 +13,9 @@ import {
   REQUESTED_PROFILE_SAVE,
   REQUESTED_PROFILE_SAVE_SUCCESS,
   REQUESTED_PROFILE_SAVE_ERROR,
+  REQUESTED_PROFILE_ITEM_REMOVE,
+  REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
+  REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -137,6 +140,31 @@ export const savedProfile = (ethereumAddress, profile) => ({
 
 export const saveProfileError = (ethereumAddress, error) => ({
   type: REQUESTED_PROFILE_SAVE_ERROR,
+  meta: {
+    ethereumAddress,
+  },
+  error,
+})
+
+export const removingItem = ethereumAddress => ({
+  type: REQUESTED_PROFILE_ITEM_REMOVE,
+  meta: {
+    ethereumAddress,
+  },
+})
+
+export const removedItem = (ethereumAddress, profile) => ({
+  type: REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    profile,
+  },
+})
+
+export const removedItemError = (ethereumAddress, error) => ({
+  type: REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
   meta: {
     ethereumAddress,
   },
