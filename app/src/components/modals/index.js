@@ -92,8 +92,9 @@ const UserInfoModal = ({ ethereumAddress }) => {
   )
 }
 
-export default UserInfoModal
-
 UserInfoModal.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
+
+export { default as RemoveItem } from './RemoveItem'
+export default UserInfoModal
