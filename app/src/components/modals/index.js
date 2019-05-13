@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
+import { cloneDeep } from 'lodash'
 
 import { BoxContext } from '../../wrappers/box'
 import { ModalContext } from '../../wrappers/modal'
@@ -15,6 +16,7 @@ import { FullWidthButton } from '../styled-components'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
+import RemoveItem from './RemoveItem'
 
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
@@ -56,6 +58,17 @@ const UserInfoModal = ({ ethereumAddress }) => {
     }
   }
 
+  const removeItem = async () => {
+    const { unlockedBox, forms } = boxes[ethereumAddress]
+    const { itemType, id } = modal
+    const newForms = cloneDeep(forms)
+    delete newForms[itemType][id]
+    const newBoxVals = Object.keys(newForms[itemType]).map(
+      id => forms[itemType][id]
+    )
+    await unlockedBox.setPublicFields([itemType], [newBoxVals])
+  }
+
   return (
     <Modal visible={userLoaded && !!modal.type}>
       {userLoaded && modal.type === 'basicInformation' && (
@@ -85,6 +98,9 @@ const UserInfoModal = ({ ethereumAddress }) => {
           workHistoryId={modal.id}
         />
       )}
+      {userLoaded && modal.type === 'removeItem' && (
+        <RemoveItem ethereumAddress={ethereumAddress} onRemove={removeItem} />
+      )}
       <FullWidthButton onClick={() => dispatchModal(close())}>
         Close modal
       </FullWidthButton>
@@ -96,5 +112,4 @@ UserInfoModal.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
 
-export { default as RemoveItem } from './RemoveItem'
 export default UserInfoModal
