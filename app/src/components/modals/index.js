@@ -33,6 +33,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const getFormValue = (field, uniqueId, nestedField) => {
     if (!userLoaded) return ''
     if (!uniqueId) return boxes[ethereumAddress].forms[field]
+    if (!nestedField) return boxes[ethereumAddress].forms[field][uniqueId]
     return (
       boxes[ethereumAddress].forms[field][uniqueId] &&
       boxes[ethereumAddress].forms[field][uniqueId][nestedField]
@@ -106,7 +107,11 @@ const UserInfoModal = ({ ethereumAddress }) => {
         />
       )}
       {userLoaded && modal.type === 'removeItem' && (
-        <RemoveItem ethereumAddress={ethereumAddress} onRemove={removeItem} />
+        <RemoveItem
+          item={getFormValue(modal.itemType, modal.id)}
+          ethereumAddress={ethereumAddress}
+          onRemove={removeItem}
+        />
       )}
       <FullWidthButton onClick={() => dispatchModal(close())}>
         Close modal
