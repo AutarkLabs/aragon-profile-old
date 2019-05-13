@@ -7,7 +7,17 @@ import { BoxContext } from '../../wrappers/box'
 import { ModalContext } from '../../wrappers/modal'
 import { open } from '../../stateManagers/modal'
 import { SafeLink } from '../readOrEditFields'
-import { IconPencil, IconGitHub, IconTwitter } from '../../assets/'
+import {
+  IconPencil,
+  IconGitHub,
+  IconTwitter,
+  IconLocation,
+  IconEthereum,
+  IconVerified,
+} from '../../assets/'
+
+const shortenAddress = address =>
+  address.slice(0, 12) + '...' + address.slice(-10)
 
 const InformationCard = ({ ethereumAddress }) => {
   const { boxes } = useContext(BoxContext)
@@ -19,6 +29,7 @@ const InformationCard = ({ ethereumAddress }) => {
 
   fields.website = 'https://autark.xyz'
   fields.github = 'rkzel'
+  fields.location = 'Mons Olympus'
   fields.twitter = 'autarklabs'
 
   return !userLoaded ? (
@@ -33,10 +44,19 @@ const InformationCard = ({ ethereumAddress }) => {
           <Text.Block size="normal">
             {fields.description ? fields.description : 'description'}
           </Text.Block>
-          <Text.Block size="normal">
-            {fields.location ? fields.location : 'location'}
-          </Text.Block>
 
+          {fields.location && (
+            <Social>
+              <IconLocation
+                width="1rem"
+                height="1rem"
+                color={theme.textTertiary}
+              />
+              <Text size="small" color={theme.textTertiary}>
+                {fields.location}
+              </Text>
+            </Social>
+          )}
           {fields.website && (
             <Social>
               <IconGitHub
@@ -63,6 +83,7 @@ const InformationCard = ({ ethereumAddress }) => {
                 placeholder="twitter account"
                 size="small"
               />
+              <IconVerified />
             </Social>
           )}
           {fields.github && (
@@ -79,9 +100,16 @@ const InformationCard = ({ ethereumAddress }) => {
               />
             </Social>
           )}
-          <Text.Block size="xsmall" color={theme.textTertiary}>
-            {ethereumAddress}
-          </Text.Block>
+          <Social>
+            <IconEthereum
+              width="1rem"
+              height="1rem"
+              color={theme.textTertiary}
+            />
+            <Text size="small" color={theme.textTertiary}>
+              {shortenAddress(ethereumAddress)}
+            </Text>
+          </Social>
         </Details>
         <Icons>
           <IconPencil
@@ -103,6 +131,9 @@ const Social = styled.div`
   align-items: center;
   > :first-child {
     width: 2rem;
+  }
+  > :nth-child(3) {
+    margin-left: 0.6rem;
   }
 `
 const Information = styled.div`

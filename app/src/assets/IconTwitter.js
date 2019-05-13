@@ -12,7 +12,7 @@ const IconTwitter = props => (
       <g
         id="Homepage---Tile-View-Copy"
         transform="translate(-945.000000, -2126.000000)"
-        fill="#8C8C8C"
+        fill={props.color}
       >
         <g id="twitter-copy" transform="translate(945.500000, 2126.000000)">
           <path
