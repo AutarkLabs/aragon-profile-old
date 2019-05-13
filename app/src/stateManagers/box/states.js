@@ -11,10 +11,12 @@ export const fetchingPublicProfile = () => ({
   unlockingProf: false,
   unlockedProf: false,
   unlockedProfSuccess: false,
-  editingProfile: false,
   savingProfile: false,
   savedProfile: false,
   savedProfileSucess: false,
+  removingItem: false,
+  removedItem: false,
+  removedItemSuccess: false,
   unlockedBox: {},
   publicProfile: {},
   forms: {
@@ -91,11 +93,6 @@ export const profileUnlockFailed = (state, error) => ({
   error,
 })
 
-export const requestProfileEdit = state => ({
-  ...state,
-  editingProfile: true,
-})
-
 const calculateChanged = (changed, field) => {
   if (!changed) return [field]
 
@@ -160,7 +157,6 @@ export const requestedSaveProfileSuccess = (state, profile) => ({
   savingProfile: false,
   savedProfile: true,
   savedProfileSucess: true,
-  editingProfile: false,
   publicProfile: {
     ...state.publicProfile,
     ...profile,
@@ -173,6 +169,31 @@ export const requestedSaveProfileError = (state, error) => ({
   savingProfile: false,
   savedProfile: true,
   savedProfileSucess: true,
-  editingProfile: false,
+  error,
+})
+
+export const requestedProfileItemRemove = state => ({
+  ...state,
+  removingItem: true,
+  removedItem: false,
+  removedItemSuccess: false,
+})
+
+export const requestedProfileItemRemoveSuccess = (state, profile) => ({
+  ...state,
+  removingItem: false,
+  removedItem: true,
+  removedItemSuccess: false,
+  publicProfile: {
+    ...state.publicProfile,
+    ...profile,
+  },
+})
+
+export const requestedProfileItemRemoveError = (state, error) => ({
+  ...state,
+  removingItem: false,
+  removedItem: true,
+  removedItemSuccess: false,
   error,
 })

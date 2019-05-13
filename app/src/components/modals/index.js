@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
-import { cloneDeep } from 'lodash'
 
 import { BoxContext } from '../../wrappers/box'
 import { ModalContext } from '../../wrappers/modal'
@@ -10,6 +9,9 @@ import {
   savingProfile,
   savedProfile,
   saveProfileError,
+  removingItem,
+  removedItem,
+  removedItemError,
 } from '../../stateManagers/box'
 import { close } from '../../stateManagers/modal'
 import { FullWidthButton } from '../styled-components'
@@ -59,14 +61,19 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   const removeItem = async () => {
-    const { unlockedBox, forms } = boxes[ethereumAddress]
-    const { itemType, id } = modal
-    const newForms = cloneDeep(forms)
-    delete newForms[itemType][id]
-    const newBoxVals = Object.keys(newForms[itemType]).map(
-      id => forms[itemType][id]
-    )
-    await unlockedBox.setPublicFields([itemType], [newBoxVals])
+    dispatch(removingItem(ethereumAddress))
+    try {
+      const { unlockedBox, forms } = boxes[ethereumAddress]
+      const { itemType, id } = modal
+      delete forms[itemType][id]
+      const newBoxVals = Object.keys(forms[itemType]).map(
+        id => forms[itemType][id]
+      )
+      await unlockedBox.setPublicFields([itemType], [newBoxVals])
+      dispatch(removedItem(ethereumAddress))
+    } catch (err) {
+      dispatch(removedItemError(err))
+    }
   }
 
   return (

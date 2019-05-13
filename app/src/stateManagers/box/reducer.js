@@ -13,6 +13,9 @@ import {
   REQUESTED_PROFILE_SAVE,
   REQUESTED_PROFILE_SAVE_SUCCESS,
   REQUESTED_PROFILE_SAVE_ERROR,
+  REQUESTED_PROFILE_ITEM_REMOVE,
+  REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
+  REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
 } from './actionTypes'
 
 import {
@@ -30,6 +33,9 @@ import {
   requestedSaveProfile,
   requestedSaveProfileSuccess,
   requestedSaveProfileError,
+  requestedProfileItemRemove,
+  requestedProfileItemRemoveSuccess,
+  requestedProfileItemRemoveError,
 } from './states'
 
 import { log } from '../../../utils'
@@ -172,6 +178,35 @@ const boxReducer = (prevState, action) => {
       nextState[ethereumAddress] = requestedSaveProfileError(
         prevState[ethereumAddress],
         action.error
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_ITEM_REMOVE: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestedProfileItemRemove(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestedProfileItemRemoveSuccess(
+        prevState[ethereumAddress],
+        action.payload.profile
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_ITEM_REMOVE_ERROR: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestedProfileItemRemoveError(
+        prevState[ethereumAddress],
+        action.payload.profile
       )
       logStateUpdate(action, prevState, nextState)
       return nextState
