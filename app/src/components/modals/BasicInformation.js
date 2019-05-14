@@ -1,7 +1,7 @@
 import React from 'react'
-import { Field, Button, DropDown, TextInput } from '@aragon/ui'
+import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import ModalWrapper from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
 
 const BasicInformation = ({
   ethereumAddress,
@@ -9,74 +9,45 @@ const BasicInformation = ({
   onChange,
   saveProfile,
 }) => {
-  const title = 'Edit Basic Information'
-
-  const months = [
-    'Month',
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  const years = ['Year', '2018', '2019']
-
   return (
-    <ModalWrapper title={title}>
-      <Field label="Name">
-        <TextInput
-          wide
-          onChange={e => onChange(e.target.value, 'name')}
-          value={getFormValue('name')}
-        />
-      </Field>
+    <ModalWrapper title="Edit Basic Information">
+      <TwoColumnsRow>
+        <div>
+          <Label>Name</Label>
+          <TextInput
+            wide
+            onChange={e => onChange(e.target.value, 'name')}
+            value={getFormValue('name')}
+          />
+        </div>
+        <div>
+          <Label>Location</Label>
+          <TextInput
+            wide
+            onChange={e => onChange(e.target.value, 'location')}
+            value={getFormValue('location')}
+          />
+        </div>
+      </TwoColumnsRow>
 
-      <Field label="Location">
-        <TextInput
-          wide
-          onChange={e => onChange(e.target.value, 'location')}
-          value={getFormValue('location')}
-        />
-      </Field>
-
-      <Field label="Bio">
+      <div>
+        <Label>Bio</Label>
         <TextInput.Multiline
+          style={{ height: '80px' }}
           wide
-          rows="3"
           value={getFormValue('description')}
           onChange={e => onChange(e.target.value, 'description')}
         />
-      </Field>
-
-      <Field label="Website">
+      </div>
+      <div>
+        <Label>Website</Label>
         <TextInput
           wide
           value={getFormValue('website')}
           onChange={e => onChange(e.target.value, 'website')}
           type="url"
-          size="normal"
         />
-      </Field>
-
-      <Field label="date">
-        <DropDown
-          items={months}
-          active={1}
-          onChange={e => onChange(e.target.value, 'description')}
-        />
-        <DropDown
-          items={years}
-          active={1}
-          onChange={e => onChange(e.target.value, 'description')}
-        />
-      </Field>
+      </div>
 
       <Button mode="strong" wide onClick={() => saveProfile(ethereumAddress)}>
         Save

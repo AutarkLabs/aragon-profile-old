@@ -61,7 +61,10 @@ const PanelContent = styled.div`
   padding-left: ${CONTENT_PADDING}px;
   padding-bottom: ${CONTENT_PADDING}px;
   > :not(:last-child) {
-    margin-bottom: 0.7rem;
+    margin-bottom: 1rem;
+  }
+  > :last-child {
+    margin-top: 1rem;
   }
 `
 const PanelCloseButton = styled.button`
@@ -79,4 +82,19 @@ const PanelCloseButton = styled.button`
     }
   }
 `
-export default ModalWrapper
+const TwoColumnsRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-content: stretch;
+  > * {
+    width: 48%;
+  }
+`
+const Label = styled.div`
+  text-transform: lowercase;
+  font-variant: small-caps;
+  color: #707070;
+  margin: 0;
+`
+
+export { ModalWrapper, TwoColumnsRow, Label }
