@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const IconLocation = props => (
   <svg width="29px" height="40px" viewBox="0 0 29 40" {...props}>
@@ -12,5 +13,17 @@ const IconLocation = props => (
     </g>
   </svg>
 )
+
+IconLocation.propTypes = {
+  color: PropTypes.string,
+  height: PropTypes.string,
+  width: PropTypes.string,
+}
+
+IconLocation.defaultProps = {
+  color: '#222',
+  width: '29px',
+  height: '40px',
+}
 
 export default IconLocation

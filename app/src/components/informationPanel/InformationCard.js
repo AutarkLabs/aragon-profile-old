@@ -25,16 +25,12 @@ const InformationCard = ({ ethereumAddress }) => {
 
   const userLoaded = !!boxes[ethereumAddress]
 
+  // return early if there is no profile to display
+  if (!userLoaded) return <div>No profile</div>
+
   const fields = boxes[ethereumAddress].publicProfile
 
-  fields.website = 'https://autark.xyz'
-  fields.github = 'rkzel'
-  fields.location = 'Mons Olympus'
-  fields.twitter = 'autarklabs'
-
-  return !userLoaded ? (
-    <div>No profile</div>
-  ) : (
+  return (
     <StyledCard>
       <Information>
         <Details>

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const IconEthereum = props => (
   <svg width="34px" height="35px" viewBox="0 0 34 35" {...props}>
@@ -14,5 +15,17 @@ const IconEthereum = props => (
     </g>
   </svg>
 )
+
+IconEthereum.propTypes = {
+  color: PropTypes.string,
+  height: PropTypes.string,
+  width: PropTypes.string,
+}
+
+IconEthereum.defaultProps = {
+  color: '#222',
+  width: '34px',
+  height: '35px',
+}
 
 export default IconEthereum
