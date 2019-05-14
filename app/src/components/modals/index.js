@@ -11,14 +11,13 @@ import {
   saveProfileError,
 } from '../../stateManagers/box'
 import { close } from '../../stateManagers/modal'
-import { FullWidthButton } from '../styled-components'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
 
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
-  const { modal, dispatchModal } = useContext(ModalContext)
+  const { modal } = useContext(ModalContext)
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -56,38 +55,28 @@ const UserInfoModal = ({ ethereumAddress }) => {
     }
   }
 
+  const props = {
+    ethereumAddress,
+    getFormValue,
+    onChange,
+    saveProfile,
+  }
+
+  if (!userLoaded) return null
+
   return (
-    <Modal visible={userLoaded && !!modal.type}>
-      {userLoaded && modal.type === 'basicInformation' && (
-        <BasicInformationModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-        />
+    <Modal visible={!!modal.type} padding="0">
+      {modal.type === 'basicInformation' && (
+        <BasicInformationModal {...props} />
       )}
 
-      {userLoaded && modal.type === 'educationHistory' && (
-        <EducationHistoryModal
-          educationHistoryId={modal.id}
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-        />
+      {modal.type === 'educationHistory' && (
+        <EducationHistoryModal educationHistoryId={modal.id} {...props} />
       )}
-      {userLoaded && modal.type === 'workHistory' && (
-        <WorkHistoryModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-          workHistoryId={modal.id}
-        />
+
+      {modal.type === 'workHistory' && (
+        <WorkHistoryModal workHistoryId={modal.id} {...props} />
       )}
-      <FullWidthButton onClick={() => dispatchModal(close())}>
-        Close modal
-      </FullWidthButton>
     </Modal>
   )
 }

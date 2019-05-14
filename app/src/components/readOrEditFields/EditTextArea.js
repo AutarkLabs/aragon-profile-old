@@ -10,6 +10,7 @@ const EditTextArea = ({ type, disabled, onChange, value, placeholder }) => (
     onChange={onChange}
     value={value}
     placeholder={placeholder}
+    rows={3}
   />
 )
 
@@ -32,7 +33,6 @@ EditTextArea.defaultProps = {
 const baseStyles = css`
   ${font({ size: 'small', weight: 'normal' })};
   width: ${({ wide }) => (wide ? '100%' : 'auto')};
-  height: 40px;
   padding: 0 10px;
   background: ${theme.contentBackground};
   border: 1px solid ${theme.contentBorder};
