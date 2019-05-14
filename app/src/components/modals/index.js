@@ -9,11 +9,15 @@ import {
   savingProfile,
   savedProfile,
   saveProfileError,
+  removingItem,
+  removedItem,
+  removedItemError,
 } from '../../stateManagers/box'
 import { close } from '../../stateManagers/modal'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
+import RemoveItem from './RemoveItem'
 
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
@@ -28,6 +32,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const getFormValue = (field, uniqueId, nestedField) => {
     if (!userLoaded) return ''
     if (!uniqueId) return boxes[ethereumAddress].forms[field]
+    if (!nestedField) return boxes[ethereumAddress].forms[field][uniqueId]
     return (
       boxes[ethereumAddress].forms[field][uniqueId] &&
       boxes[ethereumAddress].forms[field][uniqueId][nestedField]
@@ -64,6 +69,22 @@ const UserInfoModal = ({ ethereumAddress }) => {
 
   if (!userLoaded) return null
 
+  const removeItem = async () => {
+    dispatch(removingItem(ethereumAddress))
+    try {
+      const { unlockedBox, forms } = boxes[ethereumAddress]
+      const { itemType, id } = modal
+      delete forms[itemType][id]
+      const newBoxVals = Object.keys(forms[itemType]).map(
+        id => forms[itemType][id]
+      )
+      await unlockedBox.setPublicFields([itemType], [newBoxVals])
+      dispatch(removedItem(ethereumAddress))
+    } catch (err) {
+      dispatch(removedItemError(err))
+    }
+  }
+
   return (
     <Modal visible={!!modal.type} padding="0">
       {modal.type === 'basicInformation' && (
@@ -77,12 +98,19 @@ const UserInfoModal = ({ ethereumAddress }) => {
       {modal.type === 'workHistory' && (
         <WorkHistoryModal workHistoryId={modal.id} {...props} />
       )}
+      {modal.type === 'removeItem' && (
+        <RemoveItem
+          item={getFormValue(modal.itemType, modal.id)}
+          ethereumAddress={ethereumAddress}
+          onRemove={removeItem}
+        />
+      )}
     </Modal>
   )
 }
 
-export default UserInfoModal
-
 UserInfoModal.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
+
+export default UserInfoModal
