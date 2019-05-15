@@ -17,7 +17,14 @@ export const fetchingPublicProfile = () => ({
   removedItem: false,
   removedItemSuccess: false,
   // for tracking https://projects.invisionapp.com/share/AQS14BPCG9R#/screens
-  messages: [],
+  messageSigning: {
+    unlockingProf: false,
+    unlockedProf: false,
+    unlockedProfSuccess: false,
+    creatingProf: false,
+    createdProf: false,
+    createdProfSuccess: false,
+  },
   signingMessages: [],
   signedMessages: [],
   signedMessagesSuccess: [],
@@ -72,6 +79,12 @@ export const requestedProfUnlock = state => ({
   unlockedProf: false,
   unlockedProfSuccess: false,
   unlockedBox: {},
+  messageSigning: {
+    ...state.messageSigning,
+    unlockingProf: true,
+    unlockedProf: false,
+    unlockedProfSuccess: false,
+  },
 })
 
 export const profileUnlocked = (state, unlockedBox) => ({
@@ -81,6 +94,12 @@ export const profileUnlocked = (state, unlockedBox) => ({
   unlockedProfSuccess: true,
   editedProfile: false,
   unlockedBox,
+  messageSigning: {
+    ...state.messageSigning,
+    unlockingProf: false,
+    unlockedProf: true,
+    unlockedProfSuccess: true,
+  },
 })
 
 export const profileUnlockFailed = (state, error) => ({
@@ -89,6 +108,12 @@ export const profileUnlockFailed = (state, error) => ({
   unlockedProf: true,
   unlockedProfSuccess: false,
   error,
+  messageSigning: {
+    ...state.messageSigning,
+    unlockingProf: false,
+    unlockedProf: true,
+    unlockedProfSuccess: false,
+  },
 })
 
 const calculateChanged = (changed, field) => {

@@ -18,11 +18,12 @@ import {
   profileUnlockSuccess,
   profileUnlockFailure,
 } from '../../stateManagers/box'
-import { close } from '../../stateManagers/modal'
+import { close, open } from '../../stateManagers/modal'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
 import RemoveItem from './RemoveItem'
+import BoxState from './BoxState'
 
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
@@ -67,11 +68,13 @@ const UserInfoModal = ({ ethereumAddress }) => {
     if (loadedPublicProf) throw new Error('error loading profile')
   }
 
-  const unlockBoxIfRequired = ({ unlockedProf, unlockedProfSuccess }) => {
+  const unlockBoxIfRequired = async ({ unlockedProf, unlockedProfSuccess }) => {
     if (unlockedProfSuccess) return true
     if (unlockedProf) throw new Error('error unlocking box')
 
-    return unlockProfile()
+    dispatchModal(open('3boxState'))
+    const successfulUnlock = await unlockProfile()
+    return successfulUnlock
   }
 
   const saveProfile = async ethereumAddress => {
@@ -147,6 +150,9 @@ const UserInfoModal = ({ ethereumAddress }) => {
           ethereumAddress={ethereumAddress}
           onRemove={removeItem}
         />
+      )}
+      {modal.type === '3boxState' && (
+        <BoxState messageSigning={boxes[ethereumAddress].messageSigning} />
       )}
     </Modal>
   )
