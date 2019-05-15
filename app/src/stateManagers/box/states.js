@@ -5,20 +5,28 @@ import { reformatNestedFields } from '../../utils'
 export const initialState = {}
 
 export const fetchingPublicProfile = () => ({
+  // basic loading of public profiles
   loadingPublicProf: true,
   loadedPublicProf: false,
   loadedPublicProfSuccess: false,
-  unlockingProf: false,
-  unlockedProf: false,
-  unlockedProfSuccess: false,
+  // for tracking https://projects.invisionapp.com/d/main#/console/17511474/363488290/preview
   savingProfile: false,
   savedProfile: false,
   savedProfileSucess: false,
   removingItem: false,
   removedItem: false,
   removedItemSuccess: false,
+  // for tracking https://projects.invisionapp.com/share/AQS14BPCG9R#/screens
+  messages: [],
+  signingMessages: [],
+  signedMessages: [],
+  signedMessagesSuccess: [],
+  unlockingProf: false,
+  unlockedProf: false,
+  unlockedProfSuccess: false,
   unlockedBox: {},
   publicProfile: {},
+  // handles forms throughout the application
   forms: {
     name: '',
     job: '',
@@ -31,6 +39,7 @@ export const fetchingPublicProfile = () => ({
     educationHistory: {},
   },
   changed: [],
+  // to display image loading status
   uploadingImage: false,
   uploadedImageSuccess: false,
   uploadedImage: false,

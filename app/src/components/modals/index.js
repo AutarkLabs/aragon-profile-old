@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
+import { useAragonApi } from '@aragon/api-react'
 
+import { Profile } from '../../../modules/3box-aragon'
 import { BoxContext } from '../../wrappers/box'
 import { ModalContext } from '../../wrappers/modal'
 import {
@@ -12,6 +14,9 @@ import {
   removingItem,
   removedItem,
   removedItemError,
+  requestedProfileUnlock,
+  profileUnlockSuccess,
+  profileUnlockFailure,
 } from '../../stateManagers/box'
 import { close } from '../../stateManagers/modal'
 import { FullWidthButton } from '../styled-components'
@@ -23,6 +28,7 @@ import RemoveItem from './RemoveItem'
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { modal, dispatchModal } = useContext(ModalContext)
+  const { api } = useAragonApi()
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -40,6 +46,35 @@ const UserInfoModal = ({ ethereumAddress }) => {
     )
   }
 
+  const unlockProfile = async () => {
+    dispatch(requestedProfileUnlock(ethereumAddress))
+    try {
+      const profile = new Profile(ethereumAddress, api)
+      await profile.unlock()
+      dispatch(profileUnlockSuccess(ethereumAddress, profile))
+      return true
+    } catch (error) {
+      dispatch(profileUnlockFailure(ethereumAddress, error))
+      return false
+    }
+  }
+
+  const profileExists = ({
+    publicProfile,
+    loadedPublicProf,
+    loadedPublicProfSuccess,
+  }) => {
+    if (loadedPublicProfSuccess) return Object.keys(publicProfile).length > 0
+    if (loadedPublicProf) throw new Error('error loading profile')
+  }
+
+  const unlockBoxIfRequired = ({ unlockedProf, unlockedProfSuccess }) => {
+    if (unlockedProfSuccess) return true
+    if (unlockedProf) throw new Error('error unlocking box')
+
+    return unlockProfile()
+  }
+
   const saveProfile = async ethereumAddress => {
     dispatch(savingProfile(ethereumAddress))
 
@@ -53,9 +88,16 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       const changedValues = changed.map(calculateChanged)
-      await unlockedBox.setPublicFields(changed, changedValues)
-      dispatch(savedProfile(ethereumAddress, forms))
-      dispatch(close())
+      // let  = !profileExists(boxes[ethereumAddress])
+      const hasUnlockedBox = await !unlockBoxIfRequired(boxes[ethereumAddress])
+
+      if (hasUnlockedBox) {
+        // await unlockedBox.setPublicFields(changed, changedValues)
+        dispatch(savedProfile(ethereumAddress, forms))
+        dispatch(close())
+      } else {
+        dispatch(saveProfileError(ethereumAddress, 'error unlocking profile'))
+      }
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }
