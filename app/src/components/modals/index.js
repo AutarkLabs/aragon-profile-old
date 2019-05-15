@@ -101,6 +101,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       {modal.type === 'removeItem' && (
         <RemoveItem
           item={getFormValue(modal.itemType, modal.id)}
+          itemType={modal.itemType}
           ethereumAddress={ethereumAddress}
           onRemove={removeItem}
         />
