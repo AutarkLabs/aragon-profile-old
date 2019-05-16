@@ -61,10 +61,15 @@ export class Profile {
 
   unlock = () =>
     new Promise(async (resolve, reject) => {
-      const openedBox = await Box.openBox(
-        this.ethereumAddress,
-        this.boxAragonBridge
-      )
+      let openedBox
+      try {
+        openedBox = await Box.openBox(
+          this.ethereumAddress,
+          this.boxAragonBridge
+        )
+      } catch (err) {
+        return reject(err)
+      }
 
       this.boxState = { opened: true, synced: false }
       this.unlockedBox = openedBox
@@ -72,10 +77,10 @@ export class Profile {
       openedBox.onSyncDone(async () => {
         try {
           this.boxState = { opened: true, synced: true }
-          resolve()
+          return resolve()
         } catch (err) {
           this.boxState = { opened: false, synced: false }
-          reject(err)
+          return reject(err)
         }
       })
     })

@@ -91,8 +91,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
 
       const changedValues = changed.map(calculateChanged)
       // let  = !profileExists(boxes[ethereumAddress])
-      const hasUnlockedBox = await !unlockBoxIfRequired(boxes[ethereumAddress])
-
+      const hasUnlockedBox = await unlockBoxIfRequired(boxes[ethereumAddress])
       if (hasUnlockedBox) {
         // await unlockedBox.setPublicFields(changed, changedValues)
         dispatch(savedProfile(ethereumAddress, forms))
