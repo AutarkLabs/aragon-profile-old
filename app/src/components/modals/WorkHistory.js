@@ -1,11 +1,12 @@
 import React from 'react'
 import uuidv1 from 'uuid/v1'
-import { Button, DropDown, TextInput, Checkbox } from '@aragon/ui'
+import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
 import { useDate } from '../../hooks'
-import { years, months } from '../../utils'
+import { years } from '../../utils'
+import DateDropdowns from '../DateDropdowns'
+import { Label } from '../styled-components'
 
 const WorkHistory = ({
   getFormValue,
@@ -24,7 +25,7 @@ const WorkHistory = ({
     indexEndMonth,
     current,
     dispatchDateChange,
-  } = useDate(startDate, endDate, years, onChange, workHistoryId)
+  } = useDate(startDate, endDate, years, onChange, 'workHistory', workHistoryId)
 
   return (
     <ModalWrapper title="Add Work">
@@ -73,67 +74,15 @@ const WorkHistory = ({
         />
       </div>
 
-      <Label style={{ margin: 0 }}>Start Date</Label>
-      <DateDropDowns>
-        <div style={{ width: '48%' }}>
-          <DropDown
-            wide
-            items={months}
-            active={indexStartMonth}
-            onChange={index =>
-              dispatchDateChange({ type: 'setIndexStartMonth', index })
-            }
-          />
-        </div>
-        <div style={{ width: '48%' }}>
-          <DropDown
-            wide
-            items={years}
-            active={indexStartYear}
-            onChange={index =>
-              dispatchDateChange({ type: 'setIndexStartYear', index })
-            }
-          />
-        </div>
-      </DateDropDowns>
-
-      <Label style={{ margin: 0 }}>End Date</Label>
-      <div style={{ display: 'flex', height: '40px' }}>
-        {!current && (
-          <DateDropDowns>
-            <div style={{ width: '48%' }}>
-              <DropDown
-                wide
-                items={months}
-                active={indexEndMonth}
-                onChange={index =>
-                  dispatchDateChange({ type: 'setIndexEndMonth', index })
-                }
-              />
-            </div>
-            <div style={{ width: '48%' }}>
-              <DropDown
-                wide
-                items={years}
-                active={indexEndYear}
-                onChange={index =>
-                  dispatchDateChange({ type: 'setIndexEndYear', index })
-                }
-              />
-            </div>
-          </DateDropDowns>
-        )}
-
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Checkbox
-            checked={current}
-            onChange={index =>
-              dispatchDateChange({ type: 'setCurrent', index })
-            }
-          />
-          I work here presently
-        </div>
-      </div>
+      <DateDropdowns
+        current={current}
+        dispatchDateChange={dispatchDateChange}
+        indexStartMonth={indexStartMonth}
+        indexStartYear={indexStartYear}
+        indexEndMonth={indexEndMonth}
+        indexEndYear={indexEndYear}
+        type="workHistory"
+      />
 
       <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
         Save
@@ -141,13 +90,6 @@ const WorkHistory = ({
     </ModalWrapper>
   )
 }
-
-const DateDropDowns = styled.div`
-  width: 60%;
-  padding-right: 1rem;
-  display: flex;
-  justify-content: space-between;
-`
 
 WorkHistory.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,

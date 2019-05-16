@@ -1,12 +1,12 @@
 import React from 'react'
 import uuidv1 from 'uuid/v1'
-import { Field, TextInput, Button, DropDown, Text, theme } from '@aragon/ui'
+import { Field, TextInput, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
-
-const year = new Date().getFullYear()
-const years = Array.apply(0, Array(74)).map((_x, index) => year - index)
-const yearsEnd = Array.apply(0, Array(74)).map((_x, index) => year - index + 5)
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { useDate } from '../../hooks'
+import { years } from '../../utils'
+import DateDropdowns from '../DateDropdowns'
+import { Label } from '../styled-components'
 
 const EducationHistory = ({
   ethereumAddress,
@@ -25,19 +25,22 @@ const EducationHistory = ({
     educationHistoryId,
     'endDate'
   )
-  let indexStartYear, indexEndYear
 
-  if (startDate === '') indexStartYear = 0
-  else {
-    const startYear = new Date(startDate).getFullYear()
-    indexStartYear = years.indexOf(startYear)
-  }
-
-  if (endDate === '') indexEndYear = years.indexOf(year)
-  else {
-    const endYear = new Date(endDate).getFullYear()
-    indexEndYear = yearsEnd.indexOf(endYear)
-  }
+  const {
+    indexStartYear,
+    indexStartMonth,
+    indexEndYear,
+    indexEndMonth,
+    current,
+    dispatchDateChange,
+  } = useDate(
+    startDate,
+    endDate,
+    years,
+    onChange,
+    'educationHistory',
+    educationHistoryId
+  )
 
   return (
     <ModalWrapper title="Add Education">
@@ -101,43 +104,15 @@ const EducationHistory = ({
         </div>
       </TwoColumnsRow>
 
-      <TwoColumnsRow>
-        <div>
-          <Label>Start Year</Label>
-          <DropDown
-            wide
-            items={years}
-            active={indexStartYear}
-            onChange={index =>
-              onChange(
-                new Date(years[index] + '-02-01').getTime(),
-                'educationHistory',
-                educationHistoryId,
-                'startDate'
-              )
-            }
-          />
-        </div>
-        <div>
-          <Label>End Year</Label>
-          <DropDown
-            wide
-            items={yearsEnd}
-            active={indexEndYear}
-            onChange={index =>
-              onChange(
-                new Date(yearsEnd[index] + '-02-01').getTime(),
-                'educationHistory',
-                educationHistoryId,
-                'endDate'
-              )
-            }
-          />
-          <Text.Block size="xsmall" color={theme.textTertiary}>
-            Expected end year if you are in progress.
-          </Text.Block>
-        </div>
-      </TwoColumnsRow>
+      <DateDropdowns
+        current={current}
+        dispatchDateChange={dispatchDateChange}
+        indexStartMonth={indexStartMonth}
+        indexStartYear={indexStartYear}
+        indexEndMonth={indexEndMonth}
+        indexEndYear={indexEndYear}
+        type="educationHistory"
+      />
 
       <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
         Save

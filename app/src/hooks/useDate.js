@@ -51,7 +51,7 @@ const calculateInitialState = (startDate, endDate) => {
   }
 }
 
-const useDate = (startDate, endDate, years, onChange, id) => {
+const useDate = (startDate, endDate, years, onChange, history, id) => {
   const [
     { indexStartYear, indexStartMonth, indexEndYear, indexEndMonth, current },
     dispatchDateChange,
@@ -61,13 +61,12 @@ const useDate = (startDate, endDate, years, onChange, id) => {
     if (indexStartYear > 0 && indexStartMonth > 0) {
       const unixTime = toUnix(`${years[indexStartYear]}-${indexStartMonth}-01`)
 
-      if (unixTime !== startDate)
-        onChange(unixTime, 'workHistory', id, 'startDate')
+      if (unixTime !== startDate) onChange(unixTime, history, id, 'startDate')
     }
 
     if (indexEndYear > 0 && indexEndMonth > 0) {
       const unixTime = toUnix(`${years[indexEndYear]}-${indexEndMonth}-01`)
-      if (unixTime !== endDate) onChange(unixTime, 'workHistory', id, 'endDate')
+      if (unixTime !== endDate) onChange(unixTime, history, id, 'endDate')
     }
   }, [
     years,
@@ -79,6 +78,7 @@ const useDate = (startDate, endDate, years, onChange, id) => {
     indexStartMonth,
     indexEndYear,
     indexEndMonth,
+    history,
   ])
 
   return {
