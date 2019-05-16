@@ -32,11 +32,12 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const getFormValue = (field, uniqueId, nestedField) => {
     let value
     if (!userLoaded) value = ''
-    if (!uniqueId) value = boxes[ethereumAddress].forms[field]
-    if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
-    value =
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-      boxes[ethereumAddress].forms[field][uniqueId][nestedField]
+    else if (!uniqueId) value = boxes[ethereumAddress].forms[field]
+    else if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
+    else
+      value =
+        boxes[ethereumAddress].forms[field][uniqueId] &&
+        boxes[ethereumAddress].forms[field][uniqueId][nestedField]
 
     return value || ''
   }
