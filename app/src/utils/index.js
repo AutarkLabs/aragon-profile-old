@@ -35,7 +35,7 @@ export const reformatNestedFields = forms => {
 }
 
 export const months = [
-  'Select',
+  'Month',
   'January',
   'February',
   'March',
@@ -52,5 +52,5 @@ export const months = [
 
 export const currentYear = yearFromUnix(todayInUnix())
 export const years = Array.apply(0, Array(74)).map((_x, index) =>
-  index === 0 ? 'Select' : (currentYear - index).toString()
+  index === 0 ? 'Year' : (currentYear - index).toString()
 )
