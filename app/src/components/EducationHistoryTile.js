@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { Text, theme } from '@aragon/ui'
 import { IconPencil, IconTrash } from '../assets/'
+import { unixToEducationDate } from '../utils/'
 
 const EducationHistoryTile = ({
   educationHistoryData,
@@ -17,12 +18,18 @@ const EducationHistoryTile = ({
       </Text.Block>
       <Text.Block size="normal" style={{ fontWeight: '600' }}>
         {educationHistoryData.degree}
-        {educationHistoryData.field ? ', ' + educationHistoryData.field : ''}
+        {educationHistoryData.fieldOfStudy
+          ? ', ' + educationHistoryData.fieldOfStudy
+          : ''}
       </Text.Block>
       <Text.Block size="xsmall" style={{ fontColor: theme.textTertiary }}>
-        {educationHistoryData.startYear ? educationHistoryData.startYear : '?'}
+        {educationHistoryData.startDate
+          ? unixToEducationDate(educationHistoryData.startDate)
+          : '?'}
         {' - '}
-        {educationHistoryData.endYear ? educationHistoryData.endYear : '?'}
+        {educationHistoryData.endDate
+          ? unixToEducationDate(educationHistoryData.endDate)
+          : '?'}
       </Text.Block>
     </Details>
     <Icons>

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button, Text } from '@aragon/ui'
+import { Button, Text, theme } from '@aragon/ui'
 import { ModalWrapper } from './ModalWrapper'
 import { ModalContext } from '../../wrappers/modal'
 import { close } from '../../stateManagers/modal'
@@ -26,7 +26,7 @@ const RemoveItem = ({ ethereumAddress, item, itemType, onRemove }) => {
         <Button
           compact
           mode="strong"
-          style={{ background: '#FB7979' }}
+          style={{ background: theme.negative }}
           onClick={onRemove}
         >
           Delete

@@ -4,8 +4,9 @@ import { Field, TextInput, Button, DropDown, Text, theme } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
 
-const year = new Date().getFullYear() + 5
-const years = Array.apply(0, Array(32)).map((_x, index) => year - index + '')
+const year = new Date().getFullYear()
+const years = Array.apply(0, Array(74)).map((_x, index) => year - index)
+const yearsEnd = Array.apply(0, Array(74)).map((_x, index) => year - index + 5)
 
 const EducationHistory = ({
   ethereumAddress,
@@ -14,21 +15,29 @@ const EducationHistory = ({
   saveProfile,
   educationHistoryId,
 }) => {
-  const startYear = getFormValue(
+  const startDate = getFormValue(
     'educationHistory',
     educationHistoryId,
-    'startYear'
+    'startDate'
   )
-  const indexStartYear =
-    years.indexOf(startYear) === -1 ? 5 : years.indexOf(startYear)
+  const endDate = getFormValue(
+    'educationHistory',
+    educationHistoryId,
+    'endDate'
+  )
+  let indexStartYear, indexEndYear
 
-  const endYear = getFormValue(
-    'educationHistory',
-    educationHistoryId,
-    'endYear'
-  )
-  const indexEndYear =
-    years.indexOf(endYear) === -1 ? 5 : years.indexOf(endYear)
+  if (startDate === '') indexStartYear = 0
+  else {
+    const startYear = new Date(startDate).getFullYear()
+    indexStartYear = years.indexOf(startYear)
+  }
+
+  if (endDate === '') indexEndYear = years.indexOf(year)
+  else {
+    const endYear = new Date(endDate).getFullYear()
+    indexEndYear = yearsEnd.indexOf(endYear)
+  }
 
   return (
     <ModalWrapper title="Add Education">
@@ -78,14 +87,14 @@ const EducationHistory = ({
             value={getFormValue(
               'educationHistory',
               educationHistoryId,
-              'field'
+              'fieldOfStudy'
             )}
             onChange={e =>
               onChange(
                 e.target.value,
                 'educationHistory',
                 educationHistoryId,
-                'field'
+                'fieldOfStudy'
               )
             }
           />
@@ -101,10 +110,10 @@ const EducationHistory = ({
             active={indexStartYear}
             onChange={index =>
               onChange(
-                years[index],
+                new Date(years[index] + '-02-01').getTime(),
                 'educationHistory',
                 educationHistoryId,
-                'startYear'
+                'startDate'
               )
             }
           />
@@ -113,14 +122,14 @@ const EducationHistory = ({
           <Label>End Year</Label>
           <DropDown
             wide
-            items={years}
+            items={yearsEnd}
             active={indexEndYear}
             onChange={index =>
               onChange(
-                years[index],
+                new Date(yearsEnd[index] + '-02-01').getTime(),
                 'educationHistory',
                 educationHistoryId,
-                'endYear'
+                'endDate'
               )
             }
           />

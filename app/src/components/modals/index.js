@@ -21,7 +21,7 @@ import RemoveItem from './RemoveItem'
 
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
-  const { modal } = useContext(ModalContext)
+  const { modal, dispatchModal } = useContext(ModalContext)
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -30,13 +30,15 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   const getFormValue = (field, uniqueId, nestedField) => {
-    if (!userLoaded) return ''
-    if (!uniqueId) return boxes[ethereumAddress].forms[field]
-    if (!nestedField) return boxes[ethereumAddress].forms[field][uniqueId]
-    return (
+    let value
+    if (!userLoaded) value = ''
+    if (!uniqueId) value = boxes[ethereumAddress].forms[field]
+    if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
+    value =
       boxes[ethereumAddress].forms[field][uniqueId] &&
       boxes[ethereumAddress].forms[field][uniqueId][nestedField]
-    )
+
+    return value || ''
   }
 
   const saveProfile = async ethereumAddress => {
@@ -54,7 +56,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       const changedValues = changed.map(calculateChanged)
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(ethereumAddress, forms))
-      dispatch(close())
+      dispatchModal(close())
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }

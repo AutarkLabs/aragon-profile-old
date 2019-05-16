@@ -4,51 +4,38 @@ import styled from 'styled-components'
 
 import { Text, theme } from '@aragon/ui'
 import { IconPencil, IconTrash } from '../assets/'
+import { unixToWorkDate } from '../utils/'
 
-const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => {
-  let startDate
-  if (workHistoryData.startYear) {
-    if (workHistoryData.startMonth) {
-      startDate = workHistoryData.startMonth + ' ' + workHistoryData.startYear
-    } else startDate = workHistoryData.startYear
-  } else startDate = '?'
-
-  let endDate
-  if (workHistoryData.endYear) {
-    if (workHistoryData.endMonth) {
-      endDate = workHistoryData.endMonth + ' ' + workHistoryData.endYear
-    } else endDate = workHistoryData.endYear
-  } else if (workHistoryData.endYear === 0) {
-    endDate = 'Present'
-  } else endDate = '?'
-
-  return (
-    <SingleWorkItem>
-      <Details>
-        <Text.Block size="large" style={{ fontWeight: '700' }}>
-          {workHistoryData.workPlace}
-        </Text.Block>
-        <Text.Block size="normal" style={{ fontWeight: '600' }}>
-          {workHistoryData.jobTitle}
-          <Text
-            size="xsmall"
-            color={theme.textTertiary}
-            style={{ marginLeft: '1rem' }}
-          >
-            {startDate}
-            {' - '}
-            {endDate}
-          </Text>
-        </Text.Block>
-        <Text.Block size="normal">{workHistoryData.description}</Text.Block>
-      </Details>
-      <Icons>
-        <IconPencil width="16px" onClick={() => openModal()} />
-        <IconTrash width="16px" onClick={() => removeItem()} />
-      </Icons>
-    </SingleWorkItem>
-  )
-}
+const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
+  <SingleWorkItem>
+    <Details>
+      <Text.Block size="large" style={{ fontWeight: '700' }}>
+        {workHistoryData.workPlace}
+      </Text.Block>
+      <Text.Block size="normal" style={{ fontWeight: '600' }}>
+        {workHistoryData.jobTitle}
+        <Text
+          size="xsmall"
+          color={theme.textTertiary}
+          style={{ marginLeft: '1rem' }}
+        >
+          {workHistoryData.startDate
+            ? unixToWorkDate(workHistoryData.startDate)
+            : '?'}
+          {' - '}
+          {workHistoryData.endDate
+            ? unixToWorkDate(workHistoryData.endDate)
+            : 'Present'}
+        </Text>
+      </Text.Block>
+      <Text.Block size="normal">{workHistoryData.description}</Text.Block>
+    </Details>
+    <Icons>
+      <IconPencil width="16px" onClick={() => openModal()} />
+      <IconTrash width="16px" onClick={() => removeItem()} />
+    </Icons>
+  </SingleWorkItem>
+)
 
 const SingleWorkItem = styled.div`
   display: flex;
