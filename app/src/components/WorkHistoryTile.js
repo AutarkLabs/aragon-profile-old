@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { Text, theme } from '@aragon/ui'
 import { IconPencil, IconTrash } from '../assets/'
-import { unixToWorkDate } from '../utils/'
+import { displayStartEndDates } from '../utils/'
 
 const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
   <SingleWorkItem>
@@ -19,13 +19,7 @@ const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
           color={theme.textTertiary}
           style={{ marginLeft: '1rem' }}
         >
-          {workHistoryData.startDate
-            ? unixToWorkDate(workHistoryData.startDate)
-            : '?'}
-          {' - '}
-          {workHistoryData.endDate
-            ? unixToWorkDate(workHistoryData.endDate)
-            : 'Present'}
+          {displayStartEndDates(workHistoryData)}
         </Text>
       </Text.Block>
       <Text.Block size="normal">{workHistoryData.description}</Text.Block>
