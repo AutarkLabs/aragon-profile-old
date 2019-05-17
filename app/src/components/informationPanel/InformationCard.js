@@ -19,46 +19,6 @@ import {
 const shortenAddress = address =>
   address.slice(0, 12) + '...' + address.slice(-10)
 
-const renderName = fields => {
-  const { dispatchModal } = useContext(ModalContext)
-
-  return fields.name ? (
-    <Text.Block size="xxlarge" style={{ fontWeight: '700' }}>
-      {fields.name}
-    </Text.Block>
-  ) : (
-    <Center>
-      <Text
-        style={{ cursor: 'pointer' }}
-        size="large"
-        color={theme.accent}
-        onClick={() => dispatchModal(open('basicInformation'))}
-      >
-        Add name
-      </Text>
-    </Center>
-  )
-}
-
-const renderDescription = fields => {
-  const { dispatchModal } = useContext(ModalContext)
-
-  return fields.description ? (
-    <Text.Block>{fields.description}</Text.Block>
-  ) : (
-    <Center>
-      <Text.Block
-        style={{ cursor: 'pointer' }}
-        size="large"
-        color={theme.accent}
-        onClick={() => dispatchModal(open('basicInformation'))}
-      >
-        Add bio
-      </Text.Block>
-    </Center>
-  )
-}
-
 const InformationCard = ({ ethereumAddress }) => {
   const [activePopover, setPopover] = useState('')
 
@@ -94,50 +54,88 @@ const InformationCard = ({ ethereumAddress }) => {
     </VerifyCard>
   )
 
+  const renderName = fields =>
+    fields.name ? (
+      <Text.Block size="xxlarge" style={{ fontWeight: '700' }}>
+        {fields.name}
+      </Text.Block>
+    ) : (
+      <Center>
+        <Text
+          style={{ cursor: 'pointer' }}
+          size="large"
+          color={theme.accent}
+          onClick={() => dispatchModal(open('basicInformation'))}
+        >
+          Add name
+        </Text>
+      </Center>
+    )
+
+  const renderDescription = fields =>
+    fields.description ? (
+      <Text.Block>{fields.description}</Text.Block>
+    ) : (
+      <Center>
+        <Text.Block
+          style={{ cursor: 'pointer' }}
+          size="large"
+          color={theme.accent}
+          onClick={() => dispatchModal(open('basicInformation'))}
+        >
+          Add bio
+        </Text.Block>
+      </Center>
+    )
+
+  const renderLocation = fields => (
+    <Social>
+      <IconLocation width="1rem" height="1rem" color={theme.textTertiary} />
+      {fields.location ? (
+        <Text size="small" color={theme.textTertiary}>
+          {fields.location}
+        </Text>
+      ) : (
+        <Text
+          style={{ cursor: 'pointer' }}
+          color={theme.accent}
+          onClick={() => dispatchModal(open('basicInformation'))}
+        >
+          Add location
+        </Text>
+      )}
+    </Social>
+  )
+
+  const renderEmpty = () => (
+    <Center height="10rem">
+      <Text.Block style={{ textAlign: 'center' }} size="xlarge">
+        You have no name, bio or location
+      </Text.Block>
+      <Text
+        style={{ cursor: 'pointer' }}
+        size="small"
+        color={theme.accent}
+        onClick={() => dispatchModal(open('basicInformation'))}
+      >
+        Add basic information
+      </Text>
+    </Center>
+  )
+
   return (
     <StyledCard>
       <Information>
         <Details>
           {!(fields.name || fields.description || fields.location) ? (
-            <Center height="10rem">
-              <Text.Block style={{ textAlign: 'center' }} size="xlarge">
-                You have no name, bio or location
-              </Text.Block>
-              <Text
-                style={{ cursor: 'pointer' }}
-                size="small"
-                color={theme.accent}
-                onClick={() => dispatchModal(open('basicInformation'))}
-              >
-                Add basic information
-              </Text>
-            </Center>
+            renderEmpty()
           ) : (
             <Fragment>
               {renderName(fields)}
               {renderDescription(fields)}
+              {renderLocation(fields)}
             </Fragment>
           )}
-          <Social>
-            <IconLocation
-              width="1rem"
-              height="1rem"
-              color={theme.textTertiary}
-            />
-            {fields.location ? (
-              <Text size="small" color={theme.textTertiary}>
-                {fields.location}
-              </Text>
-            ) : (
-              <Text
-                style={{ cursor: 'pointer' }}
-                color={theme.accent}
-                onClick={() => dispatchModal(open('basicInformation'))}
-              >
-                Add location
-              </Text>
-            )}
-          </Social>
           <Social>
             <IconGlobe width="1rem" height="1rem" color={theme.textPrimary} />
             {fields.website ? (
