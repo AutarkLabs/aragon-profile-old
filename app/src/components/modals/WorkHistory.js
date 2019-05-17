@@ -1,5 +1,4 @@
 import React from 'react'
-import uuidv1 from 'uuid/v1'
 import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
@@ -96,10 +95,7 @@ WorkHistory.propTypes = {
   getFormValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   saveProfile: PropTypes.func.isRequired,
-}
-
-WorkHistory.defaultProps = {
-  workHistoryId: uuidv1(),
+  workHistoryId: PropTypes.string.isRequired,
 }
 
 export default WorkHistory
