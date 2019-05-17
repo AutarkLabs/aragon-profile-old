@@ -35,7 +35,7 @@ const InformationCard = ({ ethereumAddress }) => {
   const PopoverCard = ({ social }) => (
     <VerifyCard>
       <Text.Block size="xlarge">Verify my {social}</Text.Block>
-      <CardCloseButton type="button" onClick={() => setPopover('null')}>
+      <CardCloseButton type="button" onClick={() => setPopover('')}>
         <IconClose />￼
       </CardCloseButton>
 
