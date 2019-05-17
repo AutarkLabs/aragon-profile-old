@@ -4,7 +4,7 @@ import CardWrapper from '../wrappers/styleWrappers/CardWrapper'
 import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
 import EducationHistoryTile from './EducationHistoryTile'
-import { open } from '../stateManagers/modal'
+import { open, removeItem } from '../stateManagers/modal'
 
 const EducationPanel = ({ ethereumAddress }) => {
   const { boxes } = useContext(BoxContext)
@@ -27,6 +27,7 @@ const EducationPanel = ({ ethereumAddress }) => {
             key={id}
             educationHistoryData={educationHistory[id]}
             openModal={() => dispatchModal(open('educationHistory', id))}
+            removeItem={() => dispatchModal(removeItem(id, 'educationHistory'))}
           />
         ))
       ) : (
