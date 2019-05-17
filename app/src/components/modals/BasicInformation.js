@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { Label } from '../styled-components'
 
 const BasicInformation = ({
   ethereumAddress,
