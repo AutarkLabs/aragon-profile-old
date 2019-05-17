@@ -1,14 +1,12 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import uuidv1 from 'uuid/v1'
-import { Text } from '@aragon/ui'
+import { Field, TextInput, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-
-import {
-  SmallMargin,
-  FullWidthButton,
-  FullWidthTextInput,
-} from '../styled-components'
-import { DatePicker } from '../readOrEditFields'
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { useDate } from '../../hooks'
+import { years } from '../../utils'
+import DateDropdowns from '../DateDropdowns'
+import { Label } from '../styled-components'
 
 const EducationHistory = ({
   ethereumAddress,
@@ -17,73 +15,109 @@ const EducationHistory = ({
   saveProfile,
   educationHistoryId,
 }) => {
+  const startDate = getFormValue(
+    'educationHistory',
+    educationHistoryId,
+    'startDate'
+  )
+  const endDate = getFormValue(
+    'educationHistory',
+    educationHistoryId,
+    'endDate'
+  )
+
+  const {
+    indexStartYear,
+    indexStartMonth,
+    indexEndYear,
+    indexEndMonth,
+    current,
+    dispatchDateChange,
+  } = useDate(
+    startDate,
+    endDate,
+    years,
+    onChange,
+    'educationHistory',
+    educationHistoryId
+  )
+
   return (
-    <Fragment>
-      <Text>Add Education History</Text>
-      <SmallMargin />
-      <FullWidthTextInput
-        value={getFormValue(
-          'educationHistory',
-          educationHistoryId,
-          'organization'
-        )}
-        placeholder={'Organization'}
-        onChange={e =>
-          onChange(
-            e.target.value,
+    <ModalWrapper title="Add Education">
+      <Field label="School">
+        <TextInput
+          wide
+          value={getFormValue(
             'educationHistory',
             educationHistoryId,
             'organization'
-          )
-        }
-        type="text"
-        size="normal"
+          )}
+          onChange={e =>
+            onChange(
+              e.target.value,
+              'educationHistory',
+              educationHistoryId,
+              'organization'
+            )
+          }
+        />
+      </Field>
+
+      <TwoColumnsRow>
+        <div>
+          <Label>Degree</Label>
+          <TextInput
+            wide
+            value={getFormValue(
+              'educationHistory',
+              educationHistoryId,
+              'degree'
+            )}
+            onChange={e =>
+              onChange(
+                e.target.value,
+                'educationHistory',
+                educationHistoryId,
+                'degree'
+              )
+            }
+          />
+        </div>
+        <div>
+          <Label>Field of Study</Label>
+          <TextInput
+            wide
+            value={getFormValue(
+              'educationHistory',
+              educationHistoryId,
+              'fieldOfStudy'
+            )}
+            onChange={e =>
+              onChange(
+                e.target.value,
+                'educationHistory',
+                educationHistoryId,
+                'fieldOfStudy'
+              )
+            }
+          />
+        </div>
+      </TwoColumnsRow>
+
+      <DateDropdowns
+        current={current}
+        dispatchDateChange={dispatchDateChange}
+        indexStartMonth={indexStartMonth}
+        indexStartYear={indexStartYear}
+        indexEndMonth={indexEndMonth}
+        indexEndYear={indexEndYear}
+        type="educationHistory"
       />
-      <SmallMargin />
-      <FullWidthTextInput
-        value={getFormValue('educationHistory', educationHistoryId, 'degree')}
-        placeholder={'Degree'}
-        onChange={e =>
-          onChange(
-            e.target.value,
-            'educationHistory',
-            educationHistoryId,
-            'degree'
-          )
-        }
-        type="text"
-        size="normal"
-      />
-      <SmallMargin />
-      <DatePicker
-        value={getFormValue(
-          'educationHistory',
-          educationHistoryId,
-          'startDate'
-        )}
-        onChange={unixTime =>
-          onChange(
-            unixTime,
-            'educationHistory',
-            educationHistoryId,
-            'startDate'
-          )
-        }
-        label="Start date"
-      />
-      <SmallMargin />
-      <DatePicker
-        value={getFormValue('educationHistory', educationHistoryId, 'endDate')}
-        onChange={unixTime =>
-          onChange(unixTime, 'educationHistory', educationHistoryId, 'endDate')
-        }
-        label="End date"
-      />
-      <FullWidthButton onClick={() => saveProfile(ethereumAddress)}>
+
+      <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
         Save
-      </FullWidthButton>
-      <SmallMargin />
-    </Fragment>
+      </Button>
+    </ModalWrapper>
   )
 }
 

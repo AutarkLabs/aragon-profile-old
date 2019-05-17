@@ -14,7 +14,6 @@ import {
   removedItemError,
 } from '../../stateManagers/box'
 import { close } from '../../stateManagers/modal'
-import { FullWidthButton } from '../styled-components'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
@@ -31,13 +30,16 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   const getFormValue = (field, uniqueId, nestedField) => {
-    if (!userLoaded) return ''
-    if (!uniqueId) return boxes[ethereumAddress].forms[field]
-    if (!nestedField) return boxes[ethereumAddress].forms[field][uniqueId]
-    return (
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-      boxes[ethereumAddress].forms[field][uniqueId][nestedField]
-    )
+    let value
+    if (!userLoaded) value = ''
+    else if (!uniqueId) value = boxes[ethereumAddress].forms[field]
+    else if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
+    else
+      value =
+        boxes[ethereumAddress].forms[field][uniqueId] &&
+        boxes[ethereumAddress].forms[field][uniqueId][nestedField]
+
+    return value || ''
   }
 
   const saveProfile = async ethereumAddress => {
@@ -55,11 +57,20 @@ const UserInfoModal = ({ ethereumAddress }) => {
       const changedValues = changed.map(calculateChanged)
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(ethereumAddress, forms))
-      dispatch(close())
+      dispatchModal(close())
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }
   }
+
+  const props = {
+    ethereumAddress,
+    getFormValue,
+    onChange,
+    saveProfile,
+  }
+
+  if (!userLoaded) return null
 
   const removeItem = async () => {
     dispatch(removingItem(ethereumAddress))
@@ -78,44 +89,21 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   return (
-    <Modal visible={userLoaded && !!modal.type}>
-      {userLoaded && modal.type === 'basicInformation' && (
-        <BasicInformationModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-        />
+    <Modal visible={!!modal.type} padding="0">
+      {modal.type === 'basicInformation' && (
+        <BasicInformationModal {...props} />
       )}
 
-      {userLoaded && modal.type === 'educationHistory' && (
-        <EducationHistoryModal
-          educationHistoryId={modal.id}
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-        />
+      {modal.type === 'educationHistory' && (
+        <EducationHistoryModal educationHistoryId={modal.id} {...props} />
       )}
-      {userLoaded && modal.type === 'workHistory' && (
-        <WorkHistoryModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-          workHistoryId={modal.id}
-        />
+
+      {modal.type === 'workHistory' && (
+        <WorkHistoryModal workHistoryId={modal.id} {...props} />
       )}
-      {userLoaded && modal.type === 'removeItem' && (
-        <RemoveItem
-          item={getFormValue(modal.itemType, modal.id)}
-          ethereumAddress={ethereumAddress}
-          onRemove={removeItem}
-        />
+      {modal.type === 'removeItem' && (
+        <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
       )}
-      <FullWidthButton onClick={() => dispatchModal(close())}>
-        Close modal
-      </FullWidthButton>
     </Modal>
   )
 }

@@ -22,7 +22,7 @@ export const fetchingPublicProfile = () => ({
   forms: {
     name: '',
     job: '',
-    employer: '',
+    workPlace: '',
     location: '',
     school: '',
     website: '',
