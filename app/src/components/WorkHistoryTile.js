@@ -3,26 +3,23 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 import { Text, theme } from '@aragon/ui'
-import { unixToWorkDate } from '../utils'
 import { IconPencil, IconTrash } from '../assets/'
+import { displayStartEndDates } from '../utils/'
 
 const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
   <SingleWorkItem>
     <Details>
       <Text.Block size="large" style={{ fontWeight: '700' }}>
-        {workHistoryData.employer}
+        {workHistoryData.workPlace}
       </Text.Block>
       <Text.Block size="normal" style={{ fontWeight: '600' }}>
         {workHistoryData.jobTitle}
         <Text
           size="xsmall"
-          style={{ marginLeft: '1rem', fontColor: theme.textTertiary }}
+          color={theme.textTertiary}
+          style={{ marginLeft: '1rem' }}
         >
-          {unixToWorkDate(workHistoryData.startDate)}
-          {' - '}
-          {workHistoryData.endDate
-            ? unixToWorkDate(workHistoryData.endDate)
-            : 'Present'}
+          {displayStartEndDates(workHistoryData)}
         </Text>
       </Text.Block>
       <Text.Block size="normal">{workHistoryData.description}</Text.Block>
@@ -33,6 +30,7 @@ const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
     </Icons>
   </SingleWorkItem>
 )
+
 const SingleWorkItem = styled.div`
   display: flex;
   > :not(:last-child) {
@@ -62,10 +60,10 @@ const Details = styled.div`
 
 WorkHistoryTile.propTypes = {
   workHistoryData: PropTypes.shape({
-    employer: PropTypes.string.isRequired,
+    workPlace: PropTypes.string.isRequired,
     jobTitle: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    startDate: PropTypes.number.isRequired,
+    startDate: PropTypes.number,
     endDate: PropTypes.number,
   }).isRequired,
   openModal: PropTypes.func.isRequired,

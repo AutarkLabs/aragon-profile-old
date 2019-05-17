@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
+import uuidv1 from 'uuid/v1'
 
 import { BoxContext } from '../../wrappers/box'
 import { ModalContext } from '../../wrappers/modal'
@@ -14,7 +15,6 @@ import {
   removedItemError,
 } from '../../stateManagers/box'
 import { close } from '../../stateManagers/modal'
-import { FullWidthButton } from '../styled-components'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
@@ -23,6 +23,7 @@ import RemoveItem from './RemoveItem'
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { modal, dispatchModal } = useContext(ModalContext)
+  const [key, setKey] = useState(uuidv1())
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -31,13 +32,16 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   const getFormValue = (field, uniqueId, nestedField) => {
-    if (!userLoaded) return ''
-    if (!uniqueId) return boxes[ethereumAddress].forms[field]
-    if (!nestedField) return boxes[ethereumAddress].forms[field][uniqueId]
-    return (
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-      boxes[ethereumAddress].forms[field][uniqueId][nestedField]
-    )
+    let value
+    if (!userLoaded) value = ''
+    else if (!uniqueId) value = boxes[ethereumAddress].forms[field]
+    else if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
+    else
+      value =
+        boxes[ethereumAddress].forms[field][uniqueId] &&
+        boxes[ethereumAddress].forms[field][uniqueId][nestedField]
+
+    return value || ''
   }
 
   const saveProfile = async ethereumAddress => {
@@ -55,11 +59,21 @@ const UserInfoModal = ({ ethereumAddress }) => {
       const changedValues = changed.map(calculateChanged)
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(ethereumAddress, forms))
-      dispatch(close())
+      dispatchModal(close())
+      setKey(uuidv1())
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }
   }
+
+  const props = {
+    ethereumAddress,
+    getFormValue,
+    onChange,
+    saveProfile,
+  }
+
+  if (!userLoaded) return null
 
   const removeItem = async () => {
     dispatch(removingItem(ethereumAddress))
@@ -78,44 +92,24 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   return (
-    <Modal visible={userLoaded && !!modal.type}>
-      {userLoaded && modal.type === 'basicInformation' && (
-        <BasicInformationModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
+    <Modal visible={!!modal.type} padding="0">
+      {modal.type === 'basicInformation' && (
+        <BasicInformationModal {...props} />
+      )}
+
+      {modal.type === 'educationHistory' && (
+        <EducationHistoryModal
+          educationHistoryId={modal.id || key}
+          {...props}
         />
       )}
 
-      {userLoaded && modal.type === 'educationHistory' && (
-        <EducationHistoryModal
-          educationHistoryId={modal.id}
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-        />
+      {modal.type === 'workHistory' && (
+        <WorkHistoryModal workHistoryId={modal.id || key} {...props} />
       )}
-      {userLoaded && modal.type === 'workHistory' && (
-        <WorkHistoryModal
-          ethereumAddress={ethereumAddress}
-          getFormValue={getFormValue}
-          onChange={onChange}
-          saveProfile={saveProfile}
-          workHistoryId={modal.id}
-        />
+      {modal.type === 'removeItem' && (
+        <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
       )}
-      {userLoaded && modal.type === 'removeItem' && (
-        <RemoveItem
-          item={getFormValue(modal.itemType, modal.id)}
-          ethereumAddress={ethereumAddress}
-          onRemove={removeItem}
-        />
-      )}
-      <FullWidthButton onClick={() => dispatchModal(close())}>
-        Close modal
-      </FullWidthButton>
     </Modal>
   )
 }

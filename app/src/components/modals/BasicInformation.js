@@ -1,16 +1,8 @@
-import React, { Fragment } from 'react'
-import { Text } from '@aragon/ui'
+import React from 'react'
+import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import {
-  SmallMargin,
-  FlexDirectionRow,
-  FlexGrowTextInput,
-  FullWidthButton,
-  FullWidthTextInput,
-} from '../styled-components'
-
-import { EditTextArea } from '../readOrEditFields'
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { Label } from '../styled-components'
 
 const BasicInformation = ({
   ethereumAddress,
@@ -19,48 +11,49 @@ const BasicInformation = ({
   saveProfile,
 }) => {
   return (
-    <Fragment>
-      <Text>Edit Basic Information</Text>
-      <SmallMargin />
-      <SpaceAround>
-        <FlexGrowTextInput
-          type={'text'}
-          onChange={e => onChange(e.target.value, 'name')}
-          value={getFormValue('name')}
-          placeholder={'Name'}
+    <ModalWrapper title="Edit Basic Information">
+      <TwoColumnsRow>
+        <div>
+          <Label>Name</Label>
+          <TextInput
+            wide
+            onChange={e => onChange(e.target.value, 'name')}
+            value={getFormValue('name')}
+          />
+        </div>
+        <div>
+          <Label>Location</Label>
+          <TextInput
+            wide
+            onChange={e => onChange(e.target.value, 'location')}
+            value={getFormValue('location')}
+          />
+        </div>
+      </TwoColumnsRow>
+
+      <div>
+        <Label>Bio</Label>
+        <TextInput.Multiline
+          style={{ height: '80px' }}
+          wide
+          value={getFormValue('description')}
+          onChange={e => onChange(e.target.value, 'description')}
         />
-        <SmallMargin />
-        <FlexGrowTextInput
-          type="text"
-          onChange={e => onChange(e.target.value, 'location')}
-          value={getFormValue('location')}
-          placeholder={'Location'}
+      </div>
+      <div>
+        <Label>Website</Label>
+        <TextInput
+          wide
+          value={getFormValue('website')}
+          onChange={e => onChange(e.target.value, 'website')}
+          type="url"
         />
-      </SpaceAround>
-      <SmallMargin />
-      <EditTextArea
-        value={getFormValue('description')}
-        placeholder={'Bio'}
-        onChange={e => onChange(e.target.value, 'description')}
-        type="text"
-        size="normal"
-      />
-      <SmallMargin />
-      <FullWidthTextInput
-        value={getFormValue('website')}
-        placeholder={'Website'}
-        onChange={e => onChange(e.target.value, 'website')}
-        type="url"
-        size="normal"
-      />
-      <SmallMargin />
-      <FullWidthButton
-        mode="strong"
-        onClick={() => saveProfile(ethereumAddress)}
-      >
+      </div>
+
+      <Button mode="strong" wide onClick={() => saveProfile(ethereumAddress)}>
         Save
-      </FullWidthButton>
-    </Fragment>
+      </Button>
+    </ModalWrapper>
   )
 }
 
@@ -72,7 +65,3 @@ BasicInformation.propTypes = {
 }
 
 export default BasicInformation
-
-const SpaceAround = styled(FlexDirectionRow)`
-  justify-content: space-around;
-`
