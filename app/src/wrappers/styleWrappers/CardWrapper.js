@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, Text } from '@aragon/ui'
+import { Card, Text, theme } from '@aragon/ui'
 import styled from 'styled-components'
 
 const CardWrapper = ({ children, title, addMore, addSeparators }) => (
@@ -14,6 +14,7 @@ const CardWrapper = ({ children, title, addMore, addSeparators }) => (
       <Text
         style={{ paddingLeft: '1rem', cursor: 'pointer' }}
         size="small"
+        color={theme.accent}
         onClick={() => addMore()}
       >
         Add more
@@ -27,6 +28,7 @@ const CardWrapper = ({ children, title, addMore, addSeparators }) => (
 
 CardWrapper.defaultProps = {
   addSeparators: false,
+  addMore: null,
 }
 
 CardWrapper.propTypes = {

@@ -32,7 +32,7 @@ const InformationCard = ({ ethereumAddress }) => {
 
   const fields = boxes[ethereumAddress].publicProfile
 
-  const popoverCard = social => (
+  const PopoverCard = ({ social }) => (
     <VerifyCard>
       <Text.Block size="xlarge">Verify my {social}</Text.Block>
       <CardCloseButton type="button" onClick={() => setPopover('')}>
@@ -54,37 +54,106 @@ const InformationCard = ({ ethereumAddress }) => {
     </VerifyCard>
   )
 
+  const RenderName = ({ name }) =>
+    name ? (
+      <Text.Block size="xxlarge" style={{ fontWeight: '700' }}>
+        {name}
+      </Text.Block>
+    ) : (
+      <Center>
+        <Text
+          style={{ cursor: 'pointer' }}
+          size="large"
+          color={theme.accent}
+          onClick={() => dispatchModal(open('basicInformation'))}
+        >
+          Add name
+        </Text>
+      </Center>
+    )
+
+  const RenderDescription = ({ description }) =>
+    description ? (
+      <Text.Block>{description}</Text.Block>
+    ) : (
+      <Center>
+        <Text.Block
+          style={{ cursor: 'pointer' }}
+          size="large"
+          color={theme.accent}
+          onClick={() => dispatchModal(open('basicInformation'))}
+        >
+          Add bio
+        </Text.Block>
+      </Center>
+    )
+
+  const RenderLocation = ({ location }) => (
+    <Social>
+      <IconLocation width="1rem" height="1rem" color={theme.textTertiary} />
+      {location ? (
+        <Text size="small" color={theme.textTertiary}>
+          {location}
+        </Text>
+      ) : (
+        <Text
+          style={{ cursor: 'pointer' }}
+          color={theme.accent}
+          onClick={() => dispatchModal(open('basicInformation'))}
+        >
+          Add location
+        </Text>
+      )}
+    </Social>
+  )
+
+  const RenderEmpty = () => (
+    <Center height="10rem">
+      <Text.Block style={{ textAlign: 'center' }} size="xlarge">
+        You have no name, bio or location
+      </Text.Block>
+      <Text
+        style={{ cursor: 'pointer' }}
+        size="small"
+        color={theme.accent}
+        onClick={() => dispatchModal(open('basicInformation'))}
+      >
+        Add basic information
+      </Text>
+    </Center>
+  )
+
   return (
     <StyledCard>
       <Information>
         <Details>
-          <Text.Block size="xxlarge" style={{ fontWeight: '700' }}>
-            {fields.name ? fields.name : 'name'}
-          </Text.Block>
-          <Text.Block size="normal">
-            {fields.description ? fields.description : 'description'}
-          </Text.Block>
-
-          {fields.location && (
-            <Social>
-              <IconLocation
-                width="1rem"
-                height="1rem"
-                color={theme.textTertiary}
-              />
-              <Text size="small">{fields.location}</Text>
-            </Social>
+          {!(fields.name || fields.description || fields.location) ? (
+            <RenderEmpty />
+          ) : (
+            <Fragment>
+              <RenderName name={fields.name} />
+              <RenderDescription description={fields.description} />
+              <RenderLocation location={fields.location} />
+            </Fragment>
           )}
-          {fields.website && (
-            <Social>
-              <IconGlobe width="1rem" height="1rem" color={theme.textPrimary} />
+          <Social>
+            <IconGlobe width="1rem" height="1rem" color={theme.textPrimary} />
+            {fields.website ? (
               <SafeLink
                 value={fields.website}
                 placeholder="website"
                 size="small"
               />
-            </Social>
-          )}
+            ) : (
+              <Text
+                style={{ cursor: 'pointer' }}
+                color={theme.accent}
+                onClick={() => dispatchModal(open('basicInformation'))}
+              >
+                Add website
+              </Text>
+            )}
+          </Social>
           <Separator style={{ marginBottom: '1.1rem' }} />
           <Social>
             <IconTwitter
@@ -112,7 +181,9 @@ const InformationCard = ({ ethereumAddress }) => {
                   Verify my Twitter account
                 </Button>
 
-                {activePopover === 'twitter' && popoverCard('Twitter')}
+                {activePopover === 'twitter' && (
+                  <PopoverCard social="Twitter" />
+                )}
               </Fragment>
             )}
           </Social>
@@ -137,7 +208,7 @@ const InformationCard = ({ ethereumAddress }) => {
                 >
                   Verify my GitHub account
                 </Button>
-                {activePopover === 'github' && popoverCard('GitHub')}
+                {activePopover === 'github' && <PopoverCard social="GitHub" />}
               </Fragment>
             )}
           </Social>
@@ -156,6 +227,7 @@ const InformationCard = ({ ethereumAddress }) => {
         <Icons>
           <IconPencil
             width="16px"
+            color={theme.accent}
             onClick={() => dispatchModal(open('basicInformation'))}
           />
         </Icons>
@@ -168,6 +240,13 @@ InformationCard.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
 
+const Center = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: ${({ height }) => height || '3rem'};
+`
 const VerifyCard = styled(Card).attrs({
   width: '22rem',
   height: '13rem',
