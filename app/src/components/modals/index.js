@@ -51,8 +51,18 @@ const UserInfoModal = ({ ethereumAddress }) => {
     return value || ''
   }
 
-  const unlockProfile = async () => {
-    dispatch(requestedProfileUnlock(ethereumAddress))
+  const profileExists = ({
+    publicProfile,
+    loadedPublicProf,
+    loadedPublicProfSuccess,
+  }) => {
+    if (loadedPublicProfSuccess) return Object.keys(publicProfile).length > 0
+    if (loadedPublicProf) throw new Error('error loading profile')
+  }
+
+  const unlockProfile = async box => {
+    const hasProfile = profileExists(box)
+    dispatch(requestedProfileUnlock(ethereumAddress, hasProfile))
     try {
       const profile = new Profile(ethereumAddress, api)
       await profile.unlock()
@@ -64,21 +74,12 @@ const UserInfoModal = ({ ethereumAddress }) => {
     }
   }
 
-  const profileExists = ({
-    publicProfile,
-    loadedPublicProf,
-    loadedPublicProfSuccess,
-  }) => {
-    if (loadedPublicProfSuccess) return Object.keys(publicProfile).length > 0
-    if (loadedPublicProf) throw new Error('error loading profile')
-  }
-
-  const unlockBoxIfRequired = async ({ unlockedProf, unlockedProfSuccess }) => {
-    if (unlockedProfSuccess) return true
-    if (unlockedProf) throw new Error('error unlocking box')
+  const unlockBoxIfRequired = async box => {
+    if (box.unlockedProfSuccess) return true
+    if (box.unlockedProf) throw new Error('error unlocking box')
 
     dispatchModal(open('3boxState'))
-    const successfulUnlock = await unlockProfile()
+    const successfulUnlock = await unlockProfile(box)
     return successfulUnlock
   }
 

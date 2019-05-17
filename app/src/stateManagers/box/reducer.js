@@ -75,8 +75,10 @@ const boxReducer = (prevState, action) => {
     case REQUESTED_PROFILE_UNLOCK: {
       const nextState = { ...prevState }
       const ethereumAddress = action.meta.ethereumAddress
+      const hasBox = action.meta.hasBox
       nextState[ethereumAddress] = requestedProfUnlock(
-        prevState[ethereumAddress]
+        prevState[ethereumAddress],
+        hasBox
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

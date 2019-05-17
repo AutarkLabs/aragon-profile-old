@@ -44,10 +44,11 @@ export const fetchedPublicProfileError = (ethereumAddress, error) => ({
   error,
 })
 
-export const requestedProfileUnlock = ethereumAddress => ({
+export const requestedProfileUnlock = (ethereumAddress, hasBox) => ({
   type: REQUESTED_PROFILE_UNLOCK,
   meta: {
     ethereumAddress,
+    hasBox,
   },
 })
 

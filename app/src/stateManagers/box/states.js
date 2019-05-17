@@ -73,17 +73,19 @@ export const fetchedPublicProfileErr = (state, error) => ({
   error,
 })
 
-export const requestedProfUnlock = state => ({
+export const requestedProfUnlock = (state, hasBox) => ({
   ...state,
   unlockingProf: true,
   unlockedProf: false,
   unlockedProfSuccess: false,
   unlockedBox: {},
   messageSigning: {
-    ...state.messageSigning,
     unlockingProf: true,
     unlockedProf: false,
     unlockedProfSuccess: false,
+    creatingProf: !hasBox,
+    createdProf: false,
+    createdProfSuccess: false,
   },
 })
 
