@@ -32,10 +32,10 @@ const InformationCard = ({ ethereumAddress }) => {
 
   const fields = boxes[ethereumAddress].publicProfile
 
-  const popoverCard = social => (
+  const PopoverCard = ({ social }) => (
     <VerifyCard>
       <Text.Block size="xlarge">Verify my {social}</Text.Block>
-      <CardCloseButton type="button" onClick={() => setPopover('null')}>
+      <CardCloseButton type="button" onClick={() => setPopover('')}>
         <IconClose />￼
       </CardCloseButton>
 
@@ -54,10 +54,10 @@ const InformationCard = ({ ethereumAddress }) => {
     </VerifyCard>
   )
 
-  const renderName = fields =>
-    fields.name ? (
+  const RenderName = ({ name }) =>
+    name ? (
       <Text.Block size="xxlarge" style={{ fontWeight: '700' }}>
-        {fields.name}
+        {name}
       </Text.Block>
     ) : (
       <Center>
@@ -72,9 +72,9 @@ const InformationCard = ({ ethereumAddress }) => {
       </Center>
     )
 
-  const renderDescription = fields =>
-    fields.description ? (
-      <Text.Block>{fields.description}</Text.Block>
+  const RenderDescription = ({ description }) =>
+    description ? (
+      <Text.Block>{description}</Text.Block>
     ) : (
       <Center>
         <Text.Block
@@ -88,12 +88,12 @@ const InformationCard = ({ ethereumAddress }) => {
       </Center>
     )
 
-  const renderLocation = fields => (
+  const RenderLocation = ({ location }) => (
     <Social>
       <IconLocation width="1rem" height="1rem" color={theme.textTertiary} />
-      {fields.location ? (
+      {location ? (
         <Text size="small" color={theme.textTertiary}>
-          {fields.location}
+          {location}
         </Text>
       ) : (
         <Text
@@ -107,7 +107,7 @@ const InformationCard = ({ ethereumAddress }) => {
     </Social>
   )
 
-  const renderEmpty = () => (
+  const RenderEmpty = () => (
     <Center height="10rem">
       <Text.Block style={{ textAlign: 'center' }} size="xlarge">
         You have no name, bio or location
@@ -128,12 +128,12 @@ const InformationCard = ({ ethereumAddress }) => {
       <Information>
         <Details>
           {!(fields.name || fields.description || fields.location) ? (
-            renderEmpty()
+            <RenderEmpty />
           ) : (
             <Fragment>
-              {renderName(fields)}
-              {renderDescription(fields)}
-              {renderLocation(fields)}
+              <RenderName name={fields.name} />
+              <RenderDescription description={fields.description} />
+              <RenderLocation location={fields.location} />
             </Fragment>
           )}
           <Social>
@@ -181,7 +181,9 @@ const InformationCard = ({ ethereumAddress }) => {
                   Verify my Twitter account
                 </Button>
 
-                {activePopover === 'twitter' && popoverCard('Twitter')}
+                {activePopover === 'twitter' && (
+                  <PopoverCard social="Twitter" />
+                )}
               </Fragment>
             )}
           </Social>
@@ -206,7 +208,7 @@ const InformationCard = ({ ethereumAddress }) => {
                 >
                   Verify my GitHub account
                 </Button>
-                {activePopover === 'github' && popoverCard('GitHub')}
+                {activePopover === 'github' && <PopoverCard social="GitHub" />}
               </Fragment>
             )}
           </Social>

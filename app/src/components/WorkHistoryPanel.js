@@ -15,7 +15,7 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
   const userLoaded = !!boxes[ethereumAddress]
 
   const workHistory = userLoaded
-    ? boxes[ethereumAddress].publicProfile.workHistory
+    ? boxes[ethereumAddress].publicProfile.workHistory || {}
     : {}
 
   const historyNotEmpty = Object.keys(workHistory).length > 0

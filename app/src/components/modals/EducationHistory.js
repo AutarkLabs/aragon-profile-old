@@ -1,5 +1,4 @@
 import React from 'react'
-import uuidv1 from 'uuid/v1'
 import { Field, TextInput, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
@@ -122,14 +121,11 @@ const EducationHistory = ({
 }
 
 EducationHistory.propTypes = {
+  educationHistoryId: PropTypes.string.isRequired,
   ethereumAddress: PropTypes.string.isRequired,
   getFormValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   saveProfile: PropTypes.func.isRequired,
-}
-
-EducationHistory.defaultProps = {
-  educationHistoryId: uuidv1(),
 }
 
 export default EducationHistory
