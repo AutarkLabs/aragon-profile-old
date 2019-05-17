@@ -22,7 +22,7 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
 
   const cardProps = {
     title: 'Work history',
-    addMore: historyNotEmpty ? () => dispatchModal(open('workHistory')) : false,
+    addMore: historyNotEmpty ? () => dispatchModal(open('workHistory')) : null,
     addSeparators: true,
   }
 

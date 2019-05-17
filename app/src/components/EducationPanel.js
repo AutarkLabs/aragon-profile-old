@@ -23,7 +23,7 @@ const EducationPanel = ({ ethereumAddress }) => {
     title: 'Education',
     addMore: historyNotEmpty
       ? () => dispatchModal(open('educationHistory'))
-      : false,
+      : null,
     addSeparators: true,
   }
 
