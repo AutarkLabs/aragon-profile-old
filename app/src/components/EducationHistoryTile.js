@@ -63,7 +63,7 @@ EducationHistoryTile.propTypes = {
   educationHistoryData: PropTypes.shape({
     degree: PropTypes.string,
     organization: PropTypes.string.isRequired,
-    startDate: PropTypes.number.isRequired,
+    startDate: PropTypes.number,
     endDate: PropTypes.number,
   }).isRequired,
   openModal: PropTypes.func.isRequired,

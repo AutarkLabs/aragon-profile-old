@@ -63,7 +63,7 @@ WorkHistoryTile.propTypes = {
     workPlace: PropTypes.string.isRequired,
     jobTitle: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    startDate: PropTypes.number.isRequired,
+    startDate: PropTypes.number,
     endDate: PropTypes.number,
   }).isRequired,
   openModal: PropTypes.func.isRequired,
