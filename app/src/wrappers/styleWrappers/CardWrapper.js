@@ -28,6 +28,7 @@ const CardWrapper = ({ children, title, addMore, addSeparators }) => (
 
 CardWrapper.defaultProps = {
   addSeparators: false,
+  addMore: null,
 }
 
 CardWrapper.propTypes = {

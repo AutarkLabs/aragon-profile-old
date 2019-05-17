@@ -15,14 +15,14 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
   const userLoaded = !!boxes[ethereumAddress]
 
   const workHistory = userLoaded
-    ? boxes[ethereumAddress].publicProfile.workHistory
+    ? boxes[ethereumAddress].publicProfile.workHistory || {}
     : {}
 
   const historyNotEmpty = Object.keys(workHistory).length > 0
 
   const cardProps = {
     title: 'Work history',
-    addMore: historyNotEmpty ? () => dispatchModal(open('workHistory')) : false,
+    addMore: historyNotEmpty ? () => dispatchModal(open('workHistory')) : null,
     addSeparators: true,
   }
 

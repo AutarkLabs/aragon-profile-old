@@ -14,7 +14,7 @@ const EducationPanel = ({ ethereumAddress }) => {
   const userLoaded = !!boxes[ethereumAddress]
 
   const educationHistory = userLoaded
-    ? boxes[ethereumAddress].publicProfile.educationHistory
+    ? boxes[ethereumAddress].publicProfile.educationHistory || {}
     : {}
 
   const historyNotEmpty = Object.keys(educationHistory).length > 0
@@ -23,7 +23,7 @@ const EducationPanel = ({ ethereumAddress }) => {
     title: 'Education',
     addMore: historyNotEmpty
       ? () => dispatchModal(open('educationHistory'))
-      : false,
+      : null,
     addSeparators: true,
   }
 
