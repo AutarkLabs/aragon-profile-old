@@ -6,7 +6,7 @@ import { ModalWrapper } from './ModalWrapper'
 import { ModalContext } from '../../wrappers/modal'
 import { close } from '../../stateManagers/modal'
 
-const RemoveItem = ({ ethereumAddress, item, itemType, onRemove }) => {
+const RemoveItem = ({ itemType, onRemove }) => {
   const { dispatchModal } = useContext(ModalContext)
   let title
   if (itemType === 'workHistory') title = 'Delete work history record'
@@ -46,9 +46,7 @@ const ButtonsRow = styled.div`
 `
 
 RemoveItem.propTypes = {
-  ethereumAddress: PropTypes.string.isRequired,
   onRemove: PropTypes.func.isRequired,
-  item: PropTypes.object,
   itemType: PropTypes.string.isRequired,
 }
 

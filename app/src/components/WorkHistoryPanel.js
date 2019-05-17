@@ -5,6 +5,8 @@ import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
 import WorkHistoryTile from './WorkHistoryTile'
 import { open, removeItem } from '../stateManagers/modal'
+import { Text, theme } from '@aragon/ui'
+import styled from 'styled-components'
 
 const WorkHistoryPanel = ({ ethereumAddress }) => {
   const { boxes } = useContext(BoxContext)
@@ -16,13 +18,17 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
     ? boxes[ethereumAddress].publicProfile.workHistory
     : {}
 
+  const historyNotEmpty = Object.keys(workHistory).length > 0
+
+  const cardProps = {
+    title: 'Work history',
+    addMore: historyNotEmpty ? () => dispatchModal(open('workHistory')) : false,
+    addSeparators: true,
+  }
+
   return (
-    <CardWrapper
-      title="Work history"
-      addMore={() => dispatchModal(open('workHistory'))}
-      addSeparators
-    >
-      {workHistory ? (
+    <CardWrapper {...cardProps}>
+      {historyNotEmpty ? (
         Object.keys(workHistory).map(id => (
           <WorkHistoryTile
             key={id}
@@ -32,7 +38,17 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
           />
         ))
       ) : (
-        <div style={{ textAlign: 'center' }}>No work history</div>
+        <Center>
+          <Text size="xlarge">You have no work history</Text>
+          <Text
+            style={{ cursor: 'pointer' }}
+            size="small"
+            color={theme.accent}
+            onClick={() => dispatchModal(open('workHistory'))}
+          >
+            Add work
+          </Text>
+        </Center>
       )}
     </CardWrapper>
   )
@@ -41,5 +57,13 @@ const WorkHistoryPanel = ({ ethereumAddress }) => {
 WorkHistoryPanel.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
+
+const Center = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+`
 
 export default WorkHistoryPanel

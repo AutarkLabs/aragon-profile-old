@@ -5,6 +5,8 @@ import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
 import EducationHistoryTile from './EducationHistoryTile'
 import { open, removeItem } from '../stateManagers/modal'
+import { Text, theme } from '@aragon/ui'
+import styled from 'styled-components'
 
 const EducationPanel = ({ ethereumAddress }) => {
   const { boxes } = useContext(BoxContext)
@@ -15,13 +17,19 @@ const EducationPanel = ({ ethereumAddress }) => {
     ? boxes[ethereumAddress].publicProfile.educationHistory
     : {}
 
+  const historyNotEmpty = Object.keys(educationHistory).length > 0
+
+  const cardProps = {
+    title: 'Education',
+    addMore: historyNotEmpty
+      ? () => dispatchModal(open('educationHistory'))
+      : false,
+    addSeparators: true,
+  }
+
   return (
-    <CardWrapper
-      title="Education"
-      addMore={() => dispatchModal(open('educationHistory'))}
-      addSeparators
-    >
-      {educationHistory ? (
+    <CardWrapper {...cardProps}>
+      {historyNotEmpty ? (
         Object.keys(educationHistory).map(id => (
           <EducationHistoryTile
             key={id}
@@ -31,7 +39,17 @@ const EducationPanel = ({ ethereumAddress }) => {
           />
         ))
       ) : (
-        <div style={{ textAlign: 'center' }}>No education</div>
+        <Center>
+          <Text size="xlarge">You have no education</Text>
+          <Text
+            style={{ cursor: 'pointer' }}
+            size="small"
+            color={theme.accent}
+            onClick={() => dispatchModal(open('educationHistory'))}
+          >
+            Add educaction
+          </Text>
+        </Center>
       )}
     </CardWrapper>
   )
@@ -40,5 +58,13 @@ const EducationPanel = ({ ethereumAddress }) => {
 EducationPanel.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
+
+const Center = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+`
 
 export default EducationPanel

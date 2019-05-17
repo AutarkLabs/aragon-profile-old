@@ -33,8 +33,16 @@ const EducationHistoryTile = ({
       </Text.Block>
     </Details>
     <Icons>
-      <IconPencil width="16px" onClick={() => openModal()} />
-      <IconTrash width="16px" onClick={() => removeItem()} />
+      <IconPencil
+        width="16px"
+        color={theme.accent}
+        onClick={() => openModal()}
+      />
+      <IconTrash
+        width="16px"
+        color={theme.accent}
+        onClick={() => removeItem()}
+      />
     </Icons>
   </SingleEducationItem>
 )

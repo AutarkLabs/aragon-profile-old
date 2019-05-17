@@ -31,8 +31,16 @@ const WorkHistoryTile = ({ workHistoryData, openModal, removeItem }) => (
       <Text.Block size="normal">{workHistoryData.description}</Text.Block>
     </Details>
     <Icons>
-      <IconPencil width="16px" onClick={() => openModal()} />
-      <IconTrash width="16px" onClick={() => removeItem()} />
+      <IconPencil
+        color={theme.accent}
+        width="16px"
+        onClick={() => openModal()}
+      />
+      <IconTrash
+        color={theme.accent}
+        width="16px"
+        onClick={() => removeItem()}
+      />
     </Icons>
   </SingleWorkItem>
 )

@@ -32,11 +32,12 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const getFormValue = (field, uniqueId, nestedField) => {
     let value
     if (!userLoaded) value = ''
-    if (!uniqueId) value = boxes[ethereumAddress].forms[field]
-    if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
-    value =
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-      boxes[ethereumAddress].forms[field][uniqueId][nestedField]
+    else if (!uniqueId) value = boxes[ethereumAddress].forms[field]
+    else if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
+    else
+      value =
+        boxes[ethereumAddress].forms[field][uniqueId] &&
+        boxes[ethereumAddress].forms[field][uniqueId][nestedField]
 
     return value || ''
   }
@@ -101,12 +102,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
         <WorkHistoryModal workHistoryId={modal.id} {...props} />
       )}
       {modal.type === 'removeItem' && (
-        <RemoveItem
-          item={getFormValue(modal.itemType, modal.id)}
-          itemType={modal.itemType}
-          ethereumAddress={ethereumAddress}
-          onRemove={removeItem}
-        />
+        <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
       )}
     </Modal>
   )
