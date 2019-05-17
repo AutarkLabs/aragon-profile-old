@@ -16,6 +16,7 @@ import {
   removedItem,
   removedItemError,
   requestedProfileUnlock,
+  requestProfileCreate,
   profileUnlockSuccess,
   profileUnlockFailure,
 } from '../../stateManagers/box'
@@ -60,6 +61,13 @@ const UserInfoModal = ({ ethereumAddress }) => {
     if (loadedPublicProf) throw new Error('error loading profile')
   }
 
+  const delay = () =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, 3000)
+    })
+
   const unlockProfile = async box => {
     const hasProfile = profileExists(box)
     dispatch(requestedProfileUnlock(ethereumAddress, hasProfile))
@@ -67,7 +75,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       const profile = new Profile(ethereumAddress, api)
       await profile.unlock()
       dispatch(profileUnlockSuccess(ethereumAddress, profile))
-      return true
+      return profile
     } catch (error) {
       dispatch(profileUnlockFailure(ethereumAddress, error))
       return false
@@ -75,19 +83,24 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   const unlockBoxIfRequired = async box => {
-    if (box.unlockedProfSuccess) return true
+    if (box.unlockedProfSuccess) {
+      if (profileExists(box)) {
+        dispatch(requestProfileCreate(ethereumAddress))
+      }
+      return box.unlockedBox
+    }
     if (box.unlockedProf) throw new Error('error unlocking box')
 
     dispatchModal(open('3boxState'))
-    const successfulUnlock = await unlockProfile(box)
-    return successfulUnlock
+    const unlockedBox = await unlockProfile(box)
+    return unlockedBox
   }
 
   const saveProfile = async ethereumAddress => {
     dispatch(savingProfile(ethereumAddress))
 
     try {
-      const { changed, forms, unlockedBox } = boxes[ethereumAddress]
+      const { changed, forms } = boxes[ethereumAddress]
       const calculateChanged = field => {
         if (field === 'workHistory' || field === 'educationHistory') {
           return Object.keys(forms[field]).map(id => forms[field][id])
@@ -96,11 +109,11 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       const changedValues = changed.map(calculateChanged)
-      // let  = !profileExists(boxes[ethereumAddress])
-      const hasUnlockedBox = await unlockBoxIfRequired(boxes[ethereumAddress])
-      if (hasUnlockedBox) {
-        // await unlockedBox.setPublicFields(changed, changedValues)
+      const unlockedBox = await unlockBoxIfRequired(boxes[ethereumAddress])
+      if (unlockedBox) {
+        await unlockedBox.setPublicFields(changed, changedValues)
         dispatch(savedProfile(ethereumAddress, forms))
+        await delay()
         dispatchModal(close())
         setKey(uuidv1())
       } else {

@@ -12,12 +12,10 @@ const ProfileStatus = ({ awaitingSig, receivedSig, successfulSig, title }) => {
   if (awaitingSig) {
     Icon = IconAttention
     text = 'Waiting for signature...'
-  }
-  if (successfulSig) {
+  } else if (successfulSig) {
     Icon = IconCheck
     text = 'Message signed!'
-  }
-  if (receivedSig) {
+  } else if (receivedSig) {
     Icon = IconError
     text = 'Error signing message'
   }

@@ -188,6 +188,12 @@ export const requestedSaveProfileSuccess = (state, profile) => ({
     ...state.publicProfile,
     ...profile,
   },
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: false,
+    createdProf: true,
+    createdProfSuccess: true,
+  },
   changed: [],
 })
 
@@ -196,6 +202,12 @@ export const requestedSaveProfileError = (state, error) => ({
   savingProfile: false,
   savedProfile: true,
   savedProfileSucess: true,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: false,
+    createdProf: true,
+    createdProfSuccess: false,
+  },
   error,
 })
 
@@ -223,4 +235,14 @@ export const requestedProfileItemRemoveError = (state, error) => ({
   removedItem: true,
   removedItemSuccess: false,
   error,
+})
+
+export const requestProfileCreate = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: true,
+    createdProf: false,
+    createdProfSuccess: false,
+  },
 })

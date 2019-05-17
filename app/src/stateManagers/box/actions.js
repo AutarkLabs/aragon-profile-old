@@ -16,6 +16,7 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE,
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
+  REQUEST_PROFILE_CREATE,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -120,6 +121,13 @@ export const uploadedImageFailure = (ethereumAddress, error) => ({
     ethereumAddress,
   },
   error,
+})
+
+export const requestProfileCreate = ethereumAddress => ({
+  type: REQUEST_PROFILE_CREATE,
+  meta: {
+    ethereumAddress,
+  },
 })
 
 export const savingProfile = ethereumAddress => ({

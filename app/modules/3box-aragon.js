@@ -77,7 +77,7 @@ export class Profile {
       openedBox.onSyncDone(async () => {
         try {
           this.boxState = { opened: true, synced: true }
-          return resolve()
+          return resolve(openedBox)
         } catch (err) {
           this.boxState = { opened: false, synced: false }
           return reject(err)
