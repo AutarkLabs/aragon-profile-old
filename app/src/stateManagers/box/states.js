@@ -93,10 +93,12 @@ export const editedField = (state, field, value, uniqueId, nestedField) => {
   const newFormVals = _.cloneDeep({ ...state.forms })
   if (!uniqueId) newFormVals[field] = value
   else {
-    const newNestedField = {
+    let newNestedField = {
       ...newFormVals[field][uniqueId],
       [nestedField]: value,
     }
+    if (!value) delete newNestedField[nestedField]
+
     newFormVals[field][uniqueId] = newNestedField
   }
 

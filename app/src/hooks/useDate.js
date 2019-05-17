@@ -16,7 +16,12 @@ const reducer = (state, { type, index }) => {
       return { ...state, indexEndMonth: index }
     }
     case 'setCurrent': {
-      return { ...state, current: !state.current }
+      return {
+        ...state,
+        current: !state.current,
+        indexEndYear: 0,
+        indexEndMonth: 0,
+      }
     }
   }
 }
@@ -68,6 +73,10 @@ const useDate = (startDate, endDate, years, onChange, history, id) => {
       const unixTime = toUnix(`${years[indexEndYear]}-${indexEndMonth}-01`)
       if (unixTime !== endDate) onChange(unixTime, history, id, 'endDate')
     }
+
+    if (endDate && current) {
+      onChange('', history, id, 'endDate')
+    }
   }, [
     years,
     startDate,
@@ -79,6 +88,7 @@ const useDate = (startDate, endDate, years, onChange, history, id) => {
     indexEndYear,
     indexEndMonth,
     history,
+    current,
   ])
 
   return {

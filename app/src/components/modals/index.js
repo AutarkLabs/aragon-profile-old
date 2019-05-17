@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
+import uuidv1 from 'uuid/v1'
 
 import { BoxContext } from '../../wrappers/box'
 import { ModalContext } from '../../wrappers/modal'
@@ -22,6 +23,7 @@ import RemoveItem from './RemoveItem'
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { modal, dispatchModal } = useContext(ModalContext)
+  const [key, setKey] = useState(uuidv1())
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -58,6 +60,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(ethereumAddress, forms))
       dispatchModal(close())
+      setKey(uuidv1())
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }
@@ -95,11 +98,14 @@ const UserInfoModal = ({ ethereumAddress }) => {
       )}
 
       {modal.type === 'educationHistory' && (
-        <EducationHistoryModal educationHistoryId={modal.id} {...props} />
+        <EducationHistoryModal
+          educationHistoryId={modal.id || key}
+          {...props}
+        />
       )}
 
       {modal.type === 'workHistory' && (
-        <WorkHistoryModal workHistoryId={modal.id} {...props} />
+        <WorkHistoryModal workHistoryId={modal.id || key} {...props} />
       )}
       {modal.type === 'removeItem' && (
         <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
