@@ -12,7 +12,7 @@ import CoverImage from './CoverImage'
 const Profile = ({ ethereumAddress }) => {
   return (
     <div style={{ width: '100%' }}>
-      <CoverImage />
+      <CoverImage ethereumAddress={ethereumAddress} />
       <Viewport>
         {({ below }) =>
           below(640) ? (

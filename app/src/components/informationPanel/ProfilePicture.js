@@ -1,57 +1,15 @@
-import React, { useCallback, useContext, Fragment } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
-import { Buffer } from 'ipfs-http-client'
 
 import ImageMenu from '../ImageMenu'
 import { BoxContext } from '../../wrappers/box'
-import infuraIpfs from '../../../ipfs'
 
-import {
-  uploadingImage,
-  uploadedImage,
-  uploadedImageFailure,
-} from '../../stateManagers/box'
-
-import addImage from '../../assets/image-add-button.svg'
+import defaultImage from '../../assets/profile_avatar.svg'
 import editImage from '../../assets/pencil-black-tool-interface-symbol.png'
 
 const ProfilePicture = ({ ethereumAddress }) => {
-  const { boxes, dispatch } = useContext(BoxContext)
-  const onDrop = useCallback(
-    acceptedFiles => {
-      dispatch(uploadingImage(ethereumAddress))
-
-      const reader = new FileReader()
-
-      reader.onerror = error => {
-        reader.onabort = () =>
-          console.log('file reading failed and was aborted')
-        dispatch(uploadedImageFailure(error))
-      }
-
-      reader.onload = async () => {
-        try {
-          const file = Buffer.from(reader.result)
-          const result = await infuraIpfs.add(file)
-          dispatch(uploadedImage(ethereumAddress, result[0].hash))
-        } catch (error) {
-          dispatch(uploadedImageFailure(error))
-        }
-      }
-
-      acceptedFiles.forEach(file => reader.readAsArrayBuffer(file))
-    },
-    [dispatch, ethereumAddress]
-  )
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isDragReject,
-  } = useDropzone({ accept: 'image/*', onDrop })
+  const { boxes } = useContext(BoxContext)
 
   const userLoaded = !!boxes[ethereumAddress]
   const isEditing = userLoaded ? boxes[ethereumAddress].editingProfile : false
@@ -64,50 +22,38 @@ const ProfilePicture = ({ ethereumAddress }) => {
   const publicProfileImageCid =
     hasImage && boxes[ethereumAddress].publicProfile.image[0].contentUrl['/']
 
+  // console.log('--', hasImage, publicProfileImageCid, boxes[ethereumAddress].publicProfile.image)
+
   const addedImage = userLoaded && boxes[ethereumAddress].uploadedImageSuccess
 
+  // finally, in edit mode if a new image has been uploaded...
   const editProfileImageCid = addedImage
     ? boxes[ethereumAddress].forms.image[0].contentUrl['/']
     : publicProfileImageCid
 
   return (
-    <Fragment>
-      <Container
-        {...getRootProps({
-          className: 'dropzone',
-          isDragActive,
-          isDragAccept,
-          isDragReject,
-          isEditing,
-          publicProfileImageCid,
-          editProfileImageCid,
-        })}
-        className="imageHover"
-      >
-        {isEditing && (
-          <TransparentEditOverlay>
-            <EditIcon />
-          </TransparentEditOverlay>
-        )}
-        <input {...getInputProps({ disabled: !isEditing })} />
-        <ImageMenu top={26} right={-6} imageExists />
-      </Container>
-    </Fragment>
+    <Container
+      className="imageHover"
+      publicProfileImageCid={publicProfileImageCid}
+      editProfileImageCid={editProfileImageCid}
+    >
+      {isEditing && (
+        <TransparentEditOverlay>
+          <EditIcon />
+        </TransparentEditOverlay>
+      )}
+      <ImageMenu
+        ethereumAddress={ethereumAddress}
+        top={26}
+        right={-6}
+        imageExists
+      />
+    </Container>
   )
 }
 
 ProfilePicture.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
-}
-
-const getBorderColor = props => {
-  if (props.isEditing) {
-    if (props.isDragAccept) return '#00e676'
-    if (props.isDragReject) return '#ff1744'
-    if (props.isDragActive) return '#2196f3'
-  }
-  if (props.imageCid) return 'white'
-  return 'black'
 }
 
 const getBackground = props => {
@@ -117,7 +63,7 @@ const getBackground = props => {
 
   if (imageCid) return `url(https://ipfs.infura.io/ipfs/${imageCid})`
 
-  return `url(${addImage})`
+  return `url(${defaultImage})`
 }
 
 const getBorderStyle = props => {
@@ -129,8 +75,7 @@ const Container = styled.div`
   cursor: ${props => props.isEditing && 'pointer'};
   padding: 1.2rem;
   border-width: 0.15rem;
-  /*border-color: ${props => getBorderColor(props)};*/
-  border-color: #F2F2F2;
+  border-color: #f2f2f2;
   border-style: ${props => getBorderStyle(props)};
   background-color: white;
   background-image: ${props => getBackground(props)};

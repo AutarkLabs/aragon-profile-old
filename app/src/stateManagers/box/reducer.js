@@ -16,6 +16,9 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE,
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
+  REQUESTED_IMAGE_REMOVE,
+  REQUESTED_IMAGE_REMOVE_SUCCESS,
+  REQUESTED_IMAGE_REMOVE_ERROR,
 } from './actionTypes'
 
 import {
@@ -36,6 +39,9 @@ import {
   requestedProfileItemRemove,
   requestedProfileItemRemoveSuccess,
   requestedProfileItemRemoveError,
+  requestedImageRemove,
+  requestedImageRemoveSuccess,
+  requestedImageRemoveError,
 } from './states'
 
 import { log } from '../../../utils'
@@ -205,6 +211,35 @@ const boxReducer = (prevState, action) => {
       const nextState = { ...prevState }
       const ethereumAddress = action.meta.ethereumAddress
       nextState[ethereumAddress] = requestedProfileItemRemoveError(
+        prevState[ethereumAddress],
+        action.payload.profile
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_IMAGE_REMOVE: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestedImageRemove(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_IMAGE_REMOVE_SUCCESS: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestedImageRemoveSuccess(
+        prevState[ethereumAddress],
+        action.payload.profile
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_IMAGE_REMOVE_ERROR: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestedImageRemoveError(
         prevState[ethereumAddress],
         action.payload.profile
       )

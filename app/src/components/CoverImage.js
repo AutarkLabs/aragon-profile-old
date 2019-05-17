@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 import ImageMenu from './ImageMenu'
@@ -62,9 +63,19 @@ const CoverImage = ({ ethereumAddress }) => {
     >
       <input {...getInputProps()} />
 
-      <ImageMenu top={26} right={26} imageExists open={open} />
+      <ImageMenu
+        ethereumAddress={ethereumAddress}
+        top={26}
+        right={26}
+        imageExists
+        open={open}
+      />
     </CoverImageStyled>
   )
+}
+
+CoverImage.propTypes = {
+  ethereumAddress: PropTypes.string.isRequired,
 }
 
 const CoverImageStyled = styled.div`

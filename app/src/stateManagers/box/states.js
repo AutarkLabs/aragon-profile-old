@@ -34,6 +34,9 @@ export const fetchingPublicProfile = () => ({
   uploadingImage: false,
   uploadedImageSuccess: false,
   uploadedImage: false,
+  removingImage: false,
+  removedImageSuccess: false,
+  removedImage: false,
 })
 
 export const fetchedPublicProfileSuccess = (state, profile) => {
@@ -187,4 +190,27 @@ export const requestedProfileItemRemoveError = (state, error) => ({
   removedItem: true,
   removedItemSuccess: false,
   error,
+})
+
+export const requestedImageRemove = state => ({
+  ...state,
+  removingImage: true,
+  removedImageSuccess: false,
+  removedImage: false,
+})
+
+export const requestedImageRemoveSuccess = state => ({
+  ...state,
+  removingImage: false,
+  removedImageSuccess: true,
+  removedImage: true,
+  changed: calculateChanged(state.changed, 'image'),
+})
+
+export const requestedImageRemoveError = (state, error) => ({
+  ...state,
+  removingImage: false,
+  removedImageSuccess: false,
+  removedImage: true,
+  image_error: error,
 })
