@@ -1,75 +1,92 @@
-import React, { Fragment } from 'react'
-import uuidv1 from 'uuid/v1'
-import { Text } from '@aragon/ui'
+import React from 'react'
+import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-
-import {
-  SmallMargin,
-  FullWidthButton,
-  FullWidthTextInput,
-} from '../styled-components'
-import { DatePicker, EditTextArea } from '../readOrEditFields'
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { useDate } from '../../hooks'
+import { years } from '../../utils'
+import DateDropdowns from '../DateDropdowns'
+import { Label } from '../styled-components'
 
 const WorkHistory = ({
-  ethereumAddress,
   getFormValue,
   onChange,
-  saveProfile,
   workHistoryId,
+  ethereumAddress,
+  saveProfile,
 }) => {
+  const startDate = getFormValue('workHistory', workHistoryId, 'startDate')
+  const endDate = getFormValue('workHistory', workHistoryId, 'endDate')
+
+  const {
+    indexStartYear,
+    indexStartMonth,
+    indexEndYear,
+    indexEndMonth,
+    current,
+    dispatchDateChange,
+  } = useDate(startDate, endDate, years, onChange, 'workHistory', workHistoryId)
+
   return (
-    <Fragment>
-      <Text>Add Work History</Text>
-      <SmallMargin />
-      <FullWidthTextInput
-        value={getFormValue('workHistory', workHistoryId, 'employer')}
-        placeholder={'Employer'}
-        onChange={e =>
-          onChange(e.target.value, 'workHistory', workHistoryId, 'employer')
-        }
-        type="text"
-        size="normal"
+    <ModalWrapper title="Add Work">
+      <TwoColumnsRow>
+        <div>
+          <Label>Company or Project</Label>
+          <TextInput
+            wide
+            value={getFormValue('workHistory', workHistoryId, 'workPlace')}
+            onChange={e =>
+              onChange(
+                e.target.value,
+                'workHistory',
+                workHistoryId,
+                'workPlace'
+              )
+            }
+          />
+        </div>
+        <div>
+          <Label>Job Title or Role</Label>
+          <TextInput
+            wide
+            value={getFormValue('workHistory', workHistoryId, 'jobTitle')}
+            onChange={e =>
+              onChange(e.target.value, 'workHistory', workHistoryId, 'jobTitle')
+            }
+          />
+        </div>
+      </TwoColumnsRow>
+
+      <div>
+        <Label>Description</Label>
+        <TextInput.Multiline
+          style={{ height: '80px' }}
+          wide
+          value={getFormValue('workHistory', workHistoryId, 'description')}
+          onChange={e =>
+            onChange(
+              e.target.value,
+              'workHistory',
+              workHistoryId,
+              'description'
+            )
+          }
+        />
+      </div>
+
+      <DateDropdowns
+        current={current}
+        dispatchDateChange={dispatchDateChange}
+        indexStartMonth={indexStartMonth}
+        indexStartYear={indexStartYear}
+        indexEndMonth={indexEndMonth}
+        indexEndYear={indexEndYear}
+        type="workHistory"
       />
-      <SmallMargin />
-      <FullWidthTextInput
-        value={getFormValue('workHistory', workHistoryId, 'jobTitle')}
-        placeholder={'Job Title'}
-        onChange={e =>
-          onChange(e.target.value, 'workHistory', workHistoryId, 'jobTitle')
-        }
-        type="text"
-        size="normal"
-      />
-      <SmallMargin />
-      <EditTextArea
-        value={getFormValue('workHistory', workHistoryId, 'description')}
-        placeholder={'Description'}
-        onChange={e =>
-          onChange(e.target.value, 'workHistory', workHistoryId, 'description')
-        }
-        type="text"
-        size="normal"
-      />
-      <SmallMargin />
-      <DatePicker
-        value={getFormValue('workHistory', workHistoryId, 'startDate')}
-        onChange={unixTime =>
-          onChange(unixTime, 'workHistory', workHistoryId, 'startDate')
-        }
-        label="Start date"
-      />
-      <SmallMargin />
-      <DatePicker
-        value={getFormValue('workHistory', workHistoryId, 'endDate')}
-        onChange={unixTime =>
-          onChange(unixTime, 'workHistory', workHistoryId, 'endDate')
-        }
-        label="End date"
-      />
-      <FullWidthButton onClick={() => saveProfile(ethereumAddress)}>
+
+      <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
         Save
-      </FullWidthButton>
-    </Fragment>
+      </Button>
+    </ModalWrapper>
   )
 }
 
@@ -78,10 +95,7 @@ WorkHistory.propTypes = {
   getFormValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   saveProfile: PropTypes.func.isRequired,
-}
-
-WorkHistory.defaultProps = {
-  workHistoryId: uuidv1(),
+  workHistoryId: PropTypes.string.isRequired,
 }
 
 export default WorkHistory
