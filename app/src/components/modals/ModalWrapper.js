@@ -90,11 +90,5 @@ const TwoColumnsRow = styled.div`
     width: 48%;
   }
 `
-const Label = styled.div`
-  text-transform: lowercase;
-  font-variant: small-caps;
-  color: #707070;
-  margin: 0;
-`
 
-export { ModalWrapper, TwoColumnsRow, Label }
+export { ModalWrapper, TwoColumnsRow }

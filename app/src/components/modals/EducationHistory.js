@@ -1,11 +1,11 @@
 import React from 'react'
-import uuidv1 from 'uuid/v1'
-import { Field, TextInput, Button, DropDown, Text, theme } from '@aragon/ui'
+import { Field, TextInput, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
-
-const year = new Date().getFullYear() + 5
-const years = Array.apply(0, Array(32)).map((_x, index) => year - index + '')
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { useDate } from '../../hooks'
+import { years } from '../../utils'
+import DateDropdowns from '../DateDropdowns'
+import { Label } from '../styled-components'
 
 const EducationHistory = ({
   ethereumAddress,
@@ -14,21 +14,32 @@ const EducationHistory = ({
   saveProfile,
   educationHistoryId,
 }) => {
-  const startYear = getFormValue(
+  const startDate = getFormValue(
     'educationHistory',
     educationHistoryId,
-    'startYear'
+    'startDate'
   )
-  const indexStartYear =
-    years.indexOf(startYear) === -1 ? 5 : years.indexOf(startYear)
+  const endDate = getFormValue(
+    'educationHistory',
+    educationHistoryId,
+    'endDate'
+  )
 
-  const endYear = getFormValue(
+  const {
+    indexStartYear,
+    indexStartMonth,
+    indexEndYear,
+    indexEndMonth,
+    current,
+    dispatchDateChange,
+  } = useDate(
+    startDate,
+    endDate,
+    years,
+    onChange,
     'educationHistory',
-    educationHistoryId,
-    'endYear'
+    educationHistoryId
   )
-  const indexEndYear =
-    years.indexOf(endYear) === -1 ? 5 : years.indexOf(endYear)
 
   return (
     <ModalWrapper title="Add Education">
@@ -78,57 +89,29 @@ const EducationHistory = ({
             value={getFormValue(
               'educationHistory',
               educationHistoryId,
-              'field'
+              'fieldOfStudy'
             )}
             onChange={e =>
               onChange(
                 e.target.value,
                 'educationHistory',
                 educationHistoryId,
-                'field'
+                'fieldOfStudy'
               )
             }
           />
         </div>
       </TwoColumnsRow>
 
-      <TwoColumnsRow>
-        <div>
-          <Label>Start Year</Label>
-          <DropDown
-            wide
-            items={years}
-            active={indexStartYear}
-            onChange={index =>
-              onChange(
-                years[index],
-                'educationHistory',
-                educationHistoryId,
-                'startYear'
-              )
-            }
-          />
-        </div>
-        <div>
-          <Label>End Year</Label>
-          <DropDown
-            wide
-            items={years}
-            active={indexEndYear}
-            onChange={index =>
-              onChange(
-                years[index],
-                'educationHistory',
-                educationHistoryId,
-                'endYear'
-              )
-            }
-          />
-          <Text.Block size="xsmall" color={theme.textTertiary}>
-            Expected end year if you are in progress.
-          </Text.Block>
-        </div>
-      </TwoColumnsRow>
+      <DateDropdowns
+        current={current}
+        dispatchDateChange={dispatchDateChange}
+        indexStartMonth={indexStartMonth}
+        indexStartYear={indexStartYear}
+        indexEndMonth={indexEndMonth}
+        indexEndYear={indexEndYear}
+        type="educationHistory"
+      />
 
       <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
         Save
@@ -138,14 +121,11 @@ const EducationHistory = ({
 }
 
 EducationHistory.propTypes = {
+  educationHistoryId: PropTypes.string.isRequired,
   ethereumAddress: PropTypes.string.isRequired,
   getFormValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   saveProfile: PropTypes.func.isRequired,
-}
-
-EducationHistory.defaultProps = {
-  educationHistoryId: uuidv1(),
 }
 
 export default EducationHistory

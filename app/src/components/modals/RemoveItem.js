@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button, Text } from '@aragon/ui'
+import { Button, Text, theme } from '@aragon/ui'
 import { ModalWrapper } from './ModalWrapper'
 import { ModalContext } from '../../wrappers/modal'
 import { close } from '../../stateManagers/modal'
 
-const RemoveItem = ({ ethereumAddress, item, itemType, onRemove }) => {
+const RemoveItem = ({ itemType, onRemove }) => {
   const { dispatchModal } = useContext(ModalContext)
   let title
   if (itemType === 'workHistory') title = 'Delete work history record'
@@ -26,7 +26,7 @@ const RemoveItem = ({ ethereumAddress, item, itemType, onRemove }) => {
         <Button
           compact
           mode="strong"
-          style={{ background: '#FB7979' }}
+          style={{ background: theme.negative }}
           onClick={onRemove}
         >
           Delete
@@ -46,9 +46,7 @@ const ButtonsRow = styled.div`
 `
 
 RemoveItem.propTypes = {
-  ethereumAddress: PropTypes.string.isRequired,
   onRemove: PropTypes.func.isRequired,
-  item: PropTypes.object,
   itemType: PropTypes.string.isRequired,
 }
 

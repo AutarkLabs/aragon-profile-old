@@ -1,7 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
 import { useAragonApi } from '@aragon/api-react'
+import uuidv1 from 'uuid/v1'
 
 import { Profile } from '../../../modules/3box-aragon'
 import { BoxContext } from '../../wrappers/box'
@@ -29,6 +30,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { modal, dispatchModal } = useContext(ModalContext)
   const { api } = useAragonApi()
+  const [key, setKey] = useState(uuidv1())
 
   const userLoaded = !!boxes[ethereumAddress]
 
@@ -37,13 +39,16 @@ const UserInfoModal = ({ ethereumAddress }) => {
   }
 
   const getFormValue = (field, uniqueId, nestedField) => {
-    if (!userLoaded) return ''
-    if (!uniqueId) return boxes[ethereumAddress].forms[field]
-    if (!nestedField) return boxes[ethereumAddress].forms[field][uniqueId]
-    return (
-      boxes[ethereumAddress].forms[field][uniqueId] &&
-      boxes[ethereumAddress].forms[field][uniqueId][nestedField]
-    )
+    let value
+    if (!userLoaded) value = ''
+    else if (!uniqueId) value = boxes[ethereumAddress].forms[field]
+    else if (!nestedField) value = boxes[ethereumAddress].forms[field][uniqueId]
+    else
+      value =
+        boxes[ethereumAddress].forms[field][uniqueId] &&
+        boxes[ethereumAddress].forms[field][uniqueId][nestedField]
+
+    return value || ''
   }
 
   const unlockProfile = async () => {
@@ -96,6 +101,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
         // await unlockedBox.setPublicFields(changed, changedValues)
         dispatch(savedProfile(ethereumAddress, forms))
         dispatchModal(close())
+        setKey(uuidv1())
       } else {
         dispatch(saveProfileError(ethereumAddress, 'error unlocking profile'))
       }
@@ -136,19 +142,17 @@ const UserInfoModal = ({ ethereumAddress }) => {
       )}
 
       {modal.type === 'educationHistory' && (
-        <EducationHistoryModal educationHistoryId={modal.id} {...props} />
+        <EducationHistoryModal
+          educationHistoryId={modal.id || key}
+          {...props}
+        />
       )}
 
       {modal.type === 'workHistory' && (
-        <WorkHistoryModal workHistoryId={modal.id} {...props} />
+        <WorkHistoryModal workHistoryId={modal.id || key} {...props} />
       )}
       {modal.type === 'removeItem' && (
-        <RemoveItem
-          item={getFormValue(modal.itemType, modal.id)}
-          itemType={modal.itemType}
-          ethereumAddress={ethereumAddress}
-          onRemove={removeItem}
-        />
+        <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
       )}
       {modal.type === '3boxState' && (
         <BoxState messageSigning={boxes[ethereumAddress].messageSigning} />

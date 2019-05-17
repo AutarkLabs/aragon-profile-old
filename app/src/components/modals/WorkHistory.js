@@ -1,53 +1,30 @@
 import React from 'react'
-import uuidv1 from 'uuid/v1'
-import { Button, DropDown, TextInput, Checkbox } from '@aragon/ui'
+import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
-
-const currentYear = new Date().getFullYear()
-const years = Array.apply(0, Array(32)).map((_x, index) => currentYear - index)
-
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { useDate } from '../../hooks'
+import { years } from '../../utils'
+import DateDropdowns from '../DateDropdowns'
+import { Label } from '../styled-components'
 
 const WorkHistory = ({
-  ethereumAddress,
   getFormValue,
   onChange,
-  saveProfile,
   workHistoryId,
+  ethereumAddress,
+  saveProfile,
 }) => {
-  let startYear = getFormValue('workHistory', workHistoryId, 'startYear')
-  if (startYear === undefined) startYear = currentYear
-  const indexStartYear =
-    years.indexOf(startYear) === -1 ? 0 : years.indexOf(startYear)
+  const startDate = getFormValue('workHistory', workHistoryId, 'startDate')
+  const endDate = getFormValue('workHistory', workHistoryId, 'endDate')
 
-  const startMonth = getFormValue('workHistory', workHistoryId, 'startMonth')
-  const indexStartMonth =
-    months.indexOf(startMonth) === -1 ? 0 : months.indexOf(startMonth)
-
-  let endYear = getFormValue('workHistory', workHistoryId, 'endYear')
-  // endYear is also used to mark "I still work here" (no End Date)
-  if (endYear === undefined) endYear = currentYear
-  const indexEndYear =
-    years.indexOf(endYear) === -1 ? 0 : years.indexOf(endYear)
-
-  const endMonth = getFormValue('workHistory', workHistoryId, 'endMonth')
-  const indexEndMonth =
-    months.indexOf(endMonth) === -1 ? 0 : months.indexOf(endMonth)
+  const {
+    indexStartYear,
+    indexStartMonth,
+    indexEndYear,
+    indexEndMonth,
+    current,
+    dispatchDateChange,
+  } = useDate(startDate, endDate, years, onChange, 'workHistory', workHistoryId)
 
   return (
     <ModalWrapper title="Add Work">
@@ -96,87 +73,15 @@ const WorkHistory = ({
         />
       </div>
 
-      <Label style={{ margin: 0 }}>Start Date</Label>
-      <DateDropDowns>
-        <div style={{ width: '48%' }}>
-          <DropDown
-            wide
-            items={months}
-            active={indexStartMonth}
-            onChange={index =>
-              onChange(
-                months[index],
-                'workHistory',
-                workHistoryId,
-                'startMonth'
-              )
-            }
-          />
-        </div>
-        <div style={{ width: '48%' }}>
-          <DropDown
-            wide
-            items={years}
-            active={indexStartYear}
-            onChange={index =>
-              onChange(years[index], 'workHistory', workHistoryId, 'startYear')
-            }
-          />
-        </div>
-      </DateDropDowns>
-
-      <Label style={{ margin: 0 }}>End Date</Label>
-      <div style={{ display: 'flex', height: '40px' }}>
-        {!!endYear && (
-          <DateDropDowns>
-            <div style={{ width: '48%' }}>
-              <DropDown
-                wide
-                items={months}
-                active={indexEndMonth}
-                onChange={index =>
-                  onChange(
-                    months[index],
-                    'workHistory',
-                    workHistoryId,
-                    'endMonth'
-                  )
-                }
-              />
-            </div>
-            <div style={{ width: '48%' }}>
-              <DropDown
-                wide
-                items={years}
-                active={indexEndYear}
-                onChange={index =>
-                  onChange(
-                    years[index],
-                    'workHistory',
-                    workHistoryId,
-                    'endYear'
-                  )
-                }
-              />
-            </div>
-          </DateDropDowns>
-        )}
-
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Checkbox
-            checked={endYear === 0}
-            onChange={() => {
-              onChange(
-                endYear === 0 ? currentYear : 0,
-                'workHistory',
-                workHistoryId,
-                'endYear'
-              )
-            }}
-          />
-          I work here presently
-        </div>
-      </div>
+      <DateDropdowns
+        current={current}
+        dispatchDateChange={dispatchDateChange}
+        indexStartMonth={indexStartMonth}
+        indexStartYear={indexStartYear}
+        indexEndMonth={indexEndMonth}
+        indexEndYear={indexEndYear}
+        type="workHistory"
+      />
 
       <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
         Save
@@ -185,22 +90,12 @@ const WorkHistory = ({
   )
 }
 
-const DateDropDowns = styled.div`
-  width: 60%;
-  padding-right: 1rem;
-  display: flex;
-  justify-content: space-between;
-`
-
 WorkHistory.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
   getFormValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   saveProfile: PropTypes.func.isRequired,
-}
-
-WorkHistory.defaultProps = {
-  workHistoryId: uuidv1(),
+  workHistoryId: PropTypes.string.isRequired,
 }
 
 export default WorkHistory

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow, Label } from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { Label } from '../styled-components'
 
 const BasicInformation = ({
   ethereumAddress,
@@ -10,7 +11,7 @@ const BasicInformation = ({
   saveProfile,
 }) => {
   return (
-    <ModalWrapper title="Edit Basic Information">
+    <ModalWrapper title="Edit Basic Information1">
       <TwoColumnsRow>
         <div>
           <Label>Name</Label>

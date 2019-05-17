@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { Text, theme } from '@aragon/ui'
 import { IconPencil, IconTrash } from '../assets/'
+import { displayStartEndDates } from '../utils/'
 
 const EducationHistoryTile = ({
   educationHistoryData,
@@ -17,17 +18,25 @@ const EducationHistoryTile = ({
       </Text.Block>
       <Text.Block size="normal" style={{ fontWeight: '600' }}>
         {educationHistoryData.degree}
-        {educationHistoryData.field ? ', ' + educationHistoryData.field : ''}
+        {educationHistoryData.fieldOfStudy
+          ? ', ' + educationHistoryData.fieldOfStudy
+          : ''}
       </Text.Block>
       <Text.Block size="xsmall" style={{ fontColor: theme.textTertiary }}>
-        {educationHistoryData.startYear ? educationHistoryData.startYear : '?'}
-        {' - '}
-        {educationHistoryData.endYear ? educationHistoryData.endYear : '?'}
+        {displayStartEndDates(educationHistoryData)}
       </Text.Block>
     </Details>
     <Icons>
-      <IconPencil width="16px" onClick={() => openModal()} />
-      <IconTrash width="16px" onClick={() => removeItem()} />
+      <IconPencil
+        width="16px"
+        color={theme.accent}
+        onClick={() => openModal()}
+      />
+      <IconTrash
+        width="16px"
+        color={theme.accent}
+        onClick={() => removeItem()}
+      />
     </Icons>
   </SingleEducationItem>
 )
@@ -62,7 +71,7 @@ EducationHistoryTile.propTypes = {
   educationHistoryData: PropTypes.shape({
     degree: PropTypes.string,
     organization: PropTypes.string.isRequired,
-    startDate: PropTypes.number.isRequired,
+    startDate: PropTypes.number,
     endDate: PropTypes.number,
   }).isRequired,
   openModal: PropTypes.func.isRequired,
