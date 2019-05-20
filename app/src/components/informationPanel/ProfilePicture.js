@@ -21,8 +21,6 @@ const ProfilePicture = ({ ethereumAddress }) => {
   const publicProfileImageCid =
     hasImage && boxes[ethereumAddress].publicProfile.image[0].contentUrl['/']
 
-  console.log('--', hasImage, publicProfileImageCid, boxes[ethereumAddress].publicProfile.image)
-
   const addedImage = userLoaded && boxes[ethereumAddress].uploadedImageSuccess
 
   // finally, in edit mode if a new image has been uploaded...
@@ -45,7 +43,7 @@ const ProfilePicture = ({ ethereumAddress }) => {
         ethereumAddress={ethereumAddress}
         top={26}
         right={-6}
-        imageExists
+        imageExists={hasImage && addedImage}
       />
     </Container>
   )
@@ -56,7 +54,7 @@ ProfilePicture.propTypes = {
 }
 
 const getBackground = props => {
-  const imageCid = props.isEditing
+  const imageCid = props.editProfileImageCid
     ? props.editProfileImageCid
     : props.publicProfileImageCid
 

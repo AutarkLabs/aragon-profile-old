@@ -64,11 +64,11 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, open }) => {
 
   const addedImage = userLoaded && boxes[ethereumAddress].uploadedImageSuccess
 
+console.log('--=', boxes[ethereumAddress].forms)
+
   const editProfileImageCid = addedImage
     ? boxes[ethereumAddress].forms.image[0].contentUrl['/']
     : publicProfileImageCid
-
-console.log('--^', addedImage, editProfileImageCid, publicProfileImageCid)
 
   return (
     <ImageMenuStyled
@@ -86,14 +86,7 @@ console.log('--^', addedImage, editProfileImageCid, publicProfileImageCid)
       {' '}
       <input {...getInputProps({ disabled: false })} />
       <div>Update cover photo</div>
-      <div
-        onClick={event => {
-          open()
-          event.stopPropagation()
-        }}
-      >
-        Upload new image
-      </div>
+      <div>Upload new image</div>
       {imageExists && (
         <div
           onClick={() => {

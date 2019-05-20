@@ -29,6 +29,7 @@ export const fetchingPublicProfile = () => ({
     description: '',
     workHistory: {},
     educationHistory: {},
+    image: [],
   },
   changed: [],
   uploadingImage: false,
@@ -119,17 +120,22 @@ export const uploadingImage = state => ({
   uploadedImage: false,
 })
 
-export const uploadedImage = (state, imageHash) => ({
-  ...state,
-  uploadingImage: false,
-  uploadedImageSuccess: true,
-  uploadedImage: true,
-  forms: {
-    ...state.forms,
-    image: image(imageHash),
-  },
-  changed: calculateChanged(state.changed, 'image'),
-})
+export const uploadedImage = (state, imageHash) => {
+  const images = [...state.forms.image]
+  images.push(image(imageHash))
+  const newState = {
+    ...state,
+    uploadingImage: false,
+    uploadedImageSuccess: true,
+    uploadedImage: true,
+    forms: {
+      ...state.forms,
+      image: images,
+    },
+    changed: calculateChanged(state.changed, 'image'),
+  }
+  return newState
+}
 
 export const uploadedImageError = (state, error) => ({
   ...state,

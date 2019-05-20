@@ -123,6 +123,85 @@ const InformationCard = ({ ethereumAddress }) => {
     </Center>
   )
 
+  const gitHubLogin = gitHubProof => gitHubProof.split('/')[3]
+
+  const RenderGitHub = ({ fields }) => (
+    <Social>
+      <IconGitHub width="1rem" height="1rem" color={theme.textTertiary} />
+      {fields.proof_github ? (
+        <Fragment>
+          <SafeLink
+            style={{ color: theme.accent, textDecoration: 'none' }}
+            href={`https://github.com/${gitHubLogin(fields.proof_github)}`}
+            target="_blank"
+          >
+            {gitHubLogin(fields.proof_github)}
+          </SafeLink>
+          <IconVerified />
+        </Fragment>
+      ) : (
+        <Fragment>
+          <Button
+            compact
+            mode="outline"
+            style={{ position: 'relative' }}
+            onClick={() => setPopover('github')}
+          >
+            Verify my GitHub account
+          </Button>
+          {activePopover === 'github' && <PopoverCard social="GitHub" />}
+        </Fragment>
+      )}
+    </Social>
+  )
+
+  const RenderTwitter = ({ fields }) => (
+    <Social>
+      <IconTwitter width="1rem" height="1rem" color={theme.textTertiary} />
+      {fields.twitter ? (
+        <Fragment>
+          <SafeLink
+            href={'https://twitter.com/' + fields.twitter}
+            style={{ color: theme.accent, textDecoration: 'none' }}
+            target="_blank"
+          >
+          https://twitter.com/
+          </SafeLink>
+          <IconVerified />
+        </Fragment>
+      ) : (
+        <Fragment>
+          <Button
+            compact
+            mode="outline"
+            style={{ position: 'relative' }}
+            onClick={() => setPopover('twitter')}
+          >
+            Verify my Twitter account
+          </Button>
+
+          {activePopover === 'twitter' && <PopoverCard social="Twitter" />}
+        </Fragment>
+      )}
+    </Social>
+  )
+
+  const RenderWebsite = ({ fields }) => (
+    <Social>
+      <IconGlobe width="1rem" height="1rem" color={theme.textPrimary} />
+      {fields.website ? (
+        <SafeLink href={fields.website} placeholder="website" size="small" />
+      ) : (
+        <Text
+          style={{ color: theme.accent, textDecoration: 'none' }}
+          onClick={() => dispatchModal(open('basicInformation'))}
+          target="_blank"
+        >
+          Add website
+        </Text>
+      )}
+    </Social>
+  )
   return (
     <StyledCard>
       <Information>
@@ -136,82 +215,10 @@ const InformationCard = ({ ethereumAddress }) => {
               <RenderLocation location={fields.location} />
             </Fragment>
           )}
-          <Social>
-            <IconGlobe width="1rem" height="1rem" color={theme.textPrimary} />
-            {fields.website ? (
-              <SafeLink
-                value={fields.website}
-                placeholder="website"
-                size="small"
-              />
-            ) : (
-              <Text
-                style={{ cursor: 'pointer' }}
-                color={theme.accent}
-                onClick={() => dispatchModal(open('basicInformation'))}
-              >
-                Add website
-              </Text>
-            )}
-          </Social>
+          <RenderWebsite fields={fields} />
           <Separator style={{ marginBottom: '1.1rem' }} />
-          <Social>
-            <IconTwitter
-              width="1rem"
-              height="1rem"
-              color={theme.textTertiary}
-            />
-            {fields.twitter ? (
-              <Fragment>
-                <SafeLink
-                  value={'https://twitter.com/' + fields.twitter}
-                  placeholder="twitter account"
-                  size="small"
-                />
-                <IconVerified />
-              </Fragment>
-            ) : (
-              <Fragment>
-                <Button
-                  compact
-                  mode="outline"
-                  style={{ position: 'relative' }}
-                  onClick={() => setPopover('twitter')}
-                >
-                  Verify my Twitter account
-                </Button>
-
-                {activePopover === 'twitter' && (
-                  <PopoverCard social="Twitter" />
-                )}
-              </Fragment>
-            )}
-          </Social>
-          <Social>
-            <IconGitHub width="1rem" height="1rem" color={theme.textTertiary} />
-            {fields.github ? (
-              <Fragment>
-                <SafeLink
-                  value="https://github.com"
-                  placeholder="github account"
-                  size="small"
-                />
-                <IconVerified />
-              </Fragment>
-            ) : (
-              <Fragment>
-                <Button
-                  compact
-                  mode="outline"
-                  style={{ position: 'relative' }}
-                  onClick={() => setPopover('github')}
-                >
-                  Verify my GitHub account
-                </Button>
-                {activePopover === 'github' && <PopoverCard social="GitHub" />}
-              </Fragment>
-            )}
-          </Social>
+          <RenderTwitter fields={fields} />
+          <RenderGitHub fields={fields} />
           <Separator />
           <Social>
             <IconEthereum

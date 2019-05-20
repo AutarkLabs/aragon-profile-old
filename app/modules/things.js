@@ -15,15 +15,11 @@ export const homeLocation = locationName => ({
   name: locationName,
 })
 
-export const image = imageHash => {
-  return [
-    {
-      '@type': 'ImageObject',
-      '@context': 'http://schema.org/',
-      contentUrl: { '/': imageHash },
-    },
-  ]
-}
+export const image = imageHash => ({
+  '@type': 'ImageObject',
+  '@context': 'http://schema.org/',
+  contentUrl: { '/': imageHash },
+})
 
 export const schemaDotOrgImage = imageHash => {
   return [
