@@ -42,8 +42,8 @@ const BoxState = ({
   return (
     <ModalWrapper title="3BOX">
       <Text size="large" style={{ margin: '1.5rem 0 2rem 0' }}>
-        Your wallet should open and you need to sign [two] messages after
-        another to create your profile and save your updates.
+        Your wallet should open and you need to sign two messages after another
+        to create your profile and save your updates.
       </Text>
       <JustifyRowCenter>
         <ProfileStatus
