@@ -80,7 +80,22 @@ const UserInfoModal = ({ ethereumAddress }) => {
     try {
       const { unlockedBox, forms } = boxes[ethereumAddress]
       const { itemType, id } = modal
-      delete forms[itemType][id]
+      console.log('remove item', itemType, id, forms)
+      if (itemType === 'image') {
+        const index = forms[itemType].findIndex(img => {
+          console.log('comparing', id, img.contentUrl['/'], img)
+          return img.contentUrl['/'] === id
+        })
+        if (index !== undefined) {
+          console.log('found image at ', index)
+          delete forms[itemType][index]
+        } else {
+          console.log('found image at NONE')
+        }
+      } else {
+        console.log('deleting', itemType)
+        delete forms[itemType][id]
+      }
       const newBoxVals = Object.keys(forms[itemType]).map(
         id => forms[itemType][id]
       )

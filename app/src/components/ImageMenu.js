@@ -68,6 +68,8 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, open }) => {
     ? boxes[ethereumAddress].forms.image[0].contentUrl['/']
     : publicProfileImageCid
 
+console.log('--^', addedImage, editProfileImageCid, publicProfileImageCid)
+
   return (
     <ImageMenuStyled
       top={top}

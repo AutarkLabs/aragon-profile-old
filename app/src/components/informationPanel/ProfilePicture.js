@@ -10,7 +10,6 @@ import editImage from '../../assets/pencil-black-tool-interface-symbol.png'
 
 const ProfilePicture = ({ ethereumAddress }) => {
   const { boxes } = useContext(BoxContext)
-
   const userLoaded = !!boxes[ethereumAddress]
   const isEditing = userLoaded ? boxes[ethereumAddress].editingProfile : false
 
@@ -22,7 +21,7 @@ const ProfilePicture = ({ ethereumAddress }) => {
   const publicProfileImageCid =
     hasImage && boxes[ethereumAddress].publicProfile.image[0].contentUrl['/']
 
-  // console.log('--', hasImage, publicProfileImageCid, boxes[ethereumAddress].publicProfile.image)
+  console.log('--', hasImage, publicProfileImageCid, boxes[ethereumAddress].publicProfile.image)
 
   const addedImage = userLoaded && boxes[ethereumAddress].uploadedImageSuccess
 
@@ -77,9 +76,11 @@ const Container = styled.div`
   border-width: 0.15rem;
   border-color: #f2f2f2;
   border-style: ${props => getBorderStyle(props)};
-  background-color: white;
+  background-color: #EEE;
   background-image: ${props => getBackground(props)};
   background-size: 11.5rem 11.5rem;
+  background-repeat: no-repeat;
+  background-position: center;
   transition: border 0.24s ease-in-out;
   border-radius: 50%;
   width: 11.5rem;
