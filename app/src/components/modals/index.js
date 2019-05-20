@@ -84,7 +84,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
 
   const unlockBoxIfRequired = async box => {
     if (box.unlockedProfSuccess) {
-      if (profileExists(box)) {
+      if (!profileExists(box)) {
         dispatch(requestProfileCreate(ethereumAddress))
       }
       return box.unlockedBox
