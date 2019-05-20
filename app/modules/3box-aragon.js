@@ -82,6 +82,11 @@ export class Profile {
 
   isLoggedIn = () => Box.isLoggedIn(this.ethereumAddress)
 
+  getVerifiedAccounts = async () => {
+    const profile = await Box.getProfile(this.ethereumAddress)
+    return Box.getVerifiedAccounts(profile)
+  }
+
   getPrivate = () => {
     if (this.boxState.opened && this.boxState.synced) {
       return this.unlockedBox.private.all()

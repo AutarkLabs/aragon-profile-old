@@ -38,6 +38,7 @@ const use3Box = () => {
         try {
           const profile = new Profile(connectedAccount, api)
           const publicProfile = await profile.getPublic()
+          const verified = await profile.getVerifiedAccounts()
           dispatch(fetchedPublicProfile(connectedAccount, publicProfile))
           unlockIfLoggedIn(profile)
         } catch (error) {
