@@ -8,9 +8,11 @@ import AppContainer from './wrappers/styleWrappers/AppContainer'
 import LoadAndErrorWrapper from './wrappers/loadAndErrorWrapper'
 import Profile from './components/Profile'
 import { ModalWrapper } from './wrappers/modal'
+import { useIsMember } from './hooks/useIsMember'
 
 function App() {
   const { connectedAccount } = useAragonApi()
+  // useIsMember(connectedAccount)
   return (
     <Main>
       <BoxWrapper>
