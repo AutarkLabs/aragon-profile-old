@@ -1,10 +1,22 @@
-import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM } from './actionTypes'
+import {
+  OPENED_MODAL,
+  OPENED_BOX_MODAL,
+  CLOSED_MODAL,
+  REMOVE_ITEM,
+} from './actionTypes'
 
 export const open = (type, id) => ({
   type: OPENED_MODAL,
   meta: {
     type,
     id,
+  },
+})
+
+export const openBoxState = sigsRequired => ({
+  type: OPENED_BOX_MODAL,
+  meta: {
+    sigsRequired,
   },
 })
 

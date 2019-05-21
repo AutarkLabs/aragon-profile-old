@@ -1,6 +1,16 @@
-import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM } from './actionTypes'
+import {
+  OPENED_MODAL,
+  CLOSED_MODAL,
+  REMOVE_ITEM,
+  OPENED_BOX_MODAL,
+} from './actionTypes'
 
-import { openedModal, closedModal, removeItem } from './states'
+import {
+  openedModal,
+  openedBoxStateModal,
+  closedModal,
+  removeItem,
+} from './states'
 
 import { log } from '../../../utils'
 
@@ -15,6 +25,14 @@ const modalReducer = (prevState, action) => {
         { ...prevState },
         action.meta.type,
         action.meta.id
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case OPENED_BOX_MODAL: {
+      const nextState = openedBoxStateModal(
+        { ...prevState },
+        action.meta.sigsRequired
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

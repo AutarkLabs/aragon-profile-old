@@ -22,7 +22,7 @@ import {
   profileUnlockSuccess,
   profileUnlockFailure,
 } from '../../stateManagers/box'
-import { close, open } from '../../stateManagers/modal'
+import { close, openBoxState } from '../../stateManagers/modal'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
@@ -98,7 +98,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       // only create profile signature required
       if (box.unlockedProfSuccess) {
         dispatch(requestProfileCreate(ethereumAddress))
-        dispatchModal(open('3boxState', ['create']))
+        dispatchModal(openBoxState(['create']))
         await createProfile(box.unlockedBox)
         return box.unlockedBox
       }
@@ -106,13 +106,13 @@ const UserInfoModal = ({ ethereumAddress }) => {
       // open box signature only
       if (!box.unlockedProfSuccess && profileExists) {
         dispatch(requestedProfileUnlock(ethereumAddress))
-        dispatchModal(open('3boxState', ['open']))
+        dispatchModal(openBoxState(['unlock']))
         const unlockedBox = await unlockProfile()
         return unlockedBox
       }
 
       // both signatures
-      dispatchModal(open('3boxState'))
+      dispatchModal(openBoxState(['unlock', 'create']))
       dispatch(requestedProfileUnlock(ethereumAddress))
       const unlockedBox = await unlockProfile()
       dispatch(requestProfileCreate(ethereumAddress))
@@ -202,7 +202,10 @@ const UserInfoModal = ({ ethereumAddress }) => {
         <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
       )}
       {modal.type === '3boxState' && (
-        <BoxState messageSigning={boxes[ethereumAddress].messageSigning} />
+        <BoxState
+          messageSigning={boxes[ethereumAddress].messageSigning}
+          signaturesRequired={modal.sigsRequired}
+        />
       )}
     </Modal>
   )

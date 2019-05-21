@@ -38,26 +38,35 @@ const BoxState = ({
     createdProf,
     createdProfSuccess,
   },
+  signaturesRequired,
 }) => {
+  const needsToUnlock = signaturesRequired.indexOf('unlock') > -1
+  const needsToCreate = signaturesRequired.indexOf('create') > -1
   return (
     <ModalWrapper title="3BOX">
       <Text size="large" style={{ margin: '1.5rem 0 2rem 0' }}>
-        Your wallet should open and you need to sign two messages after another
-        to create your profile and save your updates.
+        {`Your wallet should open and you need to sign ${
+          signaturesRequired.length
+        } message${signaturesRequired.length > 1 ? 's after another ' : ''}
+        to create your profile and save your updates.`}
       </Text>
       <JustifyRowCenter>
-        <ProfileStatus
-          awaitingSig={unlockingProf}
-          receivedSig={unlockedProf}
-          successfulSig={unlockedProfSuccess}
-          title="Grant aragon access to your 3box"
-        />
-        <ProfileStatus
-          awaitingSig={creatingProf}
-          receivedSig={createdProf}
-          successfulSig={createdProfSuccess}
-          title="Profile creation"
-        />
+        {needsToUnlock && (
+          <ProfileStatus
+            awaitingSig={unlockingProf}
+            receivedSig={unlockedProf}
+            successfulSig={unlockedProfSuccess}
+            title="Grant aragon access to your 3box"
+          />
+        )}
+        {needsToCreate && (
+          <ProfileStatus
+            awaitingSig={creatingProf}
+            receivedSig={createdProf}
+            successfulSig={createdProfSuccess}
+            title="Profile creation"
+          />
+        )}
       </JustifyRowCenter>
     </ModalWrapper>
   )
@@ -72,6 +81,7 @@ BoxState.propTypes = {
     createdProf: PropTypes.bool.isRequired,
     createdProfSuccess: PropTypes.bool.isRequired,
   }).isRequired,
+  signaturesRequired: PropTypes.array.isRequired,
 }
 
 const AlignColCenter = styled(FlexDirectionCol)`
