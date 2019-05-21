@@ -73,19 +73,17 @@ export const fetchedPublicProfileErr = (state, error) => ({
   error,
 })
 
-export const requestedProfUnlock = (state, hasBox) => ({
+export const requestedProfUnlock = state => ({
   ...state,
   unlockingProf: true,
   unlockedProf: false,
   unlockedProfSuccess: false,
   unlockedBox: {},
   messageSigning: {
+    ...state.messageSigning,
     unlockingProf: true,
     unlockedProf: false,
     unlockedProfSuccess: false,
-    creatingProf: !hasBox,
-    createdProf: false,
-    createdProfSuccess: false,
   },
 })
 
@@ -188,12 +186,6 @@ export const requestedSaveProfileSuccess = (state, profile) => ({
     ...state.publicProfile,
     ...profile,
   },
-  messageSigning: {
-    ...state.messageSigning,
-    creatingProf: false,
-    createdProf: true,
-    createdProfSuccess: true,
-  },
   changed: [],
 })
 
@@ -202,12 +194,6 @@ export const requestedSaveProfileError = (state, error) => ({
   savingProfile: false,
   savedProfile: true,
   savedProfileSucess: true,
-  messageSigning: {
-    ...state.messageSigning,
-    creatingProf: false,
-    createdProf: true,
-    createdProfSuccess: false,
-  },
   error,
 })
 
