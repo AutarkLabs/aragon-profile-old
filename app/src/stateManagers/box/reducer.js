@@ -17,6 +17,8 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
   REQUEST_PROFILE_CREATE,
+  REQUEST_PROFILE_CREATE_SUCCESS,
+  REQUEST_PROFILE_CREATE_ERROR,
 } from './actionTypes'
 
 import {
@@ -38,6 +40,8 @@ import {
   requestedProfileItemRemoveSuccess,
   requestedProfileItemRemoveError,
   requestProfileCreate,
+  requestProfileCreateSuccess,
+  requestProfileCreateError,
 } from './states'
 
 import { log } from '../../../utils'
@@ -220,6 +224,25 @@ const boxReducer = (prevState, action) => {
       const ethereumAddress = action.meta.ethereumAddress
       nextState[ethereumAddress] = requestProfileCreate(
         prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUEST_PROFILE_CREATE_SUCCESS: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileCreateSuccess(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUEST_PROFILE_CREATE_ERROR: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileCreateError(
+        prevState[ethereumAddress],
+        action.payload.error
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

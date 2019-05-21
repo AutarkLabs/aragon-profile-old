@@ -22,7 +22,7 @@ export const fetchingPublicProfile = () => ({
     unlockedProf: false,
     unlockedProfSuccess: false,
     creatingProf: false,
-    createdProf: false,
+    createdProfError: false,
     createdProfSuccess: false,
   },
   signingMessages: [],
@@ -242,7 +242,26 @@ export const requestProfileCreate = state => ({
   messageSigning: {
     ...state.messageSigning,
     creatingProf: true,
-    createdProf: false,
+    createdProfError: false,
+    createdProfSuccess: false,
+  },
+})
+
+export const requestProfileCreateSuccess = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: false,
+    createdProfError: false,
+    createdProfSuccess: true,
+  },
+})
+export const requestProfileCreateError = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: false,
+    createdProfError: true,
     createdProfSuccess: false,
   },
 })

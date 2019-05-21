@@ -85,7 +85,19 @@ export class Profile {
       })
     })
 
+  createProfile = () => this.unlockedBox.linkAccount()
+
+  hasProfile = async () => {
+    if (this.boxState.opened) {
+      return this.unlockedBox.isAccountLinked()
+    }
+    const publicProfile = await this.getPublic()
+    return Object.keys(publicProfile).length > 1
+  }
+
   isLoggedIn = () => Box.isLoggedIn(this.ethereumAddress)
+
+  logout = () => this.unlockedBox.logout()
 
   getPrivate = () => {
     if (this.boxState.opened && this.boxState.synced) {

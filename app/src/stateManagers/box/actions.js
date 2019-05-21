@@ -17,6 +17,8 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
   REQUEST_PROFILE_CREATE,
+  REQUEST_PROFILE_CREATE_SUCCESS,
+  REQUEST_PROFILE_CREATE_ERROR,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -127,6 +129,22 @@ export const requestProfileCreate = ethereumAddress => ({
   type: REQUEST_PROFILE_CREATE,
   meta: {
     ethereumAddress,
+  },
+})
+
+export const requestProfileCreateSuccess = ethereumAddress => ({
+  type: REQUEST_PROFILE_CREATE_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const requestProfileCreateError = (ethereumAddress, error) => ({
+  type: REQUEST_PROFILE_CREATE_ERROR,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    error,
   },
 })
 

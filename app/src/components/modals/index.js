@@ -17,6 +17,8 @@ import {
   removedItemError,
   requestedProfileUnlock,
   requestProfileCreate,
+  requestProfileCreateSuccess,
+  requestProfileCreateError,
   profileUnlockSuccess,
   profileUnlockFailure,
 } from '../../stateManagers/box'
@@ -52,15 +54,6 @@ const UserInfoModal = ({ ethereumAddress }) => {
     return value || ''
   }
 
-  const profileExists = ({
-    publicProfile,
-    loadedPublicProf,
-    loadedPublicProfSuccess,
-  }) => {
-    if (loadedPublicProfSuccess) return Object.keys(publicProfile).length > 0
-    if (loadedPublicProf) throw new Error('error loading profile')
-  }
-
   const delay = () =>
     new Promise(resolve => {
       setTimeout(() => {
@@ -68,9 +61,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }, 3000)
     })
 
-  const unlockProfile = async box => {
-    const hasProfile = profileExists(box)
-    dispatch(requestedProfileUnlock(ethereumAddress, hasProfile))
+  const unlockProfile = async () => {
     try {
       const profile = new Profile(ethereumAddress, api)
       await profile.unlock()
@@ -82,18 +73,60 @@ const UserInfoModal = ({ ethereumAddress }) => {
     }
   }
 
-  const unlockBoxIfRequired = async box => {
-    if (box.unlockedProfSuccess) {
-      if (!profileExists(box)) {
-        dispatch(requestProfileCreate(ethereumAddress))
-      }
-      return box.unlockedBox
+  const createProfile = async unlockedBox => {
+    try {
+      await unlockedBox.createAccount()
+      dispatch(requestProfileCreateSuccess(ethereumAddress))
+    } catch (error) {
+      dispatch(requestProfileCreateError(ethereumAddress, error))
     }
-    if (box.unlockedProf) throw new Error('error unlocking box')
+  }
 
-    dispatchModal(open('3boxState'))
-    const unlockedBox = await unlockProfile(box)
-    return unlockedBox
+  const hasProfile = () => {
+    const { hasProfile } = new Profile(ethereumAddress, api)
+    return hasProfile()
+  }
+
+  const unlockAndCreateBoxIfRequired = async box => {
+    try {
+      const profileExists = await hasProfile()
+      // no signature required
+      if (box.unlockedProfSuccess && profileExists) {
+        return box.unlockedBox
+      }
+
+      // only create profile signature required
+      if (box.unlockedProfSuccess) {
+        dispatch(requestProfileCreate(ethereumAddress))
+        dispatchModal(open('3boxState', ['create']))
+        await createProfile(box.unlockedBox)
+        return box.unlockedBox
+      }
+
+      // open box signature only
+      if (!box.unlockedProfSuccess && profileExists) {
+        dispatch(requestedProfileUnlock(ethereumAddress))
+        dispatchModal(open('3boxState', ['open']))
+        const unlockedBox = await unlockProfile()
+        return unlockedBox
+      }
+
+      // both signatures
+      dispatchModal(open('3boxState'))
+      dispatch(requestedProfileUnlock(ethereumAddress))
+      const unlockedBox = await unlockProfile()
+      dispatch(requestProfileCreate(ethereumAddress))
+      await createProfile(box.unlockedBox)
+      return unlockedBox
+    } catch (error) {
+      dispatch(
+        saveProfileError(
+          ethereumAddress,
+          `error unlocking or creating profile: ${error}`
+        )
+      )
+      return null
+    }
   }
 
   const saveProfile = async ethereumAddress => {
@@ -109,15 +142,15 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       const changedValues = changed.map(calculateChanged)
-      const unlockedBox = await unlockBoxIfRequired(boxes[ethereumAddress])
+      const unlockedBox = await unlockAndCreateBoxIfRequired(
+        boxes[ethereumAddress]
+      )
       if (unlockedBox) {
         await unlockedBox.setPublicFields(changed, changedValues)
         dispatch(savedProfile(ethereumAddress, forms))
         await delay()
         dispatchModal(close())
         setKey(uuidv1())
-      } else {
-        dispatch(saveProfileError(ethereumAddress, 'error unlocking profile'))
       }
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
