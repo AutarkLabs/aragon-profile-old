@@ -6,15 +6,18 @@ import styled from 'styled-components'
 import { FlexDirectionRow, FlexDirectionCol } from '../styled-components'
 import { ModalWrapper } from './ModalWrapper'
 
-const ProfileStatus = ({ awaitingSig, receivedSig, successfulSig, title }) => {
+const ProfileStatus = ({ loading, error, complete, title }) => {
   let Icon
   let text
-  if (successfulSig) {
+  if (complete) {
     Icon = IconCheck
     text = 'Message signed!'
-  } else if (receivedSig) {
+  } else if (error) {
     Icon = IconError
     text = 'Error signing message'
+  } else if (loading) {
+    Icon = IconAttention
+    text = 'Loading'
   } else {
     Icon = IconAttention
     text = 'Waiting for signature...'
@@ -29,14 +32,24 @@ const ProfileStatus = ({ awaitingSig, receivedSig, successfulSig, title }) => {
   )
 }
 
+ProfileStatus.defaultProps = {
+  loading: false,
+  error: false,
+  complete: false,
+  title: '',
+}
+
 const BoxState = ({
   messageSigning: {
-    unlockingProf,
-    unlockedProf,
-    unlockedProfSuccess,
     creatingProf,
     createdProfError,
     createdProfSuccess,
+    openingProf,
+    openedProfError,
+    openedProfSuccess,
+    syncingProf,
+    syncedProfError,
+    syncedProfSuccess,
   },
   signaturesRequired,
 }) => {
@@ -53,17 +66,18 @@ const BoxState = ({
       <JustifyRowCenter>
         {needsToUnlock && (
           <ProfileStatus
-            awaitingSig={unlockingProf}
-            receivedSig={unlockedProf}
-            successfulSig={unlockedProfSuccess}
+            awaitingSig={openingProf}
+            complete={openedProfSuccess && syncedProfSuccess}
+            error={openedProfError || syncedProfError}
+            loading={syncingProf}
             title="Grant aragon access to your 3box"
           />
         )}
         {needsToCreate && (
           <ProfileStatus
             awaitingSig={creatingProf}
-            receivedSig={createdProfError}
-            successfulSig={createdProfSuccess}
+            error={createdProfError}
+            complete={createdProfSuccess}
             title="Profile creation"
           />
         )}
@@ -74,12 +88,15 @@ const BoxState = ({
 
 BoxState.propTypes = {
   messageSigning: PropTypes.shape({
-    unlockingProf: PropTypes.bool.isRequired,
-    unlockedProf: PropTypes.bool.isRequired,
-    unlockedProfSuccess: PropTypes.bool.isRequired,
     creatingProf: PropTypes.bool.isRequired,
     createdProfError: PropTypes.bool.isRequired,
     createdProfSuccess: PropTypes.bool.isRequired,
+    openingProf: PropTypes.bool.isRequired,
+    openedProfError: PropTypes.bool.isRequired,
+    openedProfSuccess: PropTypes.bool.isRequired,
+    syncingProf: PropTypes.bool.isRequired,
+    syncedProfError: PropTypes.bool.isRequired,
+    syncedProfSuccess: PropTypes.bool.isRequired,
   }).isRequired,
   signaturesRequired: PropTypes.array.isRequired,
 }

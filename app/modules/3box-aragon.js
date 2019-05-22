@@ -59,7 +59,33 @@ export class Profile {
 
   getPublic = () => Box.getProfile(this.ethereumAddress)
 
-  unlock = () =>
+  unlock = async () => {
+    const openedBox = await Box.openBox(
+      this.ethereumAddress,
+      this.boxAragonBridge
+    )
+    this.boxState = { opened: true, synced: false }
+    this.unlockedBox = openedBox
+    return openedBox
+  }
+
+  sync = () =>
+    new Promise((resolve, reject) => {
+      if (this.boxState.opened) {
+        this.unlockedBox.onSyncDone(() => {
+          try {
+            this.boxState = { opened: true, synced: true }
+            return resolve(this.unlockedBox)
+          } catch (err) {
+            this.boxState = { opened: true, synced: false }
+            return reject(err)
+          }
+        })
+      } else
+        reject(new Error('Box needs to be unlocked before it can be synced'))
+    })
+
+  unlockAndSync = () =>
     new Promise(async (resolve, reject) => {
       let openedBox
       try {
@@ -74,7 +100,7 @@ export class Profile {
       this.boxState = { opened: true, synced: false }
       this.unlockedBox = openedBox
 
-      openedBox.onSyncDone(async () => {
+      openedBox.onSyncDone(() => {
         try {
           this.boxState = { opened: true, synced: true }
           return resolve(openedBox)

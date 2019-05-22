@@ -15,12 +15,15 @@ import {
   removingItem,
   removedItem,
   removedItemError,
-  requestedProfileUnlock,
   requestProfileCreate,
   requestProfileCreateSuccess,
   requestProfileCreateError,
-  profileUnlockSuccess,
-  profileUnlockFailure,
+  profileOpenRequest,
+  profileOpenSuccess,
+  profileOpenFailure,
+  profileSyncRequest,
+  profileSyncSuccess,
+  profileSyncFailure,
 } from '../../stateManagers/box'
 import { close, openBoxState } from '../../stateManagers/modal'
 import WorkHistoryModal from './WorkHistory'
@@ -62,23 +65,35 @@ const UserInfoModal = ({ ethereumAddress }) => {
     })
 
   const unlockProfile = async () => {
+    let profile
     try {
-      const profile = new Profile(ethereumAddress, api)
+      profile = new Profile(ethereumAddress, api)
       await profile.unlock()
-      dispatch(profileUnlockSuccess(ethereumAddress, profile))
+      dispatch(profileOpenSuccess(ethereumAddress, profile))
+    } catch (error) {
+      dispatch(profileOpenFailure(ethereumAddress, error))
+      return false
+    }
+
+    dispatch(profileSyncRequest(ethereumAddress, profile))
+    try {
+      await profile.sync()
+      dispatch(profileSyncSuccess(ethereumAddress))
       return profile
     } catch (error) {
-      dispatch(profileUnlockFailure(ethereumAddress, error))
+      dispatch(profileSyncFailure(ethereumAddress, error))
       return false
     }
   }
 
   const createProfile = async unlockedBox => {
     try {
-      await unlockedBox.createAccount()
+      await unlockedBox.createProfile()
       dispatch(requestProfileCreateSuccess(ethereumAddress))
+      return true
     } catch (error) {
       dispatch(requestProfileCreateError(ethereumAddress, error))
+      return false
     }
   }
 
@@ -87,37 +102,39 @@ const UserInfoModal = ({ ethereumAddress }) => {
     return hasProfile()
   }
 
+  const createProfSig = async unlockedBox => {
+    dispatch(requestProfileCreate(ethereumAddress))
+    dispatchModal(openBoxState(['create']))
+    const created = await createProfile(unlockedBox)
+    return created ? unlockedBox : null
+  }
+
+  const openBoxSig = async () => {
+    dispatch(profileOpenRequest(ethereumAddress))
+    dispatchModal(openBoxState(['unlock']))
+    return unlockProfile()
+  }
+
+  const invokeBothSigs = async () => {
+    dispatch(profileOpenRequest(ethereumAddress))
+    dispatchModal(openBoxState(['unlock', 'create']))
+    const unlockedBox = await unlockProfile()
+    dispatch(requestProfileCreate(ethereumAddress))
+    const created = await createProfile(unlockedBox)
+    return created ? unlockedBox : null
+  }
+
   const unlockAndCreateBoxIfRequired = async box => {
     try {
       const profileExists = await hasProfile()
       // no signature required
-      if (box.unlockedProfSuccess && profileExists) {
-        return box.unlockedBox
-      }
-
+      if (box.unlockedProfSuccess && profileExists) return box.unlockedBox
       // only create profile signature required
-      if (box.unlockedProfSuccess) {
-        dispatch(requestProfileCreate(ethereumAddress))
-        dispatchModal(openBoxState(['create']))
-        await createProfile(box.unlockedBox)
-        return box.unlockedBox
-      }
-
+      if (box.unlockedProfSuccess) return createProfSig(box.unlockedBox)
       // open box signature only
-      if (!box.unlockedProfSuccess && profileExists) {
-        dispatch(requestedProfileUnlock(ethereumAddress))
-        dispatchModal(openBoxState(['unlock']))
-        const unlockedBox = await unlockProfile()
-        return unlockedBox
-      }
-
+      if (!box.unlockedProfSuccess && profileExists) return openBoxSig()
       // both signatures
-      dispatch(requestedProfileUnlock(ethereumAddress))
-      dispatchModal(openBoxState(['unlock', 'create']))
-      const unlockedBox = await unlockProfile()
-      dispatch(requestProfileCreate(ethereumAddress))
-      await createProfile(unlockedBox)
-      return unlockedBox
+      return invokeBothSigs()
     } catch (error) {
       dispatch(
         saveProfileError(

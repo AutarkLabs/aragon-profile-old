@@ -19,6 +19,12 @@ import {
   REQUEST_PROFILE_CREATE,
   REQUEST_PROFILE_CREATE_SUCCESS,
   REQUEST_PROFILE_CREATE_ERROR,
+  REQUESTED_PROFILE_SYNC,
+  REQUESTED_PROFILE_SYNC_SUCCESS,
+  REQUESTED_PROFILE_SYNC_FAILURE,
+  REQUESTED_PROFILE_OPEN,
+  REQUESTED_PROFILE_OPEN_SUCCESS,
+  REQUESTED_PROFILE_OPEN_FAILURE,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -196,4 +202,51 @@ export const removedItemError = (ethereumAddress, error) => ({
     ethereumAddress,
   },
   error,
+})
+
+export const profileOpenRequest = ethereumAddress => ({
+  type: REQUESTED_PROFILE_OPEN,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const profileOpenSuccess = ethereumAddress => ({
+  type: REQUESTED_PROFILE_OPEN_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const profileOpenFailure = (ethereumAddress, error) => ({
+  type: REQUESTED_PROFILE_OPEN_FAILURE,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    error,
+  },
+})
+
+export const profileSyncRequest = ethereumAddress => ({
+  type: REQUESTED_PROFILE_SYNC,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const profileSyncSuccess = (ethereumAddress, profile) => ({
+  type: REQUESTED_PROFILE_SYNC_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    profile,
+  },
+})
+export const profileSyncFailure = (ethereumAddress, error) => ({
+  type: REQUESTED_PROFILE_SYNC_FAILURE,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    error,
+  },
 })
