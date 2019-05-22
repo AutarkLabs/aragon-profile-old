@@ -9,15 +9,15 @@ import { ModalWrapper } from './ModalWrapper'
 const ProfileStatus = ({ awaitingSig, receivedSig, successfulSig, title }) => {
   let Icon
   let text
-  if (awaitingSig) {
-    Icon = IconAttention
-    text = 'Waiting for signature...'
-  } else if (successfulSig) {
+  if (successfulSig) {
     Icon = IconCheck
     text = 'Message signed!'
   } else if (receivedSig) {
     Icon = IconError
     text = 'Error signing message'
+  } else {
+    Icon = IconAttention
+    text = 'Waiting for signature...'
   }
 
   return (
@@ -35,7 +35,7 @@ const BoxState = ({
     unlockedProf,
     unlockedProfSuccess,
     creatingProf,
-    createdProf,
+    createdProfError,
     createdProfSuccess,
   },
   signaturesRequired,
@@ -62,7 +62,7 @@ const BoxState = ({
         {needsToCreate && (
           <ProfileStatus
             awaitingSig={creatingProf}
-            receivedSig={createdProf}
+            receivedSig={createdProfError}
             successfulSig={createdProfSuccess}
             title="Profile creation"
           />
@@ -78,7 +78,7 @@ BoxState.propTypes = {
     unlockedProf: PropTypes.bool.isRequired,
     unlockedProfSuccess: PropTypes.bool.isRequired,
     creatingProf: PropTypes.bool.isRequired,
-    createdProf: PropTypes.bool.isRequired,
+    createdProfError: PropTypes.bool.isRequired,
     createdProfSuccess: PropTypes.bool.isRequired,
   }).isRequired,
   signaturesRequired: PropTypes.array.isRequired,

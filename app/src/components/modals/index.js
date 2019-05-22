@@ -112,11 +112,11 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       // both signatures
-      dispatchModal(openBoxState(['unlock', 'create']))
       dispatch(requestedProfileUnlock(ethereumAddress))
+      dispatchModal(openBoxState(['unlock', 'create']))
       const unlockedBox = await unlockProfile()
       dispatch(requestProfileCreate(ethereumAddress))
-      await createProfile(box.unlockedBox)
+      await createProfile(unlockedBox)
       return unlockedBox
     } catch (error) {
       dispatch(
