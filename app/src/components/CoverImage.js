@@ -1,76 +1,37 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { useDropzone } from 'react-dropzone'
 import ImageMenu from './ImageMenu'
 import { BoxContext } from '../wrappers/box'
-import infuraIpfs from '../../ipfs'
-
-import {
-  uploadingImage,
-  uploadedImage,
-  uploadedImageFailure,
-} from '../stateManagers/box'
 
 const CoverImage = ({ ethereumAddress }) => {
-  const { dispatch } = useContext(BoxContext)
+  const { boxes } = useContext(BoxContext)
+  const userLoaded = !!boxes[ethereumAddress]
+  const imageTag = 'Cover'
 
-  const onDrop = useCallback(
-    acceptedFiles => {
-      dispatch(uploadingImage(ethereumAddress))
+  const hasImage =
+    userLoaded &&
+    boxes[ethereumAddress].publicProfile.image &&
+    imageTag in boxes[ethereumAddress].publicProfile.image
 
-      const reader = new FileReader()
+  const imageCid =
+    hasImage &&
+    boxes[ethereumAddress].publicProfile.image[imageTag].contentUrl['/']
 
-      reader.onerror = error => {
-        reader.onabort = () =>
-          console.log('file reading failed and was aborted')
-        dispatch(uploadedImageFailure(error))
-      }
-
-      reader.onload = async () => {
-        try {
-          const file = Buffer.from(reader.result)
-          const result = await infuraIpfs.add(file)
-          dispatch(uploadedImage(ethereumAddress, result[0].hash))
-        } catch (error) {
-          dispatch(uploadedImageFailure(error))
-        }
-      }
-
-      acceptedFiles.forEach(file => reader.readAsArrayBuffer(file))
-    },
-    [dispatch, ethereumAddress]
-  )
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isDragReject,
+  const imageMenuProps = {
+    ethereumAddress,
+    top: 26,
+    right: 26,
+    imageExists: !!hasImage,
     open,
-  } = useDropzone({ accept: 'image/*', onDrop })
-
-  let borderC = '0'
-  if (isDragActive) borderC = '3px dashed yellow'
-  if (isDragAccept) borderC = '3px dashed green'
-  if (isDragReject) borderC = '3px dashed red'
+    imageTag: 'Cover',
+  }
 
   return (
-    <CoverImageStyled
-      dragBorder={borderC}
-      {...getRootProps({ className: 'imageHover dropzone' })}
-      onClick={event => event.stopPropagation()}
-    >
-      <input {...getInputProps()} />
-
-      <ImageMenu
-        ethereumAddress={ethereumAddress}
-        top={26}
-        right={26}
-        imageExists
-        open={open}
-      />
-    </CoverImageStyled>
+    <CoverBase className="imageHover">
+      {hasImage ? <CoverPicture imageCid={imageCid} /> : <CoverPlaceholder />}
+      {userLoaded && <ImageMenu {...imageMenuProps} />}
+    </CoverBase>
   )
 }
 
@@ -78,11 +39,22 @@ CoverImage.propTypes = {
   ethereumAddress: PropTypes.string.isRequired,
 }
 
-const CoverImageStyled = styled.div`
+const getBackground = props =>
+  `url(https://ipfs.infura.io/ipfs/${props.imageCid})`
+
+const CoverBase = styled.div`
   width: 100%;
-  border: ${({ dragBorder }) => dragBorder};
   height: 12rem;
   position: relative;
-  background-image: url('https://cdn2.spacedecentral.net/assets/stars-551011e393a28d383a3f188ea38c595c9721561d3cf733bd63ce976616c0b0cd.jpg');
 `
+const CoverPicture = styled(CoverBase)`
+  background-image: ${props => getBackground(props)};
+`
+const CoverPlaceholder = styled(CoverBase)`
+  border: ${({ dragBorder }) => dragBorder};
+  filter: grayscale(100);
+  background: black;
+  opacity: 0.1;
+`
+
 export default CoverImage

@@ -16,9 +16,6 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE,
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
-  REQUESTED_IMAGE_REMOVE,
-  REQUESTED_IMAGE_REMOVE_SUCCESS,
-  REQUESTED_IMAGE_REMOVE_ERROR,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -168,28 +165,6 @@ export const removedItem = (ethereumAddress, profile) => ({
 
 export const removedItemError = (ethereumAddress, error) => ({
   type: REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
-  meta: {
-    ethereumAddress,
-  },
-  error,
-})
-
-export const removingImage = ethereumAddress => ({
-  type: REQUESTED_IMAGE_REMOVE,
-  meta: {
-    ethereumAddress,
-  },
-})
-
-export const removedImage = ethereumAddress => ({
-  type: REQUESTED_IMAGE_REMOVE_SUCCESS,
-  meta: {
-    ethereumAddress,
-  },
-})
-
-export const removedImageFailure = (ethereumAddress, error) => ({
-  type: REQUESTED_IMAGE_REMOVE_ERROR,
   meta: {
     ethereumAddress,
   },

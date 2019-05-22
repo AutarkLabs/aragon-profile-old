@@ -3,18 +3,22 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 import { Buffer } from 'ipfs-http-client'
-import { BoxContext } from '../wrappers/box'
 import infuraIpfs from '../../ipfs'
 import { removeItem } from '../stateManagers/modal'
+import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
+import { image } from '../../modules/things'
 
 import {
   uploadingImage,
   uploadedImage,
   uploadedImageFailure,
+  savingProfile,
+  savedProfile,
+  saveProfileError,
 } from '../stateManagers/box'
 
-const ImageMenu = ({ ethereumAddress, top, right, imageExists, open }) => {
+const ImageMenu = ({ ethereumAddress, top, right, imageExists, imageTag }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { dispatchModal } = useContext(ModalContext)
 
@@ -34,7 +38,18 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, open }) => {
         try {
           const file = Buffer.from(reader.result)
           const result = await infuraIpfs.add(file)
-          dispatch(uploadedImage(ethereumAddress, result[0].hash))
+          dispatch(uploadedImage(ethereumAddress, imageTag, result[0].hash))
+          const { unlockedBox, publicProfile } = boxes[ethereumAddress]
+          const profileImages = { ...publicProfile.image }
+          profileImages[imageTag] = image(result[0].hash)
+          const images = { image: profileImages }
+          try {
+            dispatch(savingProfile(ethereumAddress))
+            await unlockedBox.setPublicFields(['image'], [profileImages])
+            dispatch(savedProfile(ethereumAddress, images))
+          } catch (error2) {
+            dispatch(saveProfileError(ethereumAddress, error2))
+          }
         } catch (error) {
           dispatch(uploadedImageFailure(error))
         }
@@ -51,24 +66,18 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, open }) => {
     isDragActive,
     isDragAccept,
     isDragReject,
-  } = useDropzone({ accept: 'image/*', onDrop, noDragEventsBubbling: true })
-
-  const userLoaded = !!boxes[ethereumAddress]
-  const hasImage =
-    userLoaded &&
-    boxes[ethereumAddress].publicProfile.image &&
-    boxes[ethereumAddress].publicProfile.image.length > 0
+    open,
+  } = useDropzone({
+    accept: 'image/*',
+    onDrop,
+    noDragEventsBubbling: true,
+    noClick: true,
+    noKeyboard: true,
+  })
 
   const publicProfileImageCid =
-    hasImage && boxes[ethereumAddress].publicProfile.image[0].contentUrl['/']
-
-  const addedImage = userLoaded && boxes[ethereumAddress].uploadedImageSuccess
-
-console.log('--=', boxes[ethereumAddress].forms)
-
-  const editProfileImageCid = addedImage
-    ? boxes[ethereumAddress].forms.image[0].contentUrl['/']
-    : publicProfileImageCid
+    imageExists &&
+    boxes[ethereumAddress].publicProfile.image[imageTag].contentUrl['/']
 
   return (
     <ImageMenuStyled
@@ -80,20 +89,14 @@ console.log('--=', boxes[ethereumAddress].forms)
         isDragAccept,
         isDragReject,
         publicProfileImageCid,
-        editProfileImageCid,
       })}
     >
       {' '}
+      <div>Update {imageTag} photo</div>
       <input {...getInputProps({ disabled: false })} />
-      <div>Update cover photo</div>
-      <div>Upload new image</div>
+      <div onClick={open}>Upload new image</div>
       {imageExists && (
-        <div
-          onClick={() => {
-            console.log('dispatch delete image:', publicProfileImageCid)
-            dispatchModal(removeItem(publicProfileImageCid, 'image'))
-          }}
-        >
+        <div onClick={() => dispatchModal(removeItem(imageTag, 'image'))}>
           Delete
         </div>
       )}
@@ -118,16 +121,6 @@ const getBorderColor = props => {
   return 'black'
 }
 
-const getBackground = props => {
-  const imageCid = props.isEditing
-    ? props.editProfileImageCid
-    : props.publicProfileImageCid
-
-  if (imageCid) return `url(https://ipfs.infura.io/ipfs/${imageCid})`
-
-  return `url(${addImage})`
-}
-
 const getBorderStyle = props => {
   if (props.isEditing) return 'dashed'
   return 'solid'
@@ -139,7 +132,7 @@ const ImageMenuStyled = styled.div`
     visibility: visible;
     transition: visibility 0.3s linear, opacity 0.3s linear;
     visibility: visible;
-    opacity: 0.95;
+    opacity: 0.8;
   }
   border-radius: 3px;
   font-size: 0.9rem;
@@ -157,6 +150,7 @@ const ImageMenuStyled = styled.div`
     background: #d1d1d1;
     opacity: 0.6;
     font-weight: bold;
+    font-size: 1rem;
   }
   > :not(:first-child) {
     background: white;
@@ -171,45 +165,8 @@ const ImageMenuStyled = styled.div`
     margin-bottom: 1px;
   }
   > * {
-    padding: 4px 10px;
+    padding: 0.5rem 0.9rem;
   }
 `
 
 export default ImageMenu
-/*
-const Container = styled.div`
-  cursor: ${props => props.isEditing && 'pointer'};
-  padding: 1.2rem;
-  border-width: 0.15rem;
-  border-color: ${props => getBorderColor(props)};
-  border-color: #F2F2F2;
-  border-style: ${props => getBorderStyle(props)};
-  background-color: white;
-  background-image: ${props => getBackground(props)};
-  background-size: 11.5rem 11.5rem;
-  transition: border 0.24s ease-in-out;
-  border-radius: 50%;
-  width: 11.5rem;
-  height: 11.5rem;
-  position: absolute;
-  top: 4rem;
-  left: 4rem;
-  z-index: 4;
-`
-const TransparentEditOverlay = styled.div`
-  width: 11.2rem;
-  height: 11.2rem;
-  cursor: pointer;
-  background-color: white;
-  position: absolute;
-  opacity: 0.5;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-`
-const EditIcon = styled.img.attrs({ src: editImage })`
-  width: 1.9rem;
-  position: absolute;
-  right: 1.1rem;
-  top: 0.4rem;
-*/

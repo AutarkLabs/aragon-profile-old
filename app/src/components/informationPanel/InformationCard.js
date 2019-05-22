@@ -28,7 +28,7 @@ const InformationCard = ({ ethereumAddress }) => {
   const userLoaded = !!boxes[ethereumAddress]
 
   // return early if there is no profile to display
-  if (!userLoaded) return <div>No profile</div>
+  if (!userLoaded) return <div />
 
   const fields = boxes[ethereumAddress].publicProfile
 
@@ -158,14 +158,14 @@ const InformationCard = ({ ethereumAddress }) => {
   const RenderTwitter = ({ fields }) => (
     <Social>
       <IconTwitter width="1rem" height="1rem" color={theme.textTertiary} />
-      {fields.twitter ? (
+      {fields.proof_twitter ? (
         <Fragment>
           <SafeLink
-            href={'https://twitter.com/' + fields.twitter}
+            href={'https://twitter.com/' + fields.proof_twitter}
             style={{ color: theme.accent, textDecoration: 'none' }}
             target="_blank"
           >
-          https://twitter.com/
+            https://twitter.com/
           </SafeLink>
           <IconVerified />
         </Fragment>
