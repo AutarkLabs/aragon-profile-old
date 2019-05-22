@@ -127,13 +127,13 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const unlockAndCreateBoxIfRequired = async box => {
     try {
       const profileExists = await hasProfile()
-      // no signature required
+      // no signature required, return the box
       if (box.unlockedProfSuccess && profileExists) return box.unlockedBox
-      // only create profile signature required
+      // only create profile signature required, return box once finished
       if (box.unlockedProfSuccess) return createProfSig(box.unlockedBox)
-      // open box signature only
+      // open box signature only, return box once finished
       if (!box.unlockedProfSuccess && profileExists) return openBoxSig()
-      // both signatures
+      // both signatures, return box once finished
       return invokeBothSigs()
     } catch (error) {
       dispatch(
@@ -159,6 +159,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       const changedValues = changed.map(calculateChanged)
+      // unlockAndCreateBoxIfRequired opens the signature modal, and handles errors
       const unlockedBox = await unlockAndCreateBoxIfRequired(
         boxes[ethereumAddress]
       )
