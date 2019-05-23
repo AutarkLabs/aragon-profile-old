@@ -1,6 +1,6 @@
-import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM } from './actionTypes'
+import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM, START_DRAG } from './actionTypes'
 
-import { openedModal, closedModal, removeItem } from './states'
+import { openedModal, closedModal, removeItem, startDrag } from './states'
 
 import { log } from '../../../utils'
 
@@ -30,6 +30,11 @@ const modalReducer = (prevState, action) => {
         action.meta.id,
         action.meta.itemType
       )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case START_DRAG: {
+      const nextState = startDrag({ ...prevState })
       logStateUpdate(action, prevState, nextState)
       return nextState
     }

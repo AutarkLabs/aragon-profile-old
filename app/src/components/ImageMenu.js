@@ -18,7 +18,14 @@ import {
   saveProfileError,
 } from '../stateManagers/box'
 
-const ImageMenu = ({ ethereumAddress, top, right, imageExists, imageTag }) => {
+const ImageMenu = ({
+  ethereumAddress,
+  top,
+  right,
+  imageExists,
+  imageTag,
+  imageTitle,
+}) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { dispatchModal } = useContext(ModalContext)
 
@@ -39,14 +46,19 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, imageTag }) => {
           const file = Buffer.from(reader.result)
           const result = await infuraIpfs.add(file)
           dispatch(uploadedImage(ethereumAddress, imageTag, result[0].hash))
-          const { unlockedBox, publicProfile } = boxes[ethereumAddress]
-          const profileImages = { ...publicProfile.image }
-          profileImages[imageTag] = image(result[0].hash)
-          const images = { image: profileImages }
+          const { unlockedBox } = boxes[ethereumAddress]
+
           try {
             dispatch(savingProfile(ethereumAddress))
-            await unlockedBox.setPublicFields(['image'], [profileImages])
-            dispatch(savedProfile(ethereumAddress, images))
+            await unlockedBox.setPublicFields(
+              [imageTag],
+              [image(result[0].hash)]
+            )
+            dispatch(
+              savedProfile(ethereumAddress, {
+                [imageTag]: image(result[0].hash),
+              })
+            )
           } catch (error2) {
             dispatch(saveProfileError(ethereumAddress, error2))
           }
@@ -75,9 +87,9 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, imageTag }) => {
     noKeyboard: true,
   })
 
-  const publicProfileImageCid =
+  const imageCid =
     imageExists &&
-    boxes[ethereumAddress].publicProfile.image[imageTag].contentUrl['/']
+    boxes[ethereumAddress].publicProfile[imageTag][0].contentUrl['/']
 
   return (
     <ImageMenuStyled
@@ -88,15 +100,15 @@ const ImageMenu = ({ ethereumAddress, top, right, imageExists, imageTag }) => {
         isDragActive,
         isDragAccept,
         isDragReject,
-        publicProfileImageCid,
+        imageCid,
       })}
     >
       {' '}
-      <div>Update {imageTag} photo</div>
+      <div>Update {imageTitle} photo</div>
       <input {...getInputProps({ disabled: false })} />
       <div onClick={open}>Upload new image</div>
       {imageExists && (
-        <div onClick={() => dispatchModal(removeItem(imageTag, 'image'))}>
+        <div onClick={() => dispatchModal(removeItem(imageCid, imageTag))}>
           Delete
         </div>
       )}
@@ -109,23 +121,19 @@ ImageMenu.propTypes = {
   top: PropTypes.number.isRequired,
   right: PropTypes.number.isRequired,
   imageExists: PropTypes.bool.isRequired,
-}
-/*
-const getBorderColor = props => {
-  if (props.isEditing) {
-    if (props.isDragAccept) return '#00e676'
-    if (props.isDragReject) return '#ff1744'
-    if (props.isDragActive) return '#2196f3'
-  }
-  if (props.imageCid) return 'white'
-  return 'black'
+  imageTag: PropTypes.oneOf(['image', 'coverPhoto']),
+  imageTitle: PropTypes.string.isRequired,
 }
 
-const getBorderStyle = props => {
-  if (props.isEditing) return 'dashed'
-  return 'solid'
+const getBorder = props => {
+  let color
+
+  if (props.isDragAccept) color = '#00e676'
+  else if (props.isDragReject) color = '#ff1744'
+  else if (props.isDragActive) color = '#2196f3'
+  if (color) return `2px ${color} dashed`
+  else return '2px white solid'
 }
-*/
 
 const ImageMenuStyled = styled.div`
   .imageHover:hover & {
@@ -134,6 +142,7 @@ const ImageMenuStyled = styled.div`
     visibility: visible;
     opacity: 0.8;
   }
+  border: ${props => getBorder(props)};
   border-radius: 3px;
   font-size: 0.9rem;
   transition: visibility 0.3s linear, opacity 0.3s linear;

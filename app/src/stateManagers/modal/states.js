@@ -19,3 +19,8 @@ export const removeItem = (state, id, itemType) => ({
   itemType,
   id,
 })
+
+export const startDrag = state => ({
+  ...state,
+  drag: true,
+})

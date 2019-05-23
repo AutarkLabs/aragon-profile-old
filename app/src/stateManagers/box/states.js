@@ -29,15 +29,11 @@ export const fetchingPublicProfile = () => ({
     description: '',
     workHistory: {},
     educationHistory: {},
-    image: {},
   },
   changed: [],
   uploadingImage: false,
   uploadedImageSuccess: false,
   uploadedImage: false,
-  removingImage: false,
-  removedImageSuccess: false,
-  removedImage: false,
 })
 
 export const fetchedPublicProfileSuccess = (state, profile) => {
@@ -120,19 +116,17 @@ export const uploadingImage = state => ({
   uploadedImage: false,
 })
 
-export const uploadedImage = (state, imageTag, imageHash) => {
-  const images = { ...state.forms.image }
-  images[imageTag] = image(imageHash)
+export const uploadedImage = (state, imageTag, imageContentHash) => {
   const newState = {
     ...state,
     uploadingImage: false,
     uploadedImageSuccess: true,
     uploadedImage: true,
-    forms: {
-      ...state.forms,
-      image: images,
+    publicProfile: {
+      ...state.publicProfile,
+      [imageTag]: image(imageContentHash),
     },
-    changed: calculateChanged(state.changed, 'image'),
+    changed: calculateChanged(state.changed, imageTag),
   }
   return newState
 }
@@ -179,16 +173,21 @@ export const requestedProfileItemRemove = state => ({
   removedItemSuccess: false,
 })
 
-export const requestedProfileItemRemoveSuccess = (state, profile) => ({
-  ...state,
-  removingItem: false,
-  removedItem: true,
-  removedItemSuccess: false,
-  publicProfile: {
-    ...state.publicProfile,
-    ...profile,
-  },
-})
+export const requestedProfileItemRemoveSuccess = (state, itemType, id) => {
+  const newState = {
+    ...state,
+    removingItem: false,
+    removedItem: true,
+    removedItemSuccess: false,
+    publicProfile: {
+      ...state.publicProfile,
+    },
+  }
+  if (itemType === 'image' || itemType === 'coverPhoto') {
+    delete newState.publicProfile[itemType]
+  }
+  return newState
+}
 
 export const requestedProfileItemRemoveError = (state, error) => ({
   ...state,

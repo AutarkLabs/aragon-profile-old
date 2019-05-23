@@ -7,16 +7,13 @@ import { BoxContext } from '../wrappers/box'
 const CoverImage = ({ ethereumAddress }) => {
   const { boxes } = useContext(BoxContext)
   const userLoaded = !!boxes[ethereumAddress]
-  const imageTag = 'Cover'
+  const imageTag = 'coverPhoto'
 
-  const hasImage =
-    userLoaded &&
-    boxes[ethereumAddress].publicProfile.image &&
-    imageTag in boxes[ethereumAddress].publicProfile.image
+  const hasImage = userLoaded && boxes[ethereumAddress].publicProfile[imageTag]
 
   const imageCid =
     hasImage &&
-    boxes[ethereumAddress].publicProfile.image[imageTag].contentUrl['/']
+    boxes[ethereumAddress].publicProfile[imageTag][0].contentUrl['/']
 
   const imageMenuProps = {
     ethereumAddress,
@@ -24,7 +21,8 @@ const CoverImage = ({ ethereumAddress }) => {
     right: 26,
     imageExists: !!hasImage,
     open,
-    imageTag: 'Cover',
+    imageTag: 'coverPhoto',
+    imageTitle: 'Cover',
   }
 
   return (

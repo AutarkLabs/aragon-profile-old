@@ -1,4 +1,4 @@
-import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM } from './actionTypes'
+import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM, START_DRAG } from './actionTypes'
 
 export const open = (type, id) => ({
   type: OPENED_MODAL,
@@ -18,4 +18,8 @@ export const removeItem = (id, itemType) => ({
     id,
     itemType,
   },
+})
+
+export const startDrag = () => ({
+  type: START_DRAG,
 })

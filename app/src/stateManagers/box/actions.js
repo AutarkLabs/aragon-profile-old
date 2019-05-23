@@ -103,13 +103,14 @@ export const uploadingImage = ethereumAddress => ({
   },
 })
 
-export const uploadedImage = (ethereumAddress, imageContentHash) => ({
+export const uploadedImage = (ethereumAddress, imageTag, imageContentHash) => ({
   type: UPLOADED_IMAGE_SUCCESS,
   meta: {
     ethereumAddress,
   },
   payload: {
-    cid: imageContentHash,
+    imageTag,
+    imageContentHash,
   },
 })
 
@@ -153,13 +154,14 @@ export const removingItem = ethereumAddress => ({
   },
 })
 
-export const removedItem = (ethereumAddress, profile) => ({
+export const removedItem = (ethereumAddress, itemType, id) => ({
   type: REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   meta: {
     ethereumAddress,
   },
   payload: {
-    profile,
+    itemType,
+    id,
   },
 })
 

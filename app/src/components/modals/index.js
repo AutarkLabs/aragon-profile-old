@@ -57,7 +57,6 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       const changedValues = changed.map(calculateChanged)
-      console.log('--#', changed, changedValues)
       await unlockedBox.setPublicFields(changed, changedValues)
       dispatch(savedProfile(ethereumAddress, forms))
       dispatchModal(close())
@@ -79,20 +78,21 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const removeItem = async () => {
     dispatch(removingItem(ethereumAddress))
     try {
-      const { unlockedBox, forms, publicProfile } = boxes[ethereumAddress]
+      const { unlockedBox, forms } = boxes[ethereumAddress]
       const { itemType, id } = modal
-      let newBoxVals
 
-      if (itemType === 'image') {
-        newBoxVals = { ...publicProfile.image }
-        delete newBoxVals[id]
+      if (itemType === 'image' || itemType === 'coverPhoto') {
+        await unlockedBox.removePublicField(itemType)
       } else {
         delete forms[itemType][id]
-        newBoxVals = Object.keys(forms[itemType]).map(id => forms[itemType][id])
+        const newBoxVals = Object.keys(forms[itemType]).map(
+          id => forms[itemType][id]
+        )
+        await unlockedBox.setPublicFields([itemType], [newBoxVals])
       }
 
-      await unlockedBox.setPublicFields([itemType], [newBoxVals])
-      dispatch(removedItem(ethereumAddress))
+      dispatch(removedItem(ethereumAddress, itemType, id))
+      dispatchModal(close())
     } catch (err) {
       dispatch(removedItemError(err))
     }

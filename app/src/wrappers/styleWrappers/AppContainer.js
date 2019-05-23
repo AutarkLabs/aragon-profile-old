@@ -15,6 +15,7 @@ const style = {
 
 const AppContainer = ({ children }) => {
   const { connectedAccount } = useAragonApi()
+
   return (
     <AppView
       appBar={
