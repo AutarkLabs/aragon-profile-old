@@ -91,7 +91,9 @@ const UserInfoModal = ({ ethereumAddress }) => {
         await unlockedBox.setPublicFields([itemType], [newBoxVals])
       }
 
-      dispatch(removedItem(ethereumAddress, itemType, id))
+      const updatedProfile = await unlockedBox.getPublic()
+
+      dispatch(removedItem(ethereumAddress, updatedProfile))
       dispatchModal(close())
     } catch (err) {
       dispatch(removedItemError(err))

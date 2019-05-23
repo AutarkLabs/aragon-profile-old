@@ -173,20 +173,16 @@ export const requestedProfileItemRemove = state => ({
   removedItemSuccess: false,
 })
 
-export const requestedProfileItemRemoveSuccess = (state, itemType, id) => {
-  const newState = {
+export const requestedProfileItemRemoveSuccess = (state, profile) => {
+  const publicProfile = reformatNestedFields(profile)
+  return {
     ...state,
     removingItem: false,
     removedItem: true,
-    removedItemSuccess: false,
-    publicProfile: {
-      ...state.publicProfile,
-    },
+    removedItemSuccess: true,
+    publicProfile,
+    forms: { ...state.forms, ...publicProfile },
   }
-  if (itemType === 'image' || itemType === 'coverPhoto') {
-    delete newState.publicProfile[itemType]
-  }
-  return newState
 }
 
 export const requestedProfileItemRemoveError = (state, error) => ({

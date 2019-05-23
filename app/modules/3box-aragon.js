@@ -57,7 +57,10 @@ export class Profile {
     this.unlockedBox = null
   }
 
-  getPublic = () => Box.getProfile(this.ethereumAddress)
+  getPublic = () =>
+    this.boxState.opened
+      ? this.unlockedBox.public.all()
+      : Box.getProfile(this.ethereumAddress)
 
   unlock = () =>
     new Promise(async (resolve, reject) => {
