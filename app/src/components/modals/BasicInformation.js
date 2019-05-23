@@ -1,8 +1,27 @@
-import React from 'react'
-import { Button, TextInput } from '@aragon/ui'
+import React, { useState } from 'react'
+import { Button, Text, TextInput, theme } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
 import { Label } from '../styled-components'
+import validator from '../../utils/validation'
+
+const validateName = validator.compile({
+  type: 'string',
+  minLength: 1,
+  maxLength: 32,
+})
+
+const validateWebsite = validator.compile({
+  type: 'string',
+  format: 'uri',
+})
+
+// validation does not force BasicInformation to refresh.
+// need to trigger it manually...
+const useForceUpdate = () => {
+  const [value, set] = useState(true)
+  return () => set(!value)
+}
 
 const BasicInformation = ({
   ethereumAddress,
@@ -10,8 +29,49 @@ const BasicInformation = ({
   onChange,
   saveProfile,
 }) => {
+  const [validationErrors, setError] = useState({})
+  const forceUpdate = useForceUpdate()
+
+  const validateAndSave = () => {
+    if (!validateName(getFormValue('name'))) {
+      validationErrors['name'] = 'Please provide valid name'
+    } else {
+      delete validationErrors['name']
+    }
+
+    const website = getFormValue('website')
+    if (website && !validateWebsite(getFormValue('website'))) {
+      validationErrors['website'] = 'Please provide valid website address'
+    } else {
+      delete validationErrors['website']
+    }
+
+    setError(validationErrors)
+
+    if (Object.keys(validationErrors).length) {
+      forceUpdate()
+    } else {
+      saveProfile(ethereumAddress)
+    }
+  }
+
+  const displayErrors = () => {
+    return Object.keys(validationErrors).length ? (
+      <div>
+        {Object.keys(validationErrors).map(errorSource => (
+          <Text.Block key={errorSource} color={theme.negative}>
+            {validationErrors[errorSource]}
+          </Text.Block>
+        ))}
+      </div>
+    ) : (
+      ''
+    )
+  }
+
   return (
-    <ModalWrapper title="Edit Basic Information1">
+    <ModalWrapper title="Edit Basic Information">
+      {displayErrors()}
       <TwoColumnsRow>
         <div>
           <Label>Name</Label>
@@ -19,6 +79,9 @@ const BasicInformation = ({
             wide
             onChange={e => onChange(e.target.value, 'name')}
             value={getFormValue('name')}
+            style={{
+              borderColor: validationErrors['name'] ? 'red' : 'default',
+            }}
           />
         </div>
         <div>
@@ -47,10 +110,13 @@ const BasicInformation = ({
           value={getFormValue('website')}
           onChange={e => onChange(e.target.value, 'website')}
           type="url"
+          style={{
+            borderColor: validationErrors['website'] ? 'red' : 'default',
+          }}
         />
       </div>
 
-      <Button mode="strong" wide onClick={() => saveProfile(ethereumAddress)}>
+      <Button mode="strong" wide onClick={() => validateAndSave()}>
         Save
       </Button>
     </ModalWrapper>

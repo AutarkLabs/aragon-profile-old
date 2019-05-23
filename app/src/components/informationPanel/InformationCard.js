@@ -155,13 +155,14 @@ const InformationCard = ({ ethereumAddress }) => {
     </Social>
   )
 
+  // TODO: proof_twitter does not contain username - 3box fix?
   const RenderTwitter = ({ fields }) => (
     <Social>
       <IconTwitter width="1rem" height="1rem" color={theme.textTertiary} />
       {fields.proof_twitter ? (
         <Fragment>
           <SafeLink
-            href={'https://twitter.com/' + fields.proof_twitter}
+            href={'https://twitter.com/'}
             style={{ color: theme.accent, textDecoration: 'none' }}
             target="_blank"
           >
