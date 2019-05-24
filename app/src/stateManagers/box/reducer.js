@@ -155,10 +155,11 @@ const boxReducer = (prevState, action) => {
     case UPLOADED_IMAGE_SUCCESS: {
       const nextState = { ...prevState }
       const ethereumAddress = action.meta.ethereumAddress
-      const { cid } = action.payload
+      const { imageTag, imageContentHash } = action.payload
       nextState[ethereumAddress] = uploadedImage(
         prevState[ethereumAddress],
-        cid
+        imageTag,
+        imageContentHash
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

@@ -113,13 +113,14 @@ export const uploadingImage = ethereumAddress => ({
   },
 })
 
-export const uploadedImage = (ethereumAddress, imageContentHash) => ({
+export const uploadedImage = (ethereumAddress, imageTag, imageContentHash) => ({
   type: UPLOADED_IMAGE_SUCCESS,
   meta: {
     ethereumAddress,
   },
   payload: {
-    cid: imageContentHash,
+    imageTag,
+    imageContentHash,
   },
 })
 

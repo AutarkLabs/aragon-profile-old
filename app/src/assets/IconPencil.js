@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const IconPencil = props => (
   <svg width="22px" height="22px" viewBox="0 0 22 22" {...props}>
@@ -6,9 +7,9 @@ const IconPencil = props => (
       <g
         id="Profile-Landing-Copy"
         transform="translate(-479.000000, -972.000000)"
-        fill="#106CE3"
+        fill={props.color}
         fillRule="nonzero"
-        stroke="#106CE3"
+        stroke={props.color}
         strokeWidth="0.5"
       >
         <g id="Pencil" transform="translate(480.000000, 973.000000)">
@@ -21,5 +22,17 @@ const IconPencil = props => (
     </g>
   </svg>
 )
+
+IconPencil.propTypes = {
+  color: PropTypes.string,
+  height: PropTypes.string,
+  width: PropTypes.string,
+}
+
+IconPencil.defaultProps = {
+  color: '#106CE3',
+  width: '22px',
+  height: '22px',
+}
 
 export default IconPencil

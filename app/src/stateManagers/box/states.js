@@ -151,17 +151,19 @@ export const uploadingImage = state => ({
   uploadedImage: false,
 })
 
-export const uploadedImage = (state, imageHash) => ({
-  ...state,
-  uploadingImage: false,
-  uploadedImageSuccess: true,
-  uploadedImage: true,
-  forms: {
-    ...state.forms,
-    image: image(imageHash),
-  },
-  changed: calculateChanged(state.changed, 'image'),
-})
+export const uploadedImage = (state, imageTag, imageContentHash) => {
+  const newFormVals = _.cloneDeep({ ...state.forms })
+  newFormVals[imageTag] = image(imageContentHash)
+  const newState = {
+    ...state,
+    uploadingImage: false,
+    uploadedImageSuccess: true,
+    uploadedImage: true,
+    forms: newFormVals,
+    changed: calculateChanged(state.changed, imageTag),
+  }
+  return newState
+}
 
 export const uploadedImageError = (state, error) => ({
   ...state,
@@ -205,16 +207,17 @@ export const requestedProfileItemRemove = state => ({
   removedItemSuccess: false,
 })
 
-export const requestedProfileItemRemoveSuccess = (state, profile) => ({
-  ...state,
-  removingItem: false,
-  removedItem: true,
-  removedItemSuccess: false,
-  publicProfile: {
-    ...state.publicProfile,
-    ...profile,
-  },
-})
+export const requestedProfileItemRemoveSuccess = (state, profile) => {
+  const publicProfile = reformatNestedFields(profile)
+  return {
+    ...state,
+    removingItem: false,
+    removedItem: true,
+    removedItemSuccess: true,
+    publicProfile,
+    forms: { ...state.forms, ...publicProfile },
+  }
+}
 
 export const requestedProfileItemRemoveError = (state, error) => ({
   ...state,
