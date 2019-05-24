@@ -16,6 +16,15 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE,
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
+  REQUEST_PROFILE_CREATE,
+  REQUEST_PROFILE_CREATE_SUCCESS,
+  REQUEST_PROFILE_CREATE_ERROR,
+  REQUESTED_PROFILE_SYNC,
+  REQUESTED_PROFILE_SYNC_SUCCESS,
+  REQUESTED_PROFILE_SYNC_FAILURE,
+  REQUESTED_PROFILE_OPEN,
+  REQUESTED_PROFILE_OPEN_SUCCESS,
+  REQUESTED_PROFILE_OPEN_FAILURE,
 } from './actionTypes'
 
 export const fetchingProfile = ethereumAddress => ({
@@ -44,10 +53,11 @@ export const fetchedPublicProfileError = (ethereumAddress, error) => ({
   error,
 })
 
-export const requestedProfileUnlock = ethereumAddress => ({
+export const requestedProfileUnlock = (ethereumAddress, hasBox) => ({
   type: REQUESTED_PROFILE_UNLOCK,
   meta: {
     ethereumAddress,
+    hasBox,
   },
 })
 
@@ -122,6 +132,29 @@ export const uploadedImageFailure = (ethereumAddress, error) => ({
   error,
 })
 
+export const requestProfileCreate = ethereumAddress => ({
+  type: REQUEST_PROFILE_CREATE,
+  meta: {
+    ethereumAddress,
+  },
+})
+
+export const requestProfileCreateSuccess = ethereumAddress => ({
+  type: REQUEST_PROFILE_CREATE_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const requestProfileCreateError = (ethereumAddress, error) => ({
+  type: REQUEST_PROFILE_CREATE_ERROR,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    error,
+  },
+})
+
 export const savingProfile = ethereumAddress => ({
   type: REQUESTED_PROFILE_SAVE,
   meta: {
@@ -170,4 +203,51 @@ export const removedItemError = (ethereumAddress, error) => ({
     ethereumAddress,
   },
   error,
+})
+
+export const profileOpenRequest = ethereumAddress => ({
+  type: REQUESTED_PROFILE_OPEN,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const profileOpenSuccess = ethereumAddress => ({
+  type: REQUESTED_PROFILE_OPEN_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const profileOpenFailure = (ethereumAddress, error) => ({
+  type: REQUESTED_PROFILE_OPEN_FAILURE,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    error,
+  },
+})
+
+export const profileSyncRequest = ethereumAddress => ({
+  type: REQUESTED_PROFILE_SYNC,
+  meta: {
+    ethereumAddress,
+  },
+})
+export const profileSyncSuccess = (ethereumAddress, profile) => ({
+  type: REQUESTED_PROFILE_SYNC_SUCCESS,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    profile,
+  },
+})
+export const profileSyncFailure = (ethereumAddress, error) => ({
+  type: REQUESTED_PROFILE_SYNC_FAILURE,
+  meta: {
+    ethereumAddress,
+  },
+  payload: {
+    error,
+  },
 })

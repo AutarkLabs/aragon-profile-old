@@ -5,20 +5,36 @@ import { reformatNestedFields } from '../../utils'
 export const initialState = {}
 
 export const fetchingPublicProfile = () => ({
+  // basic loading of public profiles
   loadingPublicProf: true,
   loadedPublicProf: false,
   loadedPublicProfSuccess: false,
-  unlockingProf: false,
-  unlockedProf: false,
-  unlockedProfSuccess: false,
+  // for tracking https://projects.invisionapp.com/d/main#/console/17511474/363488290/preview
   savingProfile: false,
   savedProfile: false,
   savedProfileSucess: false,
   removingItem: false,
   removedItem: false,
   removedItemSuccess: false,
+  // for tracking https://projects.invisionapp.com/share/AQS14BPCG9R#/screens
+  messageSigning: {
+    openingProf: false,
+    openedProfError: false,
+    openedProfSuccess: false,
+    syncingProf: false,
+    syncedProfError: false,
+    syncedProfSuccess: false,
+    creatingProf: false,
+    createdProfError: false,
+    createdProfSuccess: false,
+  },
+  // an unlocked profile is both opened and synced, which is why their state is set in a few different places
+  unlockingProf: false,
+  unlockedProf: false,
+  unlockedProfSuccess: false,
   unlockedBox: {},
   publicProfile: {},
+  // handles forms throughout the application
   forms: {
     name: '',
     job: '',
@@ -31,6 +47,7 @@ export const fetchingPublicProfile = () => ({
     educationHistory: {},
   },
   changed: [],
+  // to display image loading status
   uploadingImage: false,
   uploadedImageSuccess: false,
   uploadedImage: false,
@@ -63,6 +80,12 @@ export const requestedProfUnlock = state => ({
   unlockedProf: false,
   unlockedProfSuccess: false,
   unlockedBox: {},
+  messageSigning: {
+    ...state.messageSigning,
+    unlockingProf: true,
+    unlockedProf: false,
+    unlockedProfSuccess: false,
+  },
 })
 
 export const profileUnlocked = (state, unlockedBox) => ({
@@ -72,6 +95,12 @@ export const profileUnlocked = (state, unlockedBox) => ({
   unlockedProfSuccess: true,
   editedProfile: false,
   unlockedBox,
+  messageSigning: {
+    ...state.messageSigning,
+    unlockingProf: false,
+    unlockedProf: true,
+    unlockedProfSuccess: true,
+  },
 })
 
 export const profileUnlockFailed = (state, error) => ({
@@ -80,6 +109,12 @@ export const profileUnlockFailed = (state, error) => ({
   unlockedProf: true,
   unlockedProfSuccess: false,
   error,
+  messageSigning: {
+    ...state.messageSigning,
+    unlockingProf: false,
+    unlockedProf: true,
+    unlockedProfSuccess: false,
+  },
 })
 
 const calculateChanged = (changed, field) => {
@@ -190,4 +225,109 @@ export const requestedProfileItemRemoveError = (state, error) => ({
   removedItem: true,
   removedItemSuccess: false,
   error,
+})
+
+export const requestProfileCreate = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: true,
+    createdProfError: false,
+    createdProfSuccess: false,
+  },
+})
+
+export const requestProfileCreateSuccess = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: false,
+    createdProfError: false,
+    createdProfSuccess: true,
+  },
+})
+
+export const requestProfileCreateError = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    creatingProf: false,
+    createdProfError: true,
+    createdProfSuccess: false,
+  },
+})
+
+export const requestProfileOpen = state => ({
+  ...state,
+  unlockingProf: true,
+  unlockedProf: false,
+  unlockedProfSuccess: false,
+  messageSigning: {
+    ...state.messageSigning,
+    openingProf: true,
+    openedProfError: false,
+    openedProfSuccess: false,
+  },
+})
+
+export const requestProfileOpenSuccess = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    openingProf: false,
+    openedProfError: false,
+    openedProfSuccess: true,
+  },
+})
+
+export const requestProfileOpenError = (state, error) => ({
+  ...state,
+  error,
+  messageSigning: {
+    ...state.messageSigning,
+    openingProf: false,
+    openedProfError: true,
+    openedProfSuccess: false,
+  },
+  unlockingProf: false,
+  unlockedProf: false,
+  unlockedProfSuccess: false,
+})
+
+export const requestProfileSync = state => ({
+  ...state,
+  messageSigning: {
+    ...state.messageSigning,
+    syncingProf: true,
+    syncedProfError: false,
+    syncedProfSuccess: false,
+  },
+})
+
+export const requestProfileSyncSuccess = (state, syncedBox) => ({
+  ...state,
+  unlockingProf: false,
+  unlockedProf: true,
+  unlockedProfSuccess: true,
+  unlockedBox: syncedBox,
+  messageSigning: {
+    ...state.messageSigning,
+    syncingProf: false,
+    syncedProfError: false,
+    syncedProfSuccess: true,
+  },
+})
+
+export const requestProfileSyncError = (state, error) => ({
+  ...state,
+  unlockingProf: false,
+  unlockedProf: true,
+  unlockedProfSuccess: false,
+  error,
+  messageSigning: {
+    ...state.messageSigning,
+    syncingProf: false,
+    syncedProfError: true,
+    syncedProfSuccess: false,
+  },
 })

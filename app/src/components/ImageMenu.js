@@ -1,4 +1,5 @@
 import React, { useContext, useCallback } from 'react'
+import { useAragonApi } from '@aragon/api-react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
@@ -9,6 +10,7 @@ import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
 import { DragContext } from '../wrappers/drag'
 import { image } from '../../modules/things'
+import { unlockAndCreateBoxIfRequired } from '../utils'
 
 import {
   uploadingImage,
@@ -30,6 +32,7 @@ const ImageMenu = ({
   const { boxes, dispatch } = useContext(BoxContext)
   const { dispatchModal } = useContext(ModalContext)
   const { dragState } = useContext(DragContext)
+  const { api } = useAragonApi()
 
   const onDrop = useCallback(
     acceptedFiles => {
@@ -46,23 +49,31 @@ const ImageMenu = ({
       reader.onload = async () => {
         try {
           const file = Buffer.from(reader.result)
-          const result = await infuraIpfs.add(file)
-          dispatch(uploadedImage(ethereumAddress, imageTag, result[0].hash))
-          const { unlockedBox } = boxes[ethereumAddress]
+          const unlockedBox = await unlockAndCreateBoxIfRequired(
+            boxes[ethereumAddress],
+            dispatch,
+            dispatchModal,
+            ethereumAddress,
+            api
+          )
+          if (unlockedBox) {
+            const result = await infuraIpfs.add(file)
+            dispatch(uploadedImage(ethereumAddress, imageTag, result[0].hash))
 
-          try {
-            dispatch(savingProfile(ethereumAddress))
-            await unlockedBox.setPublicFields(
-              [imageTag],
-              [image(result[0].hash)]
-            )
-            dispatch(
-              savedProfile(ethereumAddress, {
-                [imageTag]: image(result[0].hash),
-              })
-            )
-          } catch (error2) {
-            dispatch(saveProfileError(ethereumAddress, error2))
+            try {
+              dispatch(savingProfile(ethereumAddress))
+              await unlockedBox.setPublicFields(
+                [imageTag],
+                [image(result[0].hash)]
+              )
+              dispatch(
+                savedProfile(ethereumAddress, {
+                  [imageTag]: image(result[0].hash),
+                })
+              )
+            } catch (error2) {
+              dispatch(saveProfileError(ethereumAddress, error2))
+            }
           }
         } catch (error) {
           dispatch(uploadedImageFailure(error))
@@ -71,7 +82,7 @@ const ImageMenu = ({
 
       acceptedFiles.forEach(file => reader.readAsArrayBuffer(file))
     },
-    [boxes, dispatch, ethereumAddress, imageTag]
+    [api, boxes, dispatch, dispatchModal, ethereumAddress, imageTag]
   )
 
   const {

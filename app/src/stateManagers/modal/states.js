@@ -1,4 +1,9 @@
-export const initialState = { type: null, id: null, itemType: null }
+export const initialState = {
+  type: null,
+  id: null,
+  itemType: null,
+  sigsRequired: [],
+}
 
 export const openedModal = (state, type, id) => ({
   ...state,
@@ -7,10 +12,10 @@ export const openedModal = (state, type, id) => ({
 })
 
 export const closedModal = state => ({
-  ...state,
   type: null,
   id: null,
   itemType: null,
+  sigsRequired: [],
 })
 
 export const removeItem = (state, id, itemType) => ({
@@ -20,7 +25,8 @@ export const removeItem = (state, id, itemType) => ({
   id,
 })
 
-export const startDrag = state => ({
+export const openedBoxStateModal = (state, sigsRequired) => ({
   ...state,
-  drag: true,
+  type: '3boxState',
+  sigsRequired,
 })

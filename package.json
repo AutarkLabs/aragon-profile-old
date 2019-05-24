@@ -30,6 +30,7 @@
     "solidity-coverage": "^0.5.11"
   },
   "scripts": {
+    "clean": "rm -rf node_modules && rm package-lock.json && cd app && rm -rf node_modules && rm package-lock.json && cd ../",
     "start": "npm run start:ipfs",
     "start:ipfs": "aragon run",
     "start:http:no:client": "aragon run --no-client --http localhost:8001 --http-served-from ./dist",

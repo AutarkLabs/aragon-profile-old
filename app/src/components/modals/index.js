@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from '@aragon/ui'
+import { useAragonApi } from '@aragon/api-react'
 import uuidv1 from 'uuid/v1'
 
 import { BoxContext } from '../../wrappers/box'
@@ -14,15 +15,18 @@ import {
   removedItem,
   removedItemError,
 } from '../../stateManagers/box'
+import { unlockAndCreateBoxIfRequired } from '../../utils'
 import { close } from '../../stateManagers/modal'
 import WorkHistoryModal from './WorkHistory'
 import BasicInformationModal from './BasicInformation'
 import EducationHistoryModal from './EducationHistory'
 import RemoveItem from './RemoveItem'
+import BoxState from './BoxState'
 
 const UserInfoModal = ({ ethereumAddress }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { modal, dispatchModal } = useContext(ModalContext)
+  const { api } = useAragonApi()
   const [key, setKey] = useState(uuidv1())
 
   const userLoaded = !!boxes[ethereumAddress]
@@ -44,11 +48,18 @@ const UserInfoModal = ({ ethereumAddress }) => {
     return value || ''
   }
 
+  const delay = () =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, 3000)
+    })
+
   const saveProfile = async ethereumAddress => {
     dispatch(savingProfile(ethereumAddress))
 
     try {
-      const { changed, forms, unlockedBox } = boxes[ethereumAddress]
+      const { changed, forms } = boxes[ethereumAddress]
       const calculateChanged = field => {
         if (field === 'workHistory' || field === 'educationHistory') {
           return Object.keys(forms[field]).map(id => forms[field][id])
@@ -57,10 +68,21 @@ const UserInfoModal = ({ ethereumAddress }) => {
       }
 
       const changedValues = changed.map(calculateChanged)
-      await unlockedBox.setPublicFields(changed, changedValues)
-      dispatch(savedProfile(ethereumAddress, forms))
-      dispatchModal(close())
-      setKey(uuidv1())
+      // unlockAndCreateBoxIfRequired opens the signature modal, and handles errors
+      const unlockedBox = await unlockAndCreateBoxIfRequired(
+        boxes[ethereumAddress],
+        dispatch,
+        dispatchModal,
+        ethereumAddress,
+        api
+      )
+      if (unlockedBox) {
+        await unlockedBox.setPublicFields(changed, changedValues)
+        dispatch(savedProfile(ethereumAddress, forms))
+        await delay()
+        dispatchModal(close())
+        setKey(uuidv1())
+      }
     } catch (error) {
       dispatch(saveProfileError(ethereumAddress, error))
     }
@@ -78,23 +100,32 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const removeItem = async () => {
     dispatch(removingItem(ethereumAddress))
     try {
-      const { unlockedBox, forms } = boxes[ethereumAddress]
+      const { forms } = boxes[ethereumAddress]
       const { itemType, id } = modal
 
-      if (itemType === 'image' || itemType === 'coverPhoto') {
-        await unlockedBox.removePublicField(itemType)
-      } else {
-        delete forms[itemType][id]
-        const newBoxVals = Object.keys(forms[itemType]).map(
-          id => forms[itemType][id]
-        )
-        await unlockedBox.setPublicFields([itemType], [newBoxVals])
+      const unlockedBox = await unlockAndCreateBoxIfRequired(
+        boxes[ethereumAddress],
+        dispatch,
+        dispatchModal,
+        ethereumAddress,
+        api
+      )
+      if (unlockedBox) {
+        if (itemType === 'image' || itemType === 'coverPhoto') {
+          await unlockedBox.removePublicField(itemType)
+        } else {
+          delete forms[itemType][id]
+          const newBoxVals = Object.keys(forms[itemType]).map(
+            id => forms[itemType][id]
+          )
+          await unlockedBox.setPublicFields([itemType], [newBoxVals])
+        }
+
+        const updatedProfile = await unlockedBox.getPublic()
+
+        dispatch(removedItem(ethereumAddress, updatedProfile))
+        dispatchModal(close())
       }
-
-      const updatedProfile = await unlockedBox.getPublic()
-
-      dispatch(removedItem(ethereumAddress, updatedProfile))
-      dispatchModal(close())
     } catch (err) {
       dispatch(removedItemError(err))
     }
@@ -118,6 +149,12 @@ const UserInfoModal = ({ ethereumAddress }) => {
       )}
       {modal.type === 'removeItem' && (
         <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
+      )}
+      {modal.type === '3boxState' && (
+        <BoxState
+          messageSigning={boxes[ethereumAddress].messageSigning}
+          signaturesRequired={modal.sigsRequired}
+        />
       )}
     </Modal>
   )
