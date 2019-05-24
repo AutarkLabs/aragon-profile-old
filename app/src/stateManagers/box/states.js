@@ -289,6 +289,9 @@ export const requestProfileOpenError = (state, error) => ({
     openedProfError: true,
     openedProfSuccess: false,
   },
+  unlockingProf: false,
+  unlockedProf: false,
+  unlockedProfSuccess: false,
 })
 
 export const requestProfileSync = state => ({
