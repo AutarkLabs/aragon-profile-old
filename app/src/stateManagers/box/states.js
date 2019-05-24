@@ -117,15 +117,14 @@ export const uploadingImage = state => ({
 })
 
 export const uploadedImage = (state, imageTag, imageContentHash) => {
+  const newFormVals = _.cloneDeep({ ...state.forms })
+  newFormVals[imageTag] = image(imageContentHash)
   const newState = {
     ...state,
     uploadingImage: false,
     uploadedImageSuccess: true,
     uploadedImage: true,
-    publicProfile: {
-      ...state.publicProfile,
-      [imageTag]: image(imageContentHash),
-    },
+    forms: newFormVals,
     changed: calculateChanged(state.changed, imageTag),
   }
   return newState
