@@ -11,7 +11,7 @@ const BasicInformation = ({
   saveProfile,
 }) => {
   return (
-    <ModalWrapper title="Edit Basic Information1">
+    <ModalWrapper title="Edit Basic Information">
       <TwoColumnsRow>
         <div>
           <Label>Name</Label>
