@@ -154,14 +154,13 @@ export const removingItem = ethereumAddress => ({
   },
 })
 
-export const removedItem = (ethereumAddress, itemType, id) => ({
+export const removedItem = (ethereumAddress, profile) => ({
   type: REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   meta: {
     ethereumAddress,
   },
   payload: {
-    itemType,
-    id,
+    profile,
   },
 })
 

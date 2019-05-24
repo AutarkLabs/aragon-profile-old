@@ -117,15 +117,14 @@ export const uploadingImage = state => ({
 })
 
 export const uploadedImage = (state, imageTag, imageContentHash) => {
+  const newFormVals = _.cloneDeep({ ...state.forms })
+  newFormVals[imageTag] = image(imageContentHash)
   const newState = {
     ...state,
     uploadingImage: false,
     uploadedImageSuccess: true,
     uploadedImage: true,
-    publicProfile: {
-      ...state.publicProfile,
-      [imageTag]: image(imageContentHash),
-    },
+    forms: newFormVals,
     changed: calculateChanged(state.changed, imageTag),
   }
   return newState
@@ -173,20 +172,16 @@ export const requestedProfileItemRemove = state => ({
   removedItemSuccess: false,
 })
 
-export const requestedProfileItemRemoveSuccess = (state, itemType, id) => {
-  const newState = {
+export const requestedProfileItemRemoveSuccess = (state, profile) => {
+  const publicProfile = reformatNestedFields(profile)
+  return {
     ...state,
     removingItem: false,
     removedItem: true,
-    removedItemSuccess: false,
-    publicProfile: {
-      ...state.publicProfile,
-    },
+    removedItemSuccess: true,
+    publicProfile,
+    forms: { ...state.forms, ...publicProfile },
   }
-  if (itemType === 'image' || itemType === 'coverPhoto') {
-    delete newState.publicProfile[itemType]
-  }
-  return newState
 }
 
 export const requestedProfileItemRemoveError = (state, error) => ({
