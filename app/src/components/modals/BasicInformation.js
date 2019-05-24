@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Button, Text, TextInput, theme } from '@aragon/ui'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
 import { Label } from '../styled-components'
@@ -16,64 +17,63 @@ const validateWebsite = validator.compile({
   format: 'uri',
 })
 
+const hasErrors = errorObj => Object.keys(errorField => !!errorObj[errorField])
+
+const DisplayErrors = ({ validationErrors }) => {
+  return hasErrors(validationErrors) ? (
+    <Fragment>
+      {Object.keys(validationErrors)
+        .filter(field => !!validationErrors[field])
+        .map(errorSource => (
+          <Text.Block key={errorSource} color={theme.negative}>
+            {validationErrors[errorSource]}
+          </Text.Block>
+        ))}
+    </Fragment>
+  ) : (
+    <Fragment />
+  )
+}
+
+DisplayErrors.defaultProps = {
+  validationErrors: {},
+}
+
+const TextInputWithValidation = styled(TextInput)`
+  border-color: ${props => (props.error ? 'red' : 'default')};
+`
+
 const BasicInformation = ({
   ethereumAddress,
   getFormValue,
   onChange,
   saveProfile,
 }) => {
-  const [validationErrors, setError] = useState({})
+  const [validationErrors, setValidationErrors] = useState({})
 
   const validateAndSave = () => {
     const errors = {}
-    if (!validateName(getFormValue('name'))) {
+    if (!validateName(getFormValue('name')))
       errors['name'] = 'Please provide valid name'
-    } else {
-      delete errors['name']
-    }
 
-    const website = getFormValue('website')
-    if (website && !validateWebsite(getFormValue('website'))) {
+    if (!validateWebsite(getFormValue('website')))
       errors['website'] = 'Please provide valid website address'
-    } else {
-      delete errors['website']
-    }
 
-    if (Object.keys(errors).length) {
-      setError(errors)
-    } else {
-      saveProfile(ethereumAddress)
-      setError({})
-    }
-  }
-
-  const displayErrors = () => {
-    return Object.keys(validationErrors).length ? (
-      <div>
-        {Object.keys(validationErrors).map(errorSource => (
-          <Text.Block key={errorSource} color={theme.negative}>
-            {validationErrors[errorSource]}
-          </Text.Block>
-        ))}
-      </div>
-    ) : (
-      ''
-    )
+    setValidationErrors(errors)
+    if (!hasErrors(errors)) saveProfile(ethereumAddress)
   }
 
   return (
     <ModalWrapper title="Edit Basic Information">
-      {displayErrors()}
+      <DisplayErrors validationErrors={validationErrors} />
       <TwoColumnsRow>
         <div>
           <Label>Name</Label>
-          <TextInput
+          <TextInputWithValidation
             wide
             onChange={e => onChange(e.target.value, 'name')}
             value={getFormValue('name')}
-            style={{
-              borderColor: validationErrors['name'] ? 'red' : 'default',
-            }}
+            error={validationErrors['name']}
           />
         </div>
         <div>
@@ -97,14 +97,12 @@ const BasicInformation = ({
       </div>
       <div>
         <Label>Website</Label>
-        <TextInput
+        <TextInputWithValidation
           wide
           value={getFormValue('website')}
           onChange={e => onChange(e.target.value, 'website')}
           type="url"
-          style={{
-            borderColor: validationErrors['website'] ? 'red' : 'default',
-          }}
+          error={validationErrors['website']}
         />
       </div>
 
