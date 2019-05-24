@@ -1,4 +1,9 @@
-import { OPENED_MODAL, CLOSED_MODAL, REMOVE_ITEM, START_DRAG } from './actionTypes'
+import {
+  OPENED_MODAL,
+  CLOSED_MODAL,
+  REMOVE_ITEM,
+  START_DRAG,
+} from './actionTypes'
 
 import { openedModal, closedModal, removeItem, startDrag } from './states'
 

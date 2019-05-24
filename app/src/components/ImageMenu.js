@@ -7,6 +7,7 @@ import infuraIpfs from '../../ipfs'
 import { removeItem } from '../stateManagers/modal'
 import { BoxContext } from '../wrappers/box'
 import { ModalContext } from '../wrappers/modal'
+import { DragContext } from '../wrappers/drag'
 import { image } from '../../modules/things'
 
 import {
@@ -28,6 +29,7 @@ const ImageMenu = ({
 }) => {
   const { boxes, dispatch } = useContext(BoxContext)
   const { dispatchModal } = useContext(ModalContext)
+  const { dragState } = useContext(DragContext)
 
   const onDrop = useCallback(
     acceptedFiles => {
@@ -95,6 +97,7 @@ const ImageMenu = ({
     <ImageMenuStyled
       top={top}
       right={right}
+      dragging={dragState.dragging}
       {...getRootProps({
         className: 'dropzone',
         isDragActive,
@@ -131,8 +134,24 @@ const getBorder = props => {
   if (props.isDragAccept) color = '#00e676'
   else if (props.isDragReject) color = '#ff1744'
   else if (props.isDragActive) color = '#2196f3'
+  else if (props.dragging) color = '#446fe9'
   if (color) return `2px ${color} dashed`
   else return '2px white solid'
+}
+
+const isVisible = props =>
+  props.isDragAccept ||
+  props.isDragReject ||
+  props.isDragActive ||
+  props.dragging
+
+const getVisibility = props => {
+  if (isVisible(props)) return 'visible'
+  else return 'hidden'
+}
+const getOpacity = props => {
+  if (isVisible(props)) return '0.8'
+  else return '0'
 }
 
 const ImageMenuStyled = styled.div`
@@ -146,8 +165,8 @@ const ImageMenuStyled = styled.div`
   border-radius: 3px;
   font-size: 0.9rem;
   transition: visibility 0.3s linear, opacity 0.3s linear;
-  visibility: hidden;
-  opacity: 0;
+  visibility: ${props => getVisibility(props)};
+  opacity: ${props => getOpacity(props)};
   width: 12rem;
   z-index: 1;
   position: absolute;
