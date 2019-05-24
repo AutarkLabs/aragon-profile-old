@@ -16,13 +16,6 @@ const validateWebsite = validator.compile({
   format: 'uri',
 })
 
-// validation does not force BasicInformation to refresh.
-// need to trigger it manually...
-const useForceUpdate = () => {
-  const [value, set] = useState(true)
-  return () => set(!value)
-}
-
 const BasicInformation = ({
   ethereumAddress,
   getFormValue,
@@ -30,28 +23,27 @@ const BasicInformation = ({
   saveProfile,
 }) => {
   const [validationErrors, setError] = useState({})
-  const forceUpdate = useForceUpdate()
 
   const validateAndSave = () => {
+    const errors = {}
     if (!validateName(getFormValue('name'))) {
-      validationErrors['name'] = 'Please provide valid name'
+      errors['name'] = 'Please provide valid name'
     } else {
-      delete validationErrors['name']
+      delete errors['name']
     }
 
     const website = getFormValue('website')
     if (website && !validateWebsite(getFormValue('website'))) {
-      validationErrors['website'] = 'Please provide valid website address'
+      errors['website'] = 'Please provide valid website address'
     } else {
-      delete validationErrors['website']
+      delete errors['website']
     }
 
-    setError(validationErrors)
-
-    if (Object.keys(validationErrors).length) {
-      forceUpdate()
+    if (Object.keys(errors).length) {
+      setError(errors)
     } else {
       saveProfile(ethereumAddress)
+      setError({})
     }
   }
 
