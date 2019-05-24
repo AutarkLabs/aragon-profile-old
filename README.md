@@ -1,37 +1,34 @@
 # Running this code
 
-Clone the TPS repo:
-`git clone git@github.com:AutarkLabs/planning-suite.git`
-`cd planning-suite`
-
-fetch jon/identity branch
-`git fetch origin jon/identity`
-
-navigate to identity app
-`cd apps/identity`
+Clone the aragon-profile repo:
+`git clone git@github.com:AutarkLabs/aragon-profile.git`
+`cd aragon-profile`
 
 install deps
 `npm i`
 
-start the app - note, the address used to access your DAO from the browser should appear at the bottom of this process. You will need this in a few steps.
+start the app.
 `npm run start:app`
 
-in another, separate terminal process"
+in another, separate terminal process:
 `npm run start:http:no:client`
+
+YOu should see a DAO address appear after this command is finished running
 
 In order for this repository to run, you will need to run a custom version of aragon/aragon
 
-`cd ../../../`
+Navigate to a new location, outside of `aragon-profile` repository
 `git clone git@github.com:openworklabs/aragon.git`
 `cd aragon`
 `git fetch origin allow-iframe-same-origin`
 `git checkout allow-iframe-same-origin`
-`git pull origin allow-iframe-same-origin`
 `npm i`
 `npm run start:local`
 
 Open your browser at
 `http://localhost:3000/#/<DAO ADDRESS>`
+
+Go to the profile app and start adding your profile!
 
 # Aragon React Boilerplate
 
