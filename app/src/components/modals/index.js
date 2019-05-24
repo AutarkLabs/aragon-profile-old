@@ -100,23 +100,32 @@ const UserInfoModal = ({ ethereumAddress }) => {
   const removeItem = async () => {
     dispatch(removingItem(ethereumAddress))
     try {
-      const { unlockedBox, forms } = boxes[ethereumAddress]
+      const { forms } = boxes[ethereumAddress]
       const { itemType, id } = modal
 
-      if (itemType === 'image' || itemType === 'coverPhoto') {
-        await unlockedBox.removePublicField(itemType)
-      } else {
-        delete forms[itemType][id]
-        const newBoxVals = Object.keys(forms[itemType]).map(
-          id => forms[itemType][id]
-        )
-        await unlockedBox.setPublicFields([itemType], [newBoxVals])
+      const unlockedBox = await unlockAndCreateBoxIfRequired(
+        boxes[ethereumAddress],
+        dispatch,
+        dispatchModal,
+        ethereumAddress,
+        api
+      )
+      if (unlockedBox) {
+        if (itemType === 'image' || itemType === 'coverPhoto') {
+          await unlockedBox.removePublicField(itemType)
+        } else {
+          delete forms[itemType][id]
+          const newBoxVals = Object.keys(forms[itemType]).map(
+            id => forms[itemType][id]
+          )
+          await unlockedBox.setPublicFields([itemType], [newBoxVals])
+        }
+
+        const updatedProfile = await unlockedBox.getPublic()
+
+        dispatch(removedItem(ethereumAddress, updatedProfile))
+        dispatchModal(close())
       }
-
-      const updatedProfile = await unlockedBox.getPublic()
-
-      dispatch(removedItem(ethereumAddress, updatedProfile))
-      dispatchModal(close())
     } catch (err) {
       dispatch(removedItemError(err))
     }
