@@ -197,8 +197,7 @@ const boxReducer = (prevState, action) => {
       const ethereumAddress = action.meta.ethereumAddress
       nextState[ethereumAddress] = requestedProfileItemRemoveSuccess(
         prevState[ethereumAddress],
-        action.payload.itemType,
-        action.payload.id
+        action.payload.profile
       )
       logStateUpdate(action, prevState, nextState)
       return nextState

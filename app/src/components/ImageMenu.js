@@ -71,7 +71,7 @@ const ImageMenu = ({
 
       acceptedFiles.forEach(file => reader.readAsArrayBuffer(file))
     },
-    [dispatch, ethereumAddress]
+    [boxes, dispatch, ethereumAddress, imageTag]
   )
 
   const {
