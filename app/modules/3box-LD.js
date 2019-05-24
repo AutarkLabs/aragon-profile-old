@@ -84,7 +84,7 @@ const handlePerson = publicProfile => {
 }
 
 export const handleImage = publicProfile => {
-  const hasImage = !!publicProfile.image
+  const hasImage = !!publicProfile.image && publicProfile.image.length > 0
   if (!hasImage) return publicProfile
   const isProperlyTyped =
     Array.isArray(publicProfile.image) &&

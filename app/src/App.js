@@ -8,20 +8,24 @@ import AppContainer from './wrappers/styleWrappers/AppContainer'
 import LoadAndErrorWrapper from './wrappers/loadAndErrorWrapper'
 import Profile from './components/Profile'
 import { ModalWrapper } from './wrappers/modal'
+import { DragWrapper } from './wrappers/drag'
 
 function App() {
   const { connectedAccount } = useAragonApi()
+
   return (
     <Main>
       <BoxWrapper>
         <ModalWrapper ethereumAddress={connectedAccount}>
-          <AppContainer>
-            <BaseLayout>
-              <LoadAndErrorWrapper ethereumAddress={connectedAccount}>
-                <Profile ethereumAddress={connectedAccount} />
-              </LoadAndErrorWrapper>
-            </BaseLayout>
-          </AppContainer>
+          <DragWrapper>
+            <AppContainer>
+              <BaseLayout>
+                <LoadAndErrorWrapper ethereumAddress={connectedAccount}>
+                  <Profile ethereumAddress={connectedAccount} />
+                </LoadAndErrorWrapper>
+              </BaseLayout>
+            </AppContainer>
+          </DragWrapper>
         </ModalWrapper>
       </BoxWrapper>
     </Main>
