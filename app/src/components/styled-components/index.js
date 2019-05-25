@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button } from '@aragon/ui'
+import { Button, TextInput } from '@aragon/ui'
 
 import { EditTextField } from '../readOrEditFields'
 import editImage from '../../assets/pencil-black-tool-interface-symbol.png'
@@ -39,6 +39,14 @@ export const FullWidthTextInput = styled(EditTextField)`
 
 export const FlexGrowTextInput = styled(EditTextField)`
   flex-grow: 1;
+`
+
+export const TextInputWithValidation = styled(TextInput)`
+  border-color: ${props => (props.error ? 'red' : 'default')};
+`
+
+export const TextMultilineWithValidation = styled(TextInput.Multiline)`
+  border-color: ${props => (props.error ? 'red' : 'default')};
 `
 
 export const Label = styled.div`

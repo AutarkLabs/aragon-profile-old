@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Field, TextInput, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow, DisplayErrors } from './ModalWrapper'
 import { useDate } from '../../hooks'
 import { years } from '../../utils'
 import DateDropdowns from '../DateDropdowns'
-import { Label } from '../styled-components'
+import { Label, TextInputWithValidation } from '../styled-components'
+import validator from '../../utils/validation'
+
+const validateOrganization = validator.compile({
+  type: 'string',
+  minLength: 1,
+  maxLength: 64,
+})
 
 const EducationHistory = ({
   ethereumAddress,
@@ -13,7 +20,23 @@ const EducationHistory = ({
   onChange,
   saveProfile,
   educationHistoryId,
+  savingError,
 }) => {
+  const [validationErrors, setValidationErrors] = useState({})
+
+  const validateAndSave = () => {
+    const errors = {}
+    if (
+      !validateOrganization(
+        getFormValue('educationHistory', educationHistoryId, 'organization')
+      )
+    )
+      errors['organization'] = 'Please provide valid organization name'
+
+    setValidationErrors(errors)
+    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
+  }
+
   const startDate = getFormValue(
     'educationHistory',
     educationHistoryId,
@@ -42,9 +65,11 @@ const EducationHistory = ({
   )
 
   return (
-    <ModalWrapper title="Add Education">
+    <ModalWrapper title="Add Education" ethereumAddress={ethereumAddress}>
+      <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
+      <DisplayErrors errors={validationErrors} />
       <Field label="School">
-        <TextInput
+        <TextInputWithValidation
           wide
           value={getFormValue(
             'educationHistory',
@@ -59,6 +84,7 @@ const EducationHistory = ({
               'organization'
             )
           }
+          error={validationErrors['organization']}
         />
       </Field>
 
@@ -113,7 +139,7 @@ const EducationHistory = ({
         type="educationHistory"
       />
 
-      <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
+      <Button wide mode="strong" onClick={() => validateAndSave()}>
         Save
       </Button>
     </ModalWrapper>

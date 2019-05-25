@@ -1,9 +1,8 @@
-import React, { Fragment, useState } from 'react'
-import { Button, Text, TextInput, theme } from '@aragon/ui'
-import styled from 'styled-components'
+import React, { useState } from 'react'
+import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
-import { Label } from '../styled-components'
+import { ModalWrapper, TwoColumnsRow, DisplayErrors } from './ModalWrapper'
+import { Label, TextInputWithValidation } from '../styled-components'
 import validator from '../../utils/validation'
 
 const validateName = validator.compile({
@@ -17,37 +16,12 @@ const validateWebsite = validator.compile({
   format: 'uri',
 })
 
-const hasErrors = errorObj => Object.keys(errorField => !!errorObj[errorField])
-
-const DisplayErrors = ({ validationErrors }) => {
-  return hasErrors(validationErrors) ? (
-    <Fragment>
-      {Object.keys(validationErrors)
-        .filter(field => !!validationErrors[field])
-        .map(errorSource => (
-          <Text.Block key={errorSource} color={theme.negative}>
-            {validationErrors[errorSource]}
-          </Text.Block>
-        ))}
-    </Fragment>
-  ) : (
-    <Fragment />
-  )
-}
-
-DisplayErrors.defaultProps = {
-  validationErrors: {},
-}
-
-const TextInputWithValidation = styled(TextInput)`
-  border-color: ${props => (props.error ? 'red' : 'default')};
-`
-
 const BasicInformation = ({
   ethereumAddress,
   getFormValue,
   onChange,
   saveProfile,
+  savingError,
 }) => {
   const [validationErrors, setValidationErrors] = useState({})
 
@@ -56,16 +30,21 @@ const BasicInformation = ({
     if (!validateName(getFormValue('name')))
       errors['name'] = 'Please provide valid name'
 
-    if (!validateWebsite(getFormValue('website')))
+    // validate only if non-empty
+    const website = getFormValue('website')
+    if (!!website && !validateWebsite(website))
       errors['website'] = 'Please provide valid website address'
 
     setValidationErrors(errors)
-    if (!hasErrors(errors)) saveProfile(ethereumAddress)
+    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
   }
 
   return (
-    <ModalWrapper title="Edit Basic Information">
-      <DisplayErrors validationErrors={validationErrors} />
+    <ModalWrapper
+      title="Edit Basic Information"
+      ethereumAddress={ethereumAddress}
+    >
+      <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <TwoColumnsRow>
         <div>
           <Label>Name</Label>

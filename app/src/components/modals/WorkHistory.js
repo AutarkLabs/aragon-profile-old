@@ -1,11 +1,34 @@
-import React from 'react'
-import { Button, TextInput } from '@aragon/ui'
+import React, { useState } from 'react'
+import { Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow, DisplayErrors } from './ModalWrapper'
 import { useDate } from '../../hooks'
 import { years } from '../../utils'
 import DateDropdowns from '../DateDropdowns'
-import { Label } from '../styled-components'
+import {
+  Label,
+  TextInputWithValidation,
+  TextMultilineWithValidation,
+} from '../styled-components'
+import validator from '../../utils/validation'
+
+const validateWorkPlace = validator.compile({
+  type: 'string',
+  minLength: 1,
+  maxLength: 64,
+})
+
+const validateJobTitle = validator.compile({
+  type: 'string',
+  minLength: 1,
+  maxLength: 64,
+})
+
+const validateDescription = validator.compile({
+  type: 'string',
+  minLength: 10,
+  maxLength: 256,
+})
 
 const WorkHistory = ({
   getFormValue,
@@ -13,7 +36,35 @@ const WorkHistory = ({
   workHistoryId,
   ethereumAddress,
   saveProfile,
+  savingError,
 }) => {
+  const [validationErrors, setValidationErrors] = useState({})
+
+  const validateAndSave = () => {
+    const errors = {}
+    if (
+      !validateWorkPlace(
+        getFormValue('workHistory', workHistoryId, 'workPlace')
+      )
+    )
+      errors['workPlace'] = 'Please provide name of company or project'
+
+    if (
+      !validateJobTitle(getFormValue('workHistory', workHistoryId, 'jobTitle'))
+    )
+      errors['jobTitle'] = 'Please provide job title or role'
+
+    if (
+      !validateDescription(
+        getFormValue('workHistory', workHistoryId, 'description')
+      )
+    )
+      errors['description'] = 'Please provide description'
+
+    setValidationErrors(errors)
+    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
+  }
+
   const startDate = getFormValue('workHistory', workHistoryId, 'startDate')
   const endDate = getFormValue('workHistory', workHistoryId, 'endDate')
 
@@ -27,11 +78,12 @@ const WorkHistory = ({
   } = useDate(startDate, endDate, years, onChange, 'workHistory', workHistoryId)
 
   return (
-    <ModalWrapper title="Add Work">
+    <ModalWrapper title="Add Work" ethereumAddress={ethereumAddress}>
+      <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <TwoColumnsRow>
         <div>
           <Label>Company or Project</Label>
-          <TextInput
+          <TextInputWithValidation
             wide
             value={getFormValue('workHistory', workHistoryId, 'workPlace')}
             onChange={e =>
@@ -42,23 +94,25 @@ const WorkHistory = ({
                 'workPlace'
               )
             }
+            error={validationErrors['workPlace']}
           />
         </div>
         <div>
           <Label>Job Title or Role</Label>
-          <TextInput
+          <TextInputWithValidation
             wide
             value={getFormValue('workHistory', workHistoryId, 'jobTitle')}
             onChange={e =>
               onChange(e.target.value, 'workHistory', workHistoryId, 'jobTitle')
             }
+            error={validationErrors['jobTitle']}
           />
         </div>
       </TwoColumnsRow>
 
       <div>
         <Label>Description</Label>
-        <TextInput.Multiline
+        <TextMultilineWithValidation
           style={{ height: '80px' }}
           wide
           value={getFormValue('workHistory', workHistoryId, 'description')}
@@ -70,6 +124,7 @@ const WorkHistory = ({
               'description'
             )
           }
+          error={validationErrors['description']}
         />
       </div>
 
@@ -83,7 +138,7 @@ const WorkHistory = ({
         type="workHistory"
       />
 
-      <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
+      <Button wide mode="strong" onClick={() => validateAndSave()}>
         Save
       </Button>
     </ModalWrapper>

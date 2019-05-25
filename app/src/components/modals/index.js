@@ -66,13 +66,6 @@ const UserInfoModal = ({ ethereumAddress }) => {
     }
   }
 
-  const props = {
-    ethereumAddress,
-    getFormValue,
-    onChange,
-    saveProfile,
-  }
-
   if (!userLoaded) return null
 
   const removeItem = async () => {
@@ -96,8 +89,30 @@ const UserInfoModal = ({ ethereumAddress }) => {
       dispatch(removedItem(ethereumAddress, updatedProfile))
       dispatchModal(close())
     } catch (err) {
-      dispatch(removedItemError(err))
+      dispatch(removedItemError(ethereumAddress, err))
     }
+  }
+
+  const { error } = boxes[ethereumAddress]
+
+  const savingError =
+    boxes[ethereumAddress].savedProfile &&
+    !boxes[ethereumAddress].savedProfileSucess
+      ? { error: `Error saving profile: ${error.message}` }
+      : {}
+  const removingError =
+    boxes[ethereumAddress].removedItem &&
+    !boxes[ethereumAddress].removedItemSuccess
+      ? { error: `Error removing item: ${error.message}` }
+      : {}
+
+  const props = {
+    ethereumAddress,
+    getFormValue,
+    onChange,
+    saveProfile,
+    savingError,
+    removingError,
   }
 
   return (
@@ -117,7 +132,11 @@ const UserInfoModal = ({ ethereumAddress }) => {
         <WorkHistoryModal workHistoryId={modal.id || key} {...props} />
       )}
       {modal.type === 'removeItem' && (
-        <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
+        <RemoveItem
+          itemType={modal.itemType}
+          onRemove={removeItem}
+          removingError={removingError}
+        />
       )}
     </Modal>
   )
