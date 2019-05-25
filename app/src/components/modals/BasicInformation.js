@@ -40,10 +40,7 @@ const BasicInformation = ({
   }
 
   return (
-    <ModalWrapper
-      title="Edit Basic Information"
-      ethereumAddress={ethereumAddress}
-    >
+    <ModalWrapper title="Edit Basic Information">
       <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <TwoColumnsRow>
         <div>

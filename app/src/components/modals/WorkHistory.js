@@ -78,7 +78,7 @@ const WorkHistory = ({
   } = useDate(startDate, endDate, years, onChange, 'workHistory', workHistoryId)
 
   return (
-    <ModalWrapper title="Add Work" ethereumAddress={ethereumAddress}>
+    <ModalWrapper title="Add Work">
       <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <TwoColumnsRow>
         <div>

@@ -16,6 +16,15 @@ import {
   REQUESTED_PROFILE_ITEM_REMOVE,
   REQUESTED_PROFILE_ITEM_REMOVE_SUCCESS,
   REQUESTED_PROFILE_ITEM_REMOVE_ERROR,
+  REQUEST_PROFILE_CREATE,
+  REQUEST_PROFILE_CREATE_SUCCESS,
+  REQUEST_PROFILE_CREATE_ERROR,
+  REQUESTED_PROFILE_SYNC,
+  REQUESTED_PROFILE_SYNC_SUCCESS,
+  REQUESTED_PROFILE_SYNC_FAILURE,
+  REQUESTED_PROFILE_OPEN,
+  REQUESTED_PROFILE_OPEN_SUCCESS,
+  REQUESTED_PROFILE_OPEN_FAILURE,
 } from './actionTypes'
 
 import {
@@ -36,6 +45,15 @@ import {
   requestedProfileItemRemove,
   requestedProfileItemRemoveSuccess,
   requestedProfileItemRemoveError,
+  requestProfileCreate,
+  requestProfileCreateSuccess,
+  requestProfileCreateError,
+  requestProfileSync,
+  requestProfileSyncSuccess,
+  requestProfileSyncError,
+  requestProfileOpen,
+  requestProfileOpenSuccess,
+  requestProfileOpenError,
 } from './states'
 
 import { log } from '../../../utils'
@@ -75,8 +93,10 @@ const boxReducer = (prevState, action) => {
     case REQUESTED_PROFILE_UNLOCK: {
       const nextState = { ...prevState }
       const ethereumAddress = action.meta.ethereumAddress
+      const hasBox = action.meta.hasBox
       nextState[ethereumAddress] = requestedProfUnlock(
-        prevState[ethereumAddress]
+        prevState[ethereumAddress],
+        hasBox
       )
       logStateUpdate(action, prevState, nextState)
       return nextState
@@ -211,6 +231,94 @@ const boxReducer = (prevState, action) => {
       )
       logStateUpdate(action, prevState, nextState)
       return nextState
+    }
+    case REQUEST_PROFILE_CREATE: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileCreate(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUEST_PROFILE_CREATE_SUCCESS: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileCreateSuccess(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUEST_PROFILE_CREATE_ERROR: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileCreateError(
+        prevState[ethereumAddress],
+        action.payload.error
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_OPEN: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileOpen(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_OPEN_SUCCESS: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileOpenSuccess(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_OPEN_FAILURE: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileOpenError(
+        prevState[ethereumAddress],
+        action.payload.error
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_SYNC: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileSync(
+        prevState[ethereumAddress]
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_SYNC_SUCCESS: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileSyncSuccess(
+        prevState[ethereumAddress],
+        action.payload.profile
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    case REQUESTED_PROFILE_SYNC_FAILURE: {
+      const nextState = { ...prevState }
+      const ethereumAddress = action.meta.ethereumAddress
+      nextState[ethereumAddress] = requestProfileSyncError(
+        prevState[ethereumAddress],
+        action.payload.error
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
+    default: {
+      return prevState
     }
   }
 }

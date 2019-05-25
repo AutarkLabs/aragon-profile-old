@@ -62,28 +62,71 @@ export class Profile {
       ? this.unlockedBox.public.all()
       : Box.getProfile(this.ethereumAddress)
 
-  unlock = () =>
+  unlock = async () => {
+    const openedBox = await Box.openBox(
+      this.ethereumAddress,
+      this.boxAragonBridge
+    )
+    this.boxState = { opened: true, synced: false }
+    this.unlockedBox = openedBox
+    return openedBox
+  }
+
+  sync = () =>
+    new Promise((resolve, reject) => {
+      if (this.boxState.opened) {
+        this.unlockedBox.onSyncDone(() => {
+          try {
+            this.boxState = { opened: true, synced: true }
+            return resolve(this.unlockedBox)
+          } catch (err) {
+            this.boxState = { opened: true, synced: false }
+            return reject(err)
+          }
+        })
+      } else
+        reject(new Error('Box needs to be unlocked before it can be synced'))
+    })
+
+  unlockAndSync = () =>
     new Promise(async (resolve, reject) => {
-      const openedBox = await Box.openBox(
-        this.ethereumAddress,
-        this.boxAragonBridge
-      )
+      let openedBox
+      try {
+        openedBox = await Box.openBox(
+          this.ethereumAddress,
+          this.boxAragonBridge
+        )
+      } catch (err) {
+        return reject(err)
+      }
 
       this.boxState = { opened: true, synced: false }
       this.unlockedBox = openedBox
 
-      openedBox.onSyncDone(async () => {
+      openedBox.onSyncDone(() => {
         try {
           this.boxState = { opened: true, synced: true }
-          resolve()
+          return resolve(openedBox)
         } catch (err) {
           this.boxState = { opened: false, synced: false }
-          reject(err)
+          return reject(err)
         }
       })
     })
 
+  createProfile = () => this.unlockedBox.linkAccount()
+
+  hasProfile = async () => {
+    if (this.boxState.opened) {
+      return this.unlockedBox.isAccountLinked()
+    }
+    const publicProfile = await this.getPublic()
+    return Object.keys(publicProfile).length > 1
+  }
+
   isLoggedIn = () => Box.isLoggedIn(this.ethereumAddress)
+
+  logout = () => this.unlockedBox.logout()
 
   getPrivate = () => {
     if (this.boxState.opened && this.boxState.synced) {

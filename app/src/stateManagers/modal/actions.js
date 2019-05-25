@@ -1,8 +1,8 @@
 import {
   OPENED_MODAL,
+  OPENED_BOX_MODAL,
   CLOSED_MODAL,
   REMOVE_ITEM,
-  START_DRAG,
 } from './actionTypes'
 
 export const open = (type, id) => ({
@@ -10,6 +10,13 @@ export const open = (type, id) => ({
   meta: {
     type,
     id,
+  },
+})
+
+export const openBoxState = sigsRequired => ({
+  type: OPENED_BOX_MODAL,
+  meta: {
+    sigsRequired,
   },
 })
 
@@ -23,8 +30,4 @@ export const removeItem = (id, itemType) => ({
     id,
     itemType,
   },
-})
-
-export const startDrag = () => ({
-  type: START_DRAG,
 })

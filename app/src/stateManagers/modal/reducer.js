@@ -2,10 +2,15 @@ import {
   OPENED_MODAL,
   CLOSED_MODAL,
   REMOVE_ITEM,
-  START_DRAG,
+  OPENED_BOX_MODAL,
 } from './actionTypes'
 
-import { openedModal, closedModal, removeItem, startDrag } from './states'
+import {
+  openedModal,
+  openedBoxStateModal,
+  closedModal,
+  removeItem,
+} from './states'
 
 import { log } from '../../../utils'
 
@@ -24,6 +29,14 @@ const modalReducer = (prevState, action) => {
       logStateUpdate(action, prevState, nextState)
       return nextState
     }
+    case OPENED_BOX_MODAL: {
+      const nextState = openedBoxStateModal(
+        { ...prevState },
+        action.meta.sigsRequired
+      )
+      logStateUpdate(action, prevState, nextState)
+      return nextState
+    }
     case CLOSED_MODAL: {
       const nextState = closedModal({ ...prevState })
       logStateUpdate(action, prevState, nextState)
@@ -35,11 +48,6 @@ const modalReducer = (prevState, action) => {
         action.meta.id,
         action.meta.itemType
       )
-      logStateUpdate(action, prevState, nextState)
-      return nextState
-    }
-    case START_DRAG: {
-      const nextState = startDrag({ ...prevState })
       logStateUpdate(action, prevState, nextState)
       return nextState
     }

@@ -1,37 +1,34 @@
 # Running this code
 
-Clone the TPS repo:
-`git clone git@github.com:AutarkLabs/planning-suite.git`
-`cd planning-suite`
+Clone the aragon-profile repo:<br />
+`git clone git@github.com:AutarkLabs/aragon-profile.git`<br />
+`cd aragon-profile`
 
-fetch jon/identity branch
-`git fetch origin jon/identity`
-
-navigate to identity app
-`cd apps/identity`
-
-install deps
+install deps<br />
 `npm i`
 
-start the app - note, the address used to access your DAO from the browser should appear at the bottom of this process. You will need this in a few steps.
+start the app.<br />
 `npm run start:app`
 
-in another, separate terminal process"
-`npm run start:http:no:client`
+in another, separate terminal process:<br />
+`npm run start:http:no:client`<br />
 
-In order for this repository to run, you will need to run a custom version of aragon/aragon
+You should see a DAO address appear after this command is finished running<br /><br />
 
-`cd ../../../`
-`git clone git@github.com:openworklabs/aragon.git`
-`cd aragon`
-`git fetch origin allow-iframe-same-origin`
-`git checkout allow-iframe-same-origin`
-`git pull origin allow-iframe-same-origin`
-`npm i`
-`npm run start:local`
+In order for this repository to run, you will need to run a custom version of aragon/aragon:
+
+Navigate to a new location, outside of `aragon-profile` repository<br />
+`git clone git@github.com:openworklabs/aragon.git`<br />
+`cd aragon`<br />
+`git fetch origin allow-iframe-same-origin`<br />
+`git checkout allow-iframe-same-origin`<br />
+`npm i`<br />
+`npm run start:local`<br />
 
 Open your browser at
-`http://localhost:3000/#/<DAO ADDRESS>`
+`http://localhost:3000/#/<DAO ADDRESS>`<br />
+
+Go to the profile app and start adding your profile!<br />
 
 # Aragon React Boilerplate
 

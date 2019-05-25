@@ -65,7 +65,7 @@ const EducationHistory = ({
   )
 
   return (
-    <ModalWrapper title="Add Education" ethereumAddress={ethereumAddress}>
+    <ModalWrapper title="Add Education">
       <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <DisplayErrors errors={validationErrors} />
       <Field label="School">
