@@ -190,7 +190,16 @@ const InformationCard = ({ ethereumAddress }) => {
     <Social>
       <IconGlobe width="1rem" height="1rem" color={theme.textPrimary} />
       {fields.website ? (
-        <SafeLink href={fields.website} placeholder="website" size="small" />
+        <SafeLink
+          style={{
+            color: theme.accent,
+          }}
+          href={fields.website}
+          placeholder="website"
+          size="small"
+        >
+          {fields.website}
+        </SafeLink>
       ) : (
         <Text
           style={{ color: theme.accent, textDecoration: 'none' }}
