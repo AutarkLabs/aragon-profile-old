@@ -1,5 +1,5 @@
 import React, { useContext, Fragment } from 'react'
-import { Text, IconClose, unselectable } from '@aragon/ui'
+import { Text, IconClose, unselectable, theme } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
@@ -8,7 +8,7 @@ import { close } from '../../stateManagers/modal'
 
 const CONTENT_PADDING = 30
 
-const ModalWrapper = ({ children, title }) => {
+const ModalWrapper = ({ children, ethereumAddress, title }) => {
   const { dispatchModal } = useContext(ModalContext)
 
   return (
@@ -33,6 +33,26 @@ const ModalWrapper = ({ children, title }) => {
 ModalWrapper.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
+}
+
+const DisplayErrors = ({ errors }) => {
+  return Object.keys(errors).length ? (
+    <Fragment>
+      {Object.keys(errors)
+        .filter(field => !!errors[field])
+        .map(errorSource => (
+          <Text.Block key={errorSource} color={theme.negative}>
+            {errors[errorSource]}
+          </Text.Block>
+        ))}
+    </Fragment>
+  ) : (
+    <Fragment />
+  )
+}
+
+DisplayErrors.defaultProps = {
+  validationErrors: {},
 }
 
 const PanelHeader = styled.header`
@@ -91,4 +111,4 @@ const TwoColumnsRow = styled.div`
   }
 `
 
-export { ModalWrapper, TwoColumnsRow }
+export { ModalWrapper, TwoColumnsRow, DisplayErrors }

@@ -1,24 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
-import { Label } from '../styled-components'
+import { ModalWrapper, TwoColumnsRow, DisplayErrors } from './ModalWrapper'
+import { Label, TextInputWithValidation } from '../styled-components'
+import { validateName, validateWebsite } from '../../utils/validation'
 
 const BasicInformation = ({
   ethereumAddress,
   getFormValue,
   onChange,
   saveProfile,
+  savingError,
 }) => {
+  const [validationErrors, setValidationErrors] = useState({})
+
+  const validateAndSave = () => {
+    const errors = {}
+    if (!validateName(getFormValue('name')))
+      errors['name'] = 'Please provide valid name'
+
+    // validate only if non-empty
+    const website = getFormValue('website')
+    if (!!website && !validateWebsite(website))
+      errors['website'] = 'Please provide valid website address'
+
+    setValidationErrors(errors)
+    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
+  }
+
   return (
     <ModalWrapper title="Edit Basic Information">
+      <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <TwoColumnsRow>
         <div>
           <Label>Name</Label>
-          <TextInput
+          <TextInputWithValidation
             wide
             onChange={e => onChange(e.target.value, 'name')}
             value={getFormValue('name')}
+            error={validationErrors['name']}
           />
         </div>
         <div>
@@ -42,15 +62,16 @@ const BasicInformation = ({
       </div>
       <div>
         <Label>Website</Label>
-        <TextInput
+        <TextInputWithValidation
           wide
           value={getFormValue('website')}
           onChange={e => onChange(e.target.value, 'website')}
           type="url"
+          error={validationErrors['website']}
         />
       </div>
 
-      <Button mode="strong" wide onClick={() => saveProfile(ethereumAddress)}>
+      <Button mode="strong" wide onClick={validateAndSave}>
         Save
       </Button>
     </ModalWrapper>

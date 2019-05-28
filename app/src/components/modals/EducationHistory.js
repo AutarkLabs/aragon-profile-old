@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Field, TextInput, Button } from '@aragon/ui'
 import PropTypes from 'prop-types'
-import { ModalWrapper, TwoColumnsRow } from './ModalWrapper'
+import { ModalWrapper, TwoColumnsRow, DisplayErrors } from './ModalWrapper'
 import { useDate } from '../../hooks'
 import { years } from '../../utils'
 import DateDropdowns from '../DateDropdowns'
-import { Label } from '../styled-components'
+import { Label, TextInputWithValidation } from '../styled-components'
+import {
+  validateEducationOrg,
+  validateEducationDates,
+  educationDatesError,
+} from '../../utils/validation'
 
 const EducationHistory = ({
   ethereumAddress,
@@ -13,7 +18,10 @@ const EducationHistory = ({
   onChange,
   saveProfile,
   educationHistoryId,
+  savingError,
 }) => {
+  const [validationErrors, setValidationErrors] = useState({})
+
   const startDate = getFormValue(
     'educationHistory',
     educationHistoryId,
@@ -24,6 +32,22 @@ const EducationHistory = ({
     educationHistoryId,
     'endDate'
   )
+
+  const validateAndSave = () => {
+    const errors = {}
+    if (
+      !validateEducationOrg(
+        getFormValue('educationHistory', educationHistoryId, 'organization')
+      )
+    )
+      errors['organization'] = 'Please provide valid organization name'
+
+    if (!validateEducationDates(startDate, endDate))
+      errors['dates'] = educationDatesError(startDate, endDate)
+
+    setValidationErrors(errors)
+    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
+  }
 
   const {
     indexStartYear,
@@ -43,8 +67,9 @@ const EducationHistory = ({
 
   return (
     <ModalWrapper title="Add Education">
+      <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
       <Field label="School">
-        <TextInput
+        <TextInputWithValidation
           wide
           value={getFormValue(
             'educationHistory',
@@ -59,6 +84,7 @@ const EducationHistory = ({
               'organization'
             )
           }
+          error={validationErrors['organization']}
         />
       </Field>
 
@@ -111,9 +137,10 @@ const EducationHistory = ({
         indexEndMonth={indexEndMonth}
         indexEndYear={indexEndYear}
         type="educationHistory"
+        error={validationErrors['dates']}
       />
 
-      <Button wide mode="strong" onClick={() => saveProfile(ethereumAddress)}>
+      <Button wide mode="strong" onClick={validateAndSave}>
         Save
       </Button>
     </ModalWrapper>

@@ -88,13 +88,6 @@ const UserInfoModal = ({ ethereumAddress }) => {
     }
   }
 
-  const props = {
-    ethereumAddress,
-    getFormValue,
-    onChange,
-    saveProfile,
-  }
-
   if (!userLoaded) return null
 
   const removeItem = async () => {
@@ -127,28 +120,57 @@ const UserInfoModal = ({ ethereumAddress }) => {
         dispatchModal(close())
       }
     } catch (err) {
-      dispatch(removedItemError(err))
+      dispatch(removedItemError(ethereumAddress, err))
     }
+  }
+
+  const { error } = boxes[ethereumAddress]
+
+  const savingError =
+    boxes[ethereumAddress].savedProfile &&
+    !boxes[ethereumAddress].savedProfileSucess
+      ? { error: `Error saving profile: ${error.message}` }
+      : {}
+  const removingError =
+    boxes[ethereumAddress].removedItem &&
+    !boxes[ethereumAddress].removedItemSuccess
+      ? { error: `Error removing item: ${error.message}` }
+      : {}
+
+  const modalsCommonProps = {
+    ethereumAddress,
+    getFormValue,
+    onChange,
+    saveProfile,
+    savingError,
+    removingError,
   }
 
   return (
     <Modal visible={!!modal.type} padding="0">
       {modal.type === 'basicInformation' && (
-        <BasicInformationModal {...props} />
+        <BasicInformationModal {...modalsCommonProps} />
       )}
 
       {modal.type === 'educationHistory' && (
         <EducationHistoryModal
           educationHistoryId={modal.id || key}
-          {...props}
+          {...modalsCommonProps}
         />
       )}
 
       {modal.type === 'workHistory' && (
-        <WorkHistoryModal workHistoryId={modal.id || key} {...props} />
+        <WorkHistoryModal
+          workHistoryId={modal.id || key}
+          {...modalsCommonProps}
+        />
       )}
       {modal.type === 'removeItem' && (
-        <RemoveItem itemType={modal.itemType} onRemove={removeItem} />
+        <RemoveItem
+          itemType={modal.itemType}
+          onRemove={removeItem}
+          removingError={removingError}
+        />
       )}
       {modal.type === '3boxState' && (
         <BoxState

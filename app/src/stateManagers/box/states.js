@@ -196,7 +196,7 @@ export const requestedSaveProfileError = (state, error) => ({
   ...state,
   savingProfile: false,
   savedProfile: true,
-  savedProfileSucess: true,
+  savedProfileSucess: false,
   error,
 })
 
