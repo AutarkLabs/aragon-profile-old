@@ -14,6 +14,7 @@ import {
   validateWorkPlace,
   validateJobTitle,
   validateWorkDates,
+  workDatesError,
 } from '../../utils/validation'
 
 const WorkHistory = ({
@@ -41,7 +42,7 @@ const WorkHistory = ({
       errors['jobTitle'] = 'Please provide job title or role'
 
     if (!validateWorkDates(startDate, endDate))
-      errors['dates'] = 'Please provide valid start and end dates'
+      errors['dates'] = workDatesError(startDate, endDate)
 
     setValidationErrors(errors)
     if (!Object.keys(errors).length) saveProfile(ethereumAddress)

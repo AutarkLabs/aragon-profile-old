@@ -1,3 +1,4 @@
+import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import { Button, TextInput, DropDown } from '@aragon/ui'
 
@@ -45,10 +46,6 @@ export const TextInputWithValidation = styled(TextInput)`
   border-color: ${props => (props.error ? 'red' : 'default')};
 `
 
-export const DropDownWithValidation = styled(DropDown)`
-  border-color: ${props => (props.error ? 'red' : 'default')};
-`
-
 export const TextMultilineWithValidation = styled(TextInput.Multiline)`
   border-color: ${props => (props.error ? 'red' : 'default')};
 `
@@ -59,3 +56,21 @@ export const Label = styled.div`
   color: #707070;
   margin: 0;
 `
+
+export const ErrorBar = styled.div`
+  height: 1px;
+  margin-top: 3px;
+  width: 100%;
+  background-color: red;
+`
+
+export const DropDownWithValidation = props => (
+  <Fragment>
+    <DropDown {...props} />
+    {props.error && <ErrorBar />}
+  </Fragment>
+)
+
+DropDownWithValidation.defaultProps = {
+  error: '',
+}

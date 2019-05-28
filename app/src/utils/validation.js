@@ -6,13 +6,11 @@ export const validator = new JsonSchemaValidator({
   useDefaults: true,
 })
 
-// not in use at the moment, left here for future reference
 validator.addFormat('address', {
   type: 'string',
   validate: isAddress,
 })
 
-// Work Panel
 export const validateWorkPlace = validator.compile({
   type: 'string',
   minLength: 1,
@@ -33,6 +31,12 @@ export const validateEducationDates = (startDate, endDate) => {
   else return true
 }
 
+export const educationDatesError = (startDate, endDate) => {
+  if (!startDate && endDate) return 'Please provide a start date'
+  else if (startDate > endDate) return 'Start date must be before end date'
+  else return ''
+}
+
 export const validateWorkDates = (startDate, endDate) => {
   if (!startDate) return false
   else if (!endDate) return true
@@ -40,14 +44,19 @@ export const validateWorkDates = (startDate, endDate) => {
   else return true
 }
 
-// Education Panel
+export const workDatesError = (startDate, endDate) => {
+  if (!startDate) return 'Please provide a start date'
+  else if (!endDate) return 'Please provide an end date'
+  else if (startDate > endDate) return 'Start date must be before end date'
+  else return ''
+}
+
 export const validateEducationOrg = validator.compile({
   type: 'string',
   minLength: 1,
   maxLength: 64,
 })
 
-// Basic Information Panel
 export const validateName = validator.compile({
   type: 'string',
   minLength: 1,

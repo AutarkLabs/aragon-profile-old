@@ -9,6 +9,7 @@ import { Label, TextInputWithValidation } from '../styled-components'
 import {
   validateEducationOrg,
   validateEducationDates,
+  educationDatesError,
 } from '../../utils/validation'
 
 const EducationHistory = ({
@@ -42,7 +43,7 @@ const EducationHistory = ({
       errors['organization'] = 'Please provide valid organization name'
 
     if (!validateEducationDates(startDate, endDate))
-      errors['dates'] = 'Please provide valid start and end dates'
+      errors['dates'] = educationDatesError(startDate, endDate)
 
     setValidationErrors(errors)
     if (!Object.keys(errors).length) saveProfile(ethereumAddress)
