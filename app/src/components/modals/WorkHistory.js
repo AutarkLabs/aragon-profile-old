@@ -10,25 +10,11 @@ import {
   TextInputWithValidation,
   TextMultilineWithValidation,
 } from '../styled-components'
-import validator from '../../utils/validation'
-
-const validateWorkPlace = validator.compile({
-  type: 'string',
-  minLength: 1,
-  maxLength: 64,
-})
-
-const validateJobTitle = validator.compile({
-  type: 'string',
-  minLength: 1,
-  maxLength: 64,
-})
-
-const validateDescription = validator.compile({
-  type: 'string',
-  minLength: 10,
-  maxLength: 256,
-})
+import {
+  validateWorkPlace,
+  validateJobTitle,
+  validateWorkDates,
+} from '../../utils/validation'
 
 const WorkHistory = ({
   getFormValue,
@@ -54,12 +40,8 @@ const WorkHistory = ({
     )
       errors['jobTitle'] = 'Please provide job title or role'
 
-    if (
-      !validateDescription(
-        getFormValue('workHistory', workHistoryId, 'description')
-      )
-    )
-      errors['description'] = 'Please provide description'
+    if (!validateWorkDates(startDate, endDate))
+      errors['dates'] = 'Please provide valid start and end dates'
 
     setValidationErrors(errors)
     if (!Object.keys(errors).length) saveProfile(ethereumAddress)
@@ -136,9 +118,10 @@ const WorkHistory = ({
         indexEndMonth={indexEndMonth}
         indexEndYear={indexEndYear}
         type="workHistory"
+        error={validationErrors['dates']}
       />
 
-      <Button wide mode="strong" onClick={() => validateAndSave()}>
+      <Button wide mode="strong" onClick={validateAndSave}>
         Save
       </Button>
     </ModalWrapper>

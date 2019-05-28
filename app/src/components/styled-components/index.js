@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button, TextInput } from '@aragon/ui'
+import { Button, TextInput, DropDown } from '@aragon/ui'
 
 import { EditTextField } from '../readOrEditFields'
 import editImage from '../../assets/pencil-black-tool-interface-symbol.png'
@@ -42,6 +42,10 @@ export const FlexGrowTextInput = styled(EditTextField)`
 `
 
 export const TextInputWithValidation = styled(TextInput)`
+  border-color: ${props => (props.error ? 'red' : 'default')};
+`
+
+export const DropDownWithValidation = styled(DropDown)`
   border-color: ${props => (props.error ? 'red' : 'default')};
 `
 

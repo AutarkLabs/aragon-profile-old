@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
-import { Checkbox, DropDown } from '@aragon/ui'
-import { Label } from './styled-components'
+import { Checkbox } from '@aragon/ui'
+import { Label, DropDownWithValidation } from './styled-components'
 import { years, months } from '../utils'
 
 const DateDropdowns = ({
@@ -12,29 +12,32 @@ const DateDropdowns = ({
   indexEndMonth,
   indexEndYear,
   type,
+  error,
 }) => {
   return (
     <Fragment>
       <Label style={{ margin: 0 }}>Start Date</Label>
       <DateDropDowns>
         <div style={{ width: '48%' }}>
-          <DropDown
+          <DropDownWithValidation
             wide
             items={months}
             active={indexStartMonth}
             onChange={index =>
               dispatchDateChange({ type: 'setIndexStartMonth', index })
             }
+            error={error}
           />
         </div>
         <div style={{ width: '48%' }}>
-          <DropDown
+          <DropDownWithValidation
             wide
             items={years}
             active={indexStartYear}
             onChange={index =>
               dispatchDateChange({ type: 'setIndexStartYear', index })
             }
+            error={error}
           />
         </div>
       </DateDropDowns>
@@ -44,23 +47,25 @@ const DateDropdowns = ({
         {!current && (
           <DateDropDowns>
             <div style={{ width: '48%' }}>
-              <DropDown
+              <DropDownWithValidation
                 wide
                 items={months}
                 active={indexEndMonth}
                 onChange={index =>
                   dispatchDateChange({ type: 'setIndexEndMonth', index })
                 }
+                error={error}
               />
             </div>
             <div style={{ width: '48%' }}>
-              <DropDown
+              <DropDownWithValidation
                 wide
                 items={years}
                 active={indexEndYear}
                 onChange={index =>
                   dispatchDateChange({ type: 'setIndexEndYear', index })
                 }
+                error={error}
               />
             </div>
           </DateDropDowns>

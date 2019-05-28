@@ -56,7 +56,13 @@ export const years = Array.apply(0, Array(74)).map((_x, index) =>
 
 export const displayStartEndDates = data => {
   if (data.startDate && data.endDate) {
-    return `${unixToTileDate(data.startDate)} - ${unixToTileDate(data.endDate)}`
+    if (data.startDate === data.endDate) {
+      return `${unixToTileDate(data.startDate)}`
+    } else {
+      return `${unixToTileDate(data.startDate)} - ${unixToTileDate(
+        data.endDate
+      )}`
+    }
   } else if (data.startDate) {
     return `${unixToTileDate(data.startDate)} - Present`
   } else {

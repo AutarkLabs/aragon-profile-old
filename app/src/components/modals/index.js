@@ -137,7 +137,7 @@ const UserInfoModal = ({ ethereumAddress }) => {
       ? { error: `Error removing item: ${error.message}` }
       : {}
 
-  const props = {
+  const modalsCommonProps = {
     ethereumAddress,
     getFormValue,
     onChange,
@@ -149,18 +149,21 @@ const UserInfoModal = ({ ethereumAddress }) => {
   return (
     <Modal visible={!!modal.type} padding="0">
       {modal.type === 'basicInformation' && (
-        <BasicInformationModal {...props} />
+        <BasicInformationModal {...modalsCommonProps} />
       )}
 
       {modal.type === 'educationHistory' && (
         <EducationHistoryModal
           educationHistoryId={modal.id || key}
-          {...props}
+          {...modalsCommonProps}
         />
       )}
 
       {modal.type === 'workHistory' && (
-        <WorkHistoryModal workHistoryId={modal.id || key} {...props} />
+        <WorkHistoryModal
+          workHistoryId={modal.id || key}
+          {...modalsCommonProps}
+        />
       )}
       {modal.type === 'removeItem' && (
         <RemoveItem

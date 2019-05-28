@@ -67,11 +67,15 @@ const useDate = (startDate, endDate, years, onChange, history, id) => {
       const unixTime = toUnix(`${years[indexStartYear]}-${indexStartMonth}-01`)
 
       if (unixTime !== startDate) onChange(unixTime, history, id, 'startDate')
+    } else {
+      if (startDate) onChange('', history, id, 'startDate')
     }
 
     if (indexEndYear > 0 && indexEndMonth > 0) {
       const unixTime = toUnix(`${years[indexEndYear]}-${indexEndMonth}-01`)
       if (unixTime !== endDate) onChange(unixTime, history, id, 'endDate')
+    } else {
+      if (endDate) onChange('', history, id, 'endDate')
     }
 
     if (endDate && current) {

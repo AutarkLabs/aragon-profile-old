@@ -3,18 +3,7 @@ import { Button, TextInput } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import { ModalWrapper, TwoColumnsRow, DisplayErrors } from './ModalWrapper'
 import { Label, TextInputWithValidation } from '../styled-components'
-import validator from '../../utils/validation'
-
-const validateName = validator.compile({
-  type: 'string',
-  minLength: 1,
-  maxLength: 32,
-})
-
-const validateWebsite = validator.compile({
-  type: 'string',
-  format: 'uri',
-})
+import { validateName, validateWebsite } from '../../utils/validation'
 
 const BasicInformation = ({
   ethereumAddress,
@@ -82,7 +71,7 @@ const BasicInformation = ({
         />
       </div>
 
-      <Button mode="strong" wide onClick={() => validateAndSave()}>
+      <Button mode="strong" wide onClick={validateAndSave}>
         Save
       </Button>
     </ModalWrapper>

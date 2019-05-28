@@ -6,13 +6,10 @@ import { useDate } from '../../hooks'
 import { years } from '../../utils'
 import DateDropdowns from '../DateDropdowns'
 import { Label, TextInputWithValidation } from '../styled-components'
-import validator from '../../utils/validation'
-
-const validateOrganization = validator.compile({
-  type: 'string',
-  minLength: 1,
-  maxLength: 64,
-})
+import {
+  validateEducationOrg,
+  validateEducationDates,
+} from '../../utils/validation'
 
 const EducationHistory = ({
   ethereumAddress,
@@ -24,19 +21,6 @@ const EducationHistory = ({
 }) => {
   const [validationErrors, setValidationErrors] = useState({})
 
-  const validateAndSave = () => {
-    const errors = {}
-    if (
-      !validateOrganization(
-        getFormValue('educationHistory', educationHistoryId, 'organization')
-      )
-    )
-      errors['organization'] = 'Please provide valid organization name'
-
-    setValidationErrors(errors)
-    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
-  }
-
   const startDate = getFormValue(
     'educationHistory',
     educationHistoryId,
@@ -47,6 +31,22 @@ const EducationHistory = ({
     educationHistoryId,
     'endDate'
   )
+
+  const validateAndSave = () => {
+    const errors = {}
+    if (
+      !validateEducationOrg(
+        getFormValue('educationHistory', educationHistoryId, 'organization')
+      )
+    )
+      errors['organization'] = 'Please provide valid organization name'
+
+    if (!validateEducationDates(startDate, endDate))
+      errors['dates'] = 'Please provide valid start and end dates'
+
+    setValidationErrors(errors)
+    if (!Object.keys(errors).length) saveProfile(ethereumAddress)
+  }
 
   const {
     indexStartYear,
@@ -67,7 +67,6 @@ const EducationHistory = ({
   return (
     <ModalWrapper title="Add Education">
       <DisplayErrors errors={{ ...validationErrors, ...savingError }} />
-      <DisplayErrors errors={validationErrors} />
       <Field label="School">
         <TextInputWithValidation
           wide
@@ -137,9 +136,10 @@ const EducationHistory = ({
         indexEndMonth={indexEndMonth}
         indexEndYear={indexEndYear}
         type="educationHistory"
+        error={validationErrors['dates']}
       />
 
-      <Button wide mode="strong" onClick={() => validateAndSave()}>
+      <Button wide mode="strong" onClick={validateAndSave}>
         Save
       </Button>
     </ModalWrapper>
